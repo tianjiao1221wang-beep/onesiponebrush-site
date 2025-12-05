@@ -112,6 +112,42 @@ const Navigation: React.FC = () => {
 };
 
 const Footer: React.FC = () => {
+  const [footerEmail, setFooterEmail] = useState('');
+  const [footerStatus, setFooterStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [footerMessage, setFooterMessage] = useState('');
+
+  const handleFooterSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!footerEmail || !footerEmail.includes('@')) {
+      setFooterMessage('Please enter a valid email address');
+      setFooterStatus('error');
+      return;
+    }
+
+    setFooterStatus('loading');
+    
+    // Mailchimp AJAX endpoint (change /post to /post-json)
+    const url = 'https://gmail.us11.list-manage.com/subscribe/post-json?u=594012d500b9cc95b32d31fa3&id=75a2e58659&f_id=0004aee0f0';
+    
+    try {
+      const response = await fetch(`${url}&EMAIL=${encodeURIComponent(footerEmail)}`, {
+        method: 'GET',
+        mode: 'no-cors',
+      });
+      
+      // Since we're using no-cors, we assume success
+      setFooterStatus('success');
+      setFooterMessage('Thanks for subscribing! Please check your email to confirm.');
+      setFooterEmail('');
+      setTimeout(() => setFooterStatus('idle'), 5000);
+    } catch (error) {
+      setFooterStatus('error');
+      setFooterMessage('Something went wrong. Please try again.');
+      setTimeout(() => setFooterStatus('idle'), 5000);
+    }
+  };
+
   return (
     <footer className="bg-paper-beige pt-16 pb-8 border-t border-stone-200 mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -143,15 +179,29 @@ const Footer: React.FC = () => {
           <div>
             <h4 className="text-sm font-bold uppercase tracking-widest text-ink-black mb-4">Newsletter</h4>
             <p className="text-xs text-stone-500 mb-3">Join our community for updates on events.</p>
-            <form className="flex flex-col space-y-2">
+            <form onSubmit={handleFooterSubscribe} className="flex flex-col space-y-2">
               <input 
-                type="email" 
-                placeholder="Email address" 
-                className="bg-white border border-stone-300 px-3 py-2 text-sm focus:outline-none focus:border-tea-brown"
+                type="email"
+                value={footerEmail}
+                onChange={(e) => setFooterEmail(e.target.value)}
+                placeholder="Email address"
+                disabled={footerStatus === 'loading'}
+                required
+                className="bg-white border border-stone-300 px-3 py-2 text-sm focus:outline-none focus:border-tea-brown disabled:opacity-50"
               />
-              <button className="bg-ink-black text-white text-xs uppercase tracking-widest py-2 hover:bg-tea-brown transition-colors">
-                Subscribe
+              <button 
+                type="submit" 
+                disabled={footerStatus === 'loading'}
+                className="bg-ink-black text-white text-xs uppercase tracking-widest py-2 hover:bg-tea-brown transition-colors disabled:opacity-50"
+              >
+                {footerStatus === 'loading' ? 'Subscribing...' : 
+                 footerStatus === 'success' ? '✓ Subscribed!' : 'Subscribe'}
               </button>
+              {footerMessage && (
+                <p className={`text-xs ${footerStatus === 'success' ? 'text-tea-brown' : 'text-red-600'}`}>
+                  {footerMessage}
+                </p>
+              )}
             </form>
           </div>
 
@@ -174,7 +224,7 @@ const Home: React.FC = () => {
         {/* Background Image with Overlay */}
         <div className="absolute inset-0 z-0">
           <img 
-            src="https://picsum.photos/seed/tea_ceremony/1920/1080" 
+            src="/images/hero/tea-ceremony.jpg" 
             alt="Chinese Tea Ceremony" 
             className="w-full h-full object-cover opacity-90"
           />
@@ -236,7 +286,7 @@ const Home: React.FC = () => {
           {/* Card 1 */}
           <Link to="/products" className="group block relative overflow-hidden aspect-[3/4] md:aspect-[4/5]">
             <img 
-              src="https://picsum.photos/seed/crafts1/800/1000" 
+              src="/images/hero/crafts-1.jpg" 
               alt="DIY Kits" 
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 grayscale-[20%] group-hover:grayscale-0"
             />
@@ -251,7 +301,7 @@ const Home: React.FC = () => {
           {/* Card 2 */}
           <Link to="/workshops" className="group block relative overflow-hidden aspect-[3/4] md:aspect-[4/5] md:-mt-12">
             <img 
-              src="https://picsum.photos/seed/kids_art/800/1000" 
+              src="/images/hero/kids-art.jpg" 
               alt="Kids Workshops" 
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 grayscale-[20%] group-hover:grayscale-0"
             />
@@ -266,7 +316,7 @@ const Home: React.FC = () => {
           {/* Card 3 */}
           <Link to="/workshops" className="group block relative overflow-hidden aspect-[3/4] md:aspect-[4/5]">
             <img 
-              src="https://picsum.photos/seed/tea_set/800/1000" 
+              src="/images/hero/tea-set.jpg" 
               alt="Adult Slow Living" 
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 grayscale-[20%] group-hover:grayscale-0"
             />
@@ -286,7 +336,7 @@ const Home: React.FC = () => {
         <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row items-center gap-12">
           <div className="w-full md:w-1/2">
              <img 
-              src="https://picsum.photos/seed/portrait_artist/800/800" 
+              src="/images/about/founder-portrait.jpg" 
               alt="Founder" 
               className="w-full h-auto object-cover shadow-xl max-w-md mx-auto"
             />
@@ -304,25 +354,87 @@ const Home: React.FC = () => {
       </section>
 
       {/* Newsletter CTA */}
-      <section className="py-24 px-4 text-center bg-ink-black text-rice-white">
-        <div className="max-w-xl mx-auto">
-          <h2 className="text-3xl font-serif mb-2">Join Our Community</h2>
-          <p className="text-stone-400 mb-8 font-light">
-            Receive early access to seasonal workshops and new DIY kit releases.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3">
-            <input 
-              type="email" 
-              placeholder="Your email address" 
-              className="flex-grow px-4 py-3 bg-stone-800 border border-stone-700 text-white focus:outline-none focus:border-tea-brown"
-            />
-            <button className="px-8 py-3 bg-tea-brown hover:bg-tea-light hover:text-ink-black transition-colors uppercase tracking-widest text-sm font-medium">
-              Subscribe
-            </button>
-          </div>
-        </div>
-      </section>
+      <NewsletterSection />
     </div>
+  );
+};
+
+const NewsletterSection: React.FC = () => {
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [message, setMessage] = useState('');
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!email || !email.includes('@')) {
+      setMessage('Please enter a valid email address');
+      setStatus('error');
+      return;
+    }
+
+    setStatus('loading');
+    
+    // Mailchimp AJAX endpoint
+    const url = 'https://gmail.us11.list-manage.com/subscribe/post-json?u=594012d500b9cc95b32d31fa3&id=75a2e58659&f_id=0004aee0f0';
+    
+    try {
+      const response = await fetch(`${url}&EMAIL=${encodeURIComponent(email)}`, {
+        method: 'GET',
+        mode: 'no-cors',
+      });
+      
+      // Since we're using no-cors, we assume success
+      setStatus('success');
+      setMessage('Thanks for subscribing! Please check your email to confirm.');
+      setEmail('');
+      setTimeout(() => {
+        setStatus('idle');
+        setMessage('');
+      }, 5000);
+    } catch (error) {
+      setStatus('error');
+      setMessage('Something went wrong. Please try again.');
+      setTimeout(() => {
+        setStatus('idle');
+        setMessage('');
+      }, 5000);
+    }
+  };
+
+  return (
+    <section className="py-24 px-4 text-center bg-ink-black text-rice-white">
+      <div className="max-w-xl mx-auto">
+        <h2 className="text-3xl font-serif mb-2">Join Our Community</h2>
+        <p className="text-stone-400 mb-8 font-light">
+          Receive early access to seasonal workshops and new DIY kit releases.
+        </p>
+        <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-3">
+          <input 
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Your email address"
+            disabled={status === 'loading'}
+            required
+            className="flex-grow px-4 py-3 bg-stone-800 border border-stone-700 text-white focus:outline-none focus:border-tea-brown disabled:opacity-50"
+          />
+          <button 
+            type="submit"
+            disabled={status === 'loading'}
+            className="px-8 py-3 bg-tea-brown hover:bg-tea-light hover:text-ink-black transition-colors uppercase tracking-widest text-sm font-medium disabled:opacity-50"
+          >
+            {status === 'loading' ? 'Subscribing...' : 
+             status === 'success' ? '✓ Subscribed!' : 'Subscribe'}
+          </button>
+        </form>
+        {message && (
+          <p className={`text-sm mt-4 ${status === 'success' ? 'text-tea-light' : 'text-red-400'}`}>
+            {message}
+          </p>
+        )}
+      </div>
+    </section>
   );
 };
 
@@ -331,14 +443,14 @@ const Products: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState('All');
 
   const products = [
-    { id: '1', name: 'Cream Glue Phone Case Kit', nameCN: '奶油胶手机壳DIY', price: '$25.00', category: 'DIY Kit', image: 'https://picsum.photos/seed/phonecase/600/600' },
-    { id: '2', name: 'Traditional Fan Painting Set', nameCN: '团扇绘画套装', price: '$30.00', category: 'DIY Kit', image: 'https://picsum.photos/seed/fan/600/600' },
-    { id: '3', name: 'Chinese Jewelry Making Kit', nameCN: '古风首饰DIY', price: '$45.00', category: 'DIY Kit', image: 'https://picsum.photos/seed/jewelry/600/600' },
-    { id: '4', name: 'Plaster Figurine Paint Set', nameCN: '石膏娃娃彩绘', price: '$18.00', category: 'DIY Kit', image: 'https://picsum.photos/seed/plaster/600/600' },
-    { id: '5', name: 'Hand-painted Canvas Bag', nameCN: '手绘帆布袋', price: '$22.00', category: 'Gift', image: 'https://picsum.photos/seed/bag/600/600' },
-    { id: '6', name: 'Aroma Stone Gift Set', nameCN: '香薰扩香石', price: '$35.00', category: 'Gift', image: 'https://picsum.photos/seed/aroma/600/600' },
-    { id: '7', name: 'Mid-Autumn Lantern Kit', nameCN: '中秋花灯DIY', price: '$28.00', category: 'Seasonal', image: 'https://picsum.photos/seed/lantern/600/600' },
-    { id: '8', name: 'CNY Couplet Writing Set', nameCN: '新春对联套装', price: '$20.00', category: 'Seasonal', image: 'https://picsum.photos/seed/cny/600/600' },
+    { id: '1', name: 'Cream Glue Phone Case Kit', nameCN: '奶油胶手机壳DIY', price: '$25.00', category: 'DIY Kit', image: '/images/products/phone-case.jpg' },
+    { id: '2', name: 'Traditional Fan Painting Set', nameCN: '团扇绘画套装', price: '$30.00', category: 'DIY Kit', image: '/images/products/fan.jpg' },
+    { id: '3', name: 'Chinese Jewelry Making Kit', nameCN: '古风首饰DIY', price: '$45.00', category: 'DIY Kit', image: '/images/products/jewelry.jpg' },
+    { id: '4', name: 'Plaster Figurine Paint Set', nameCN: '石膏娃娃彩绘', price: '$18.00', category: 'DIY Kit', image: '/images/products/plaster.jpg' },
+    { id: '5', name: 'Hand-painted Canvas Bag', nameCN: '手绘帆布袋', price: '$22.00', category: 'Gift', image: '/images/products/bag.jpg' },
+    { id: '6', name: 'Aroma Stone Gift Set', nameCN: '香薰扩香石', price: '$35.00', category: 'Gift', image: '/images/products/aroma.jpg' },
+    { id: '7', name: 'Mid-Autumn Lantern Kit', nameCN: '中秋花灯DIY', price: '$28.00', category: 'Seasonal', image: '/images/products/lantern.jpg' },
+    { id: '8', name: 'CNY Couplet Writing Set', nameCN: '新春对联套装', price: '$20.00', category: 'Seasonal', image: '/images/products/cny.jpg' },
   ];
 
   const filteredProducts = activeCategory === 'All' 
@@ -406,7 +518,7 @@ const Workshops: React.FC = () => {
       learn: "Brush holding techniques, simple ink animals, paper cutting.",
       price: "$45 / session",
       duration: "90 mins",
-      image: "https://picsum.photos/seed/kids_class/800/500",
+      image: "/images/workshops/kids-class.jpg",
       tags: ["Ages 4-15", "Beginner"]
     },
     {
@@ -417,7 +529,7 @@ const Workshops: React.FC = () => {
       learn: "Tea tasting ceremony, basic calligraphy strokes, mindfulness.",
       price: "$65 / session",
       duration: "2 hours",
-      image: "https://picsum.photos/seed/tea_adult/800/500",
+      image: "/images/workshops/tea-adult.jpg",
       tags: ["Adults", "Relaxation"]
     },
     {
@@ -428,7 +540,7 @@ const Workshops: React.FC = () => {
       learn: "Landscape composition, observing nature, watercolor techniques.",
       price: "$50 / session",
       duration: "2 hours",
-      image: "https://picsum.photos/seed/outdoor_art/800/500",
+      image: "/images/workshops/outdoor-art.jpg",
       tags: ["Seasonal", "Outdoor"]
     },
     {
@@ -439,7 +551,7 @@ const Workshops: React.FC = () => {
       learn: "Team collaboration, creative expression, cultural history.",
       price: "Custom Pricing",
       duration: "2-4 hours",
-      image: "https://picsum.photos/seed/team_art/800/500",
+      image: "/images/workshops/team-art.jpg",
       tags: ["Group", "Social"]
     }
   ];
@@ -522,7 +634,7 @@ const About: React.FC = () => {
           
           <div className="my-12 relative">
              <img 
-              src="https://picsum.photos/seed/artist_work/1200/600" 
+              src="/images/about/artist-work.jpg" 
               alt="Founder working" 
               className="w-full h-auto shadow-sm"
             />
@@ -574,7 +686,7 @@ const Contact: React.FC = () => {
               <Mail className="mt-1 text-tea-brown" size={20} />
               <div>
                 <h4 className="text-sm font-bold uppercase tracking-widest text-ink-black">Email</h4>
-                <p className="text-stone-500">hello@onesiponebrush.com</p>
+                <p className="text-stone-500">sipbrush@gmail.com</p>
               </div>
             </div>
             <div className="flex items-start space-x-4">
