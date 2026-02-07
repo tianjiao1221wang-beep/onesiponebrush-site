@@ -1,14 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { HashRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
-import { Menu, X, Instagram, Mail, ShoppingBag, ArrowRight, Leaf, PenTool, Coffee } from 'lucide-react';
+import { Menu, X, Instagram, Mail, ShoppingBag, ArrowRight, Leaf, PenTool, Coffee, CreditCard, Wallet, ShieldCheck, Truck } from 'lucide-react';
 import { NavLink } from './types';
 
 // --- Icons & Assets ---
 // Using Lucide icons imported above.
+type ProductItem = {
+  id: string;
+  name: string;
+  nameCN: string;
+  price: number;
+  category: 'DIY Kit' | 'Gift' | 'Seasonal';
+  image: string;
+};
 
+type CartItem = {
+  product: ProductItem;
+  quantity: number;
+};
+
+const formatPrice = (value: number) => `$${value.toFixed(2)}`;
 // --- Components ---
 
-const Navigation: React.FC = () => {
+type NavigationProps = {
+  cartCount: number;
+};
+
+const Navigation: React.FC<NavigationProps> = ({ cartCount }) => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
 
@@ -66,6 +84,20 @@ const Navigation: React.FC = () => {
             >
               Shop
             </a>
+            <Link
+              to="/cart"
+              className={`relative flex items-center gap-2 text-xs uppercase tracking-widest ${
+                location.pathname === '/cart' ? 'text-tea-brown' : 'text-ink-grey'
+              }`}
+            >
+              <ShoppingBag size={18} />
+              Cart
+              {cartCount > 0 && (
+                <span className="absolute -top-2 -right-3 bg-tea-brown text-white text-[10px] rounded-full px-1.5 py-0.5">
+                  {cartCount}
+                </span>
+              )}
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -103,6 +135,17 @@ const Navigation: React.FC = () => {
               >
                 Online Shop
               </a>
+            </div>
+            <div className="flex justify-center pt-2">
+              <Link to="/cart" className="relative inline-flex items-center gap-2 text-sm uppercase tracking-widest text-ink-black">
+                <ShoppingBag size={18} />
+                Cart
+                {cartCount > 0 && (
+                  <span className="absolute -top-2 -right-3 bg-tea-brown text-white text-[10px] rounded-full px-1.5 py-0.5">
+                    {cartCount}
+                  </span>
+                )}
+              </Link>
             </div>
           </div>
         </div>
@@ -328,19 +371,13 @@ const Home: React.FC = () => {
 
 const Products: React.FC = () => {
   const categories = ['All', 'DIY Kit', 'Gift', 'Seasonal'];
-  const [activeCategory, setActiveCategory] = useState('All');
+  type ProductsProps = {
+  products: ProductItem[];
+  onAddToCart: (product: ProductItem) => void;
+};
 
-  const products = [
-    { id: '1', name: 'Cream Glue Phone Case Kit', nameCN: '奶油胶手机壳DIY', price: '$25.00', category: 'DIY Kit', image: 'https://picsum.photos/seed/phonecase/600/600' },
-    { id: '2', name: 'Traditional Fan Painting Set', nameCN: '团扇绘画套装', price: '$30.00', category: 'DIY Kit', image: 'https://picsum.photos/seed/fan/600/600' },
-    { id: '3', name: 'Chinese Jewelry Making Kit', nameCN: '古风首饰DIY', price: '$45.00', category: 'DIY Kit', image: 'https://picsum.photos/seed/jewelry/600/600' },
-    { id: '4', name: 'Plaster Figurine Paint Set', nameCN: '石膏娃娃彩绘', price: '$18.00', category: 'DIY Kit', image: 'https://picsum.photos/seed/plaster/600/600' },
-    { id: '5', name: 'Hand-painted Canvas Bag', nameCN: '手绘帆布袋', price: '$22.00', category: 'Gift', image: 'https://picsum.photos/seed/bag/600/600' },
-    { id: '6', name: 'Aroma Stone Gift Set', nameCN: '香薰扩香石', price: '$35.00', category: 'Gift', image: 'https://picsum.photos/seed/aroma/600/600' },
-    { id: '7', name: 'Mid-Autumn Lantern Kit', nameCN: '中秋花灯DIY', price: '$28.00', category: 'Seasonal', image: 'https://picsum.photos/seed/lantern/600/600' },
-    { id: '8', name: 'CNY Couplet Writing Set', nameCN: '新春对联套装', price: '$20.00', category: 'Seasonal', image: 'https://picsum.photos/seed/cny/600/600' },
-  ];
-
+const Products: React.FC<ProductsProps> = ({ products, onAddToCart }) => {
+ 
   const filteredProducts = activeCategory === 'All' 
     ? products 
     : products.filter(p => p.category === activeCategory);
@@ -380,7 +417,11 @@ const Products: React.FC = () => {
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors" />
-              <button className="absolute bottom-4 right-4 bg-white text-ink-black p-2 rounded-full shadow-md opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
+              <button
+                onClick={() => onAddToCart(product)}
+                className="absolute bottom-4 right-4 bg-white text-ink-black p-2 rounded-full shadow-md opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
+                aria-label={`Add ${product.name} to cart`}
+              >
                 <ShoppingBag size={18} />
               </button>
             </div>
@@ -388,7 +429,15 @@ const Products: React.FC = () => {
               {product.name}
             </h3>
             <p className="text-xs text-stone-400 mb-1">{product.nameCN}</p>
-            <p className="text-sm font-medium text-ink-grey">{product.price}</p>
+             <div className="flex items-center justify-between">
+              <p className="text-sm font-medium text-ink-grey">{formatPrice(product.price)}</p>
+              <button
+                onClick={() => onAddToCart(product)}
+                className="text-xs uppercase tracking-widest text-ink-black border-b border-ink-black/40 hover:text-tea-brown hover:border-tea-brown"
+              >
+                Add to cart
+              </button>
+            </div>
           </div>
         ))}
       </div>
@@ -624,21 +673,339 @@ const Contact: React.FC = () => {
     </div>
   );
 };
+type CartProps = {
+  items: CartItem[];
+  onUpdateQuantity: (productId: string, quantity: number) => void;
+  onRemove: (productId: string) => void;
+  onClear: () => void;
+};
+
+const Cart: React.FC<CartProps> = ({ items, onUpdateQuantity, onRemove, onClear }) => {
+  const [paymentMethod, setPaymentMethod] = useState<'card' | 'paypal' | 'apple'>('card');
+  const [orderPlaced, setOrderPlaced] = useState(false);
+
+  const subtotal = useMemo(
+    () => items.reduce((total, item) => total + item.product.price * item.quantity, 0),
+    [items]
+  );
+  const shipping = items.length > 0 ? 8 : 0;
+  const total = subtotal + shipping;
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!items.length) {
+      return;
+    }
+    setOrderPlaced(true);
+    onClear();
+  };
+
+  return (
+    <div className="bg-rice-white min-h-[80vh] animate-fade-in">
+      <div className="max-w-6xl mx-auto px-4 py-16">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-serif text-ink-black mb-3">Shopping Cart</h1>
+          <p className="text-ink-grey">Review your selections and choose a payment method.</p>
+        </div>
+
+        {orderPlaced && (
+          <div className="mb-10 bg-tea-light/40 border border-tea-light text-ink-black px-6 py-4 flex items-center gap-3">
+            <ShieldCheck size={20} className="text-tea-brown" />
+            <p className="text-sm">Thank you! Your order request has been received. We'll email your confirmation shortly.</p>
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+          <div className="lg:col-span-2 space-y-6">
+            {items.length === 0 ? (
+              <div className="bg-white border border-stone-200 p-8 text-center">
+                <p className="text-ink-grey mb-4">Your cart is empty. Explore our curated kits to begin.</p>
+                <Link to="/products" className="inline-flex items-center gap-2 text-sm uppercase tracking-widest text-ink-black border-b border-ink-black/50">
+                  Browse products <ArrowRight size={14} />
+                </Link>
+              </div>
+            ) : (
+              items.map(item => (
+                <div key={item.product.id} className="bg-white border border-stone-200 p-4 md:p-6 flex flex-col md:flex-row gap-6">
+                  <div className="w-full md:w-32 h-32 overflow-hidden bg-stone-100">
+                    <img src={item.product.image} alt={item.product.name} className="w-full h-full object-cover" />
+                  </div>
+                  <div className="flex-1 space-y-2">
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                      <div>
+                        <h3 className="text-lg font-serif text-ink-black">{item.product.name}</h3>
+                        <p className="text-xs text-stone-400">{item.product.nameCN}</p>
+                      </div>
+                      <span className="text-sm font-medium text-ink-grey">{formatPrice(item.product.price)}</span>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-4">
+                      <label className="text-xs uppercase tracking-widest text-stone-500">Quantity</label>
+                      <input
+                        type="number"
+                        min={1}
+                        value={item.quantity}
+                        onChange={(event) => onUpdateQuantity(item.product.id, Number(event.target.value))}
+                        className="w-20 bg-stone-50 border border-stone-200 px-2 py-1 text-sm focus:outline-none focus:border-tea-brown"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => onRemove(item.product.id)}
+                        className="text-xs uppercase tracking-widest text-stone-400 hover:text-tea-brown"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                    <p className="text-sm text-stone-500">
+                      Line total: <span className="text-ink-black font-medium">{formatPrice(item.product.price * item.quantity)}</span>
+                    </p>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+
+          <div className="bg-white border border-stone-200 p-6 space-y-6">
+            <div>
+              <h2 className="text-lg font-serif text-ink-black mb-2">Order Summary</h2>
+              <div className="space-y-2 text-sm text-stone-500">
+                <div className="flex justify-between">
+                  <span>Subtotal</span>
+                  <span className="text-ink-black">{formatPrice(subtotal)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Shipping</span>
+                  <span className="text-ink-black">{items.length ? formatPrice(shipping) : formatPrice(0)}</span>
+                </div>
+                <div className="flex justify-between text-base font-medium text-ink-black pt-2 border-t border-stone-200">
+                  <span>Total</span>
+                  <span>{formatPrice(total)}</span>
+                </div>
+              </div>
+              <div className="mt-4 flex items-center gap-2 text-xs text-stone-400">
+                <Truck size={14} /> Complimentary gift wrap on orders over $60.
+              </div>
+            </div>
+
+            <form className="space-y-4" onSubmit={handleSubmit}>
+              <div>
+                <h3 className="text-sm uppercase tracking-widest text-ink-black mb-2">Shipping Details</h3>
+                <div className="space-y-3">
+                  <input
+                    required
+                    type="text"
+                    placeholder="Full name"
+                    className="w-full bg-stone-50 border border-stone-200 px-3 py-2 text-sm focus:outline-none focus:border-tea-brown"
+                  />
+                  <input
+                    required
+                    type="email"
+                    placeholder="Email address"
+                    className="w-full bg-stone-50 border border-stone-200 px-3 py-2 text-sm focus:outline-none focus:border-tea-brown"
+                  />
+                  <input
+                    required
+                    type="text"
+                    placeholder="Street address"
+                    className="w-full bg-stone-50 border border-stone-200 px-3 py-2 text-sm focus:outline-none focus:border-tea-brown"
+                  />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <input
+                      required
+                      type="text"
+                      placeholder="City"
+                      className="w-full bg-stone-50 border border-stone-200 px-3 py-2 text-sm focus:outline-none focus:border-tea-brown"
+                    />
+                    <input
+                      required
+                      type="text"
+                      placeholder="State / Province"
+                      className="w-full bg-stone-50 border border-stone-200 px-3 py-2 text-sm focus:outline-none focus:border-tea-brown"
+                    />
+                    <input
+                      required
+                      type="text"
+                      placeholder="Postal code"
+                      className="w-full bg-stone-50 border border-stone-200 px-3 py-2 text-sm focus:outline-none focus:border-tea-brown"
+                    />
+                    <input
+                      required
+                      type="text"
+                      placeholder="Country"
+                      className="w-full bg-stone-50 border border-stone-200 px-3 py-2 text-sm focus:outline-none focus:border-tea-brown"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-sm uppercase tracking-widest text-ink-black mb-2">Payment Method</h3>
+                <div className="space-y-2 text-sm">
+                  <label className="flex items-center gap-3 border border-stone-200 px-3 py-2 bg-stone-50">
+                    <input
+                      type="radio"
+                      name="payment"
+                      value="card"
+                      checked={paymentMethod === 'card'}
+                      onChange={() => setPaymentMethod('card')}
+                    />
+                    <CreditCard size={16} className="text-stone-500" />
+                    Credit / Debit Card
+                  </label>
+                  <label className="flex items-center gap-3 border border-stone-200 px-3 py-2 bg-stone-50">
+                    <input
+                      type="radio"
+                      name="payment"
+                      value="paypal"
+                      checked={paymentMethod === 'paypal'}
+                      onChange={() => setPaymentMethod('paypal')}
+                    />
+                    <Wallet size={16} className="text-stone-500" />
+                    PayPal
+                  </label>
+                  <label className="flex items-center gap-3 border border-stone-200 px-3 py-2 bg-stone-50">
+                    <input
+                      type="radio"
+                      name="payment"
+                      value="apple"
+                      checked={paymentMethod === 'apple'}
+                      onChange={() => setPaymentMethod('apple')}
+                    />
+                    <Wallet size={16} className="text-stone-500" />
+                    Apple Pay
+                  </label>
+                </div>
+              </div>
+
+              {paymentMethod === 'card' && (
+                <div className="space-y-3">
+                  <input
+                    required
+                    type="text"
+                    placeholder="Cardholder name"
+                    className="w-full bg-stone-50 border border-stone-200 px-3 py-2 text-sm focus:outline-none focus:border-tea-brown"
+                  />
+                  <input
+                    required
+                    type="text"
+                    placeholder="Card number"
+                    inputMode="numeric"
+                    className="w-full bg-stone-50 border border-stone-200 px-3 py-2 text-sm focus:outline-none focus:border-tea-brown"
+                  />
+                  <div className="grid grid-cols-2 gap-3">
+                    <input
+                      required
+                      type="text"
+                      placeholder="MM / YY"
+                      className="w-full bg-stone-50 border border-stone-200 px-3 py-2 text-sm focus:outline-none focus:border-tea-brown"
+                    />
+                    <input
+                      required
+                      type="text"
+                      placeholder="CVC"
+                      inputMode="numeric"
+                      className="w-full bg-stone-50 border border-stone-200 px-3 py-2 text-sm focus:outline-none focus:border-tea-brown"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {paymentMethod !== 'card' && (
+                <p className="text-xs text-stone-500">
+                  You will be redirected to complete your {paymentMethod === 'paypal' ? 'PayPal' : 'Apple Pay'} payment securely.
+                </p>
+              )}
+
+              <button
+                type="submit"
+                disabled={!items.length}
+                className="w-full bg-ink-black text-white text-xs uppercase tracking-widest py-3 hover:bg-tea-brown transition-colors disabled:bg-stone-300 disabled:cursor-not-allowed"
+              >
+                Place Order
+              </button>
+              <p className="text-[11px] text-stone-400 flex items-center gap-2">
+                <ShieldCheck size={12} /> Secure checkout · Your payment details are encrypted.
+              </p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 // --- Main App Component ---
 
 const App: React.FC = () => {
+  const products: ProductItem[] = [
+    { id: '1', name: 'Cream Glue Phone Case Kit', nameCN: '奶油胶手机壳DIY', price: 25, category: 'DIY Kit', image: 'https://picsum.photos/seed/phonecase/600/600' },
+    { id: '2', name: 'Traditional Fan Painting Set', nameCN: '团扇绘画套装', price: 30, category: 'DIY Kit', image: 'https://picsum.photos/seed/fan/600/600' },
+    { id: '3', name: 'Chinese Jewelry Making Kit', nameCN: '古风首饰DIY', price: 45, category: 'DIY Kit', image: 'https://picsum.photos/seed/jewelry/600/600' },
+    { id: '4', name: 'Plaster Figurine Paint Set', nameCN: '石膏娃娃彩绘', price: 18, category: 'DIY Kit', image: 'https://picsum.photos/seed/plaster/600/600' },
+    { id: '5', name: 'Hand-painted Canvas Bag', nameCN: '手绘帆布袋', price: 22, category: 'Gift', image: 'https://picsum.photos/seed/bag/600/600' },
+    { id: '6', name: 'Aroma Stone Gift Set', nameCN: '香薰扩香石', price: 35, category: 'Gift', image: 'https://picsum.photos/seed/aroma/600/600' },
+    { id: '7', name: 'Mid-Autumn Lantern Kit', nameCN: '中秋花灯DIY', price: 28, category: 'Seasonal', image: 'https://picsum.photos/seed/lantern/600/600' },
+    { id: '8', name: 'CNY Couplet Writing Set', nameCN: '新春对联套装', price: 20, category: 'Seasonal', image: 'https://picsum.photos/seed/cny/600/600' },
+  ];
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+
+  const handleAddToCart = (product: ProductItem) => {
+    setCartItems(prevItems => {
+      const existing = prevItems.find(item => item.product.id === product.id);
+      if (existing) {
+        return prevItems.map(item =>
+          item.product.id === product.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+      }
+      return [...prevItems, { product, quantity: 1 }];
+    });
+  };
+
+  const handleUpdateQuantity = (productId: string, quantity: number) => {
+    setCartItems(prevItems =>
+      prevItems
+        .map(item =>
+          item.product.id === productId
+            ? { ...item, quantity: Math.max(1, quantity) }
+            : item
+        )
+        .filter(item => item.quantity > 0)
+    );
+  };
+
+  const handleRemove = (productId: string) => {
+    setCartItems(prevItems => prevItems.filter(item => item.product.id !== productId));
+  };
+
+  const handleClearCart = () => {
+    setCartItems([]);
+  };
+
+  const cartCount = cartItems.reduce((count, item) => count + item.quantity, 0);
+
   return (
     <HashRouter>
       <div className="flex flex-col min-h-screen font-sans text-ink-black selection:bg-tea-light selection:text-ink-black">
-        <Navigation />
+        <Navigation cartCount={cartCount} />
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/products" element={<Products />} />
+            <Route path="/products" element={<Products products={products} onAddToCart={handleAddToCart} />} />
             <Route path="/workshops" element={<Workshops />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
+            <Route
+              path="/cart"
+              element={
+                <Cart
+                  items={cartItems}
+                  onUpdateQuantity={handleUpdateQuantity}
+                  onRemove={handleRemove}
+                  onClear={handleClearCart}
+                />
+              }
+            />
           </Routes>
         </main>
         <Footer />
