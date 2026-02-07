@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { HashRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
-import { Menu, X, Instagram, Mail, ShoppingBag, ArrowRight, Leaf, PenTool, Coffee, CreditCard, Wallet, ShieldCheck, Truck } from 'lucide-react';
+import { HashRouter, Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
+import { Menu, X, Instagram, Mail, ShoppingBag, ArrowRight, Leaf, PenTool, Coffee, CreditCard, Wallet, ShieldCheck, Truck, PlayCircle } from 'lucide-react';
 import { NavLink } from './types';
 
 // --- Icons & Assets ---
@@ -29,11 +29,12 @@ type NavigationProps = {
 const Navigation: React.FC<NavigationProps> = ({ cartCount }) => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+
 
   const links: NavLink[] = [
     { label: 'Home', labelCN: '首页', path: '/' },
     { label: 'Products', labelCN: '产品', path: '/products' },
-    { label: 'Workshops', labelCN: '工坊', path: '/workshops' },
     { label: 'About', labelCN: '关于我们', path: '/about' },
     { label: 'Contact', labelCN: '联系', path: '/contact' },
   ];
@@ -42,6 +43,21 @@ const Navigation: React.FC<NavigationProps> = ({ cartCount }) => {
   useEffect(() => {
     setIsOpen(false);
   }, [location]);
+const scrollToCulture = () => {
+    const section = document.getElementById('culture');
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handleCultureClick = () => {
+    if (location.pathname !== '/') {
+      navigate('/');
+      setTimeout(scrollToCulture, 100);
+      return;
+    }
+    scrollToCulture();
+  };
 
   return (
     <nav className="sticky top-0 z-50 w-full bg-rice-white/90 backdrop-blur-sm border-b border-stone-100 transition-all duration-300">
@@ -76,14 +92,15 @@ const Navigation: React.FC<NavigationProps> = ({ cartCount }) => {
                 </span>
               </Link>
             ))}
-            <a 
-              href="https://etsy.com" // Placeholder
-              target="_blank"
-              rel="noreferrer"
-              className="ml-4 px-4 py-2 bg-ink-black text-white text-xs uppercase tracking-widest hover:bg-tea-brown transition-colors"
+            <button
+              type="button"
+              onClick={handleCultureClick}
+              className="ml-4 inline-flex items-center gap-2 text-ink-grey hover:text-tea-brown transition-colors text-xs uppercase tracking-widest"
+              aria-label="Chinese art & culture videos"
             >
-              Shop
-            </a>
+               <PlayCircle size={20} />
+              Culture Lab 文艺堂
+            </button>
             <Link
               to="/cart"
               className={`relative flex items-center gap-2 text-xs uppercase tracking-widest ${
@@ -127,14 +144,13 @@ const Navigation: React.FC<NavigationProps> = ({ cartCount }) => {
               </Link>
             ))}
             <div className="flex justify-center pt-4">
-               <a 
-                href="https://etsy.com" 
-                target="_blank"
-                rel="noreferrer"
-                className="px-6 py-2 bg-ink-black text-white text-sm uppercase tracking-widest"
+               <button
+                type="button"
+                onClick={handleCultureClick}
+                className="inline-flex items-center gap-2 px-6 py-2 bg-ink-black text-white text-sm uppercase tracking-widest"
               >
-                Online Shop
-              </a>
+                <PlayCircle size={16} /> Culture Lab 文艺堂
+              </button>
             </div>
             <div className="flex justify-center pt-2">
               <Link to="/cart" className="relative inline-flex items-center gap-2 text-sm uppercase tracking-widest text-ink-black">
@@ -170,7 +186,7 @@ const Footer: React.FC = () => {
             <div className="flex space-x-4">
               <a href="#" className="text-ink-grey hover:text-tea-brown transition-colors"><Instagram size={20} /></a>
               <a href="#" className="text-ink-grey hover:text-tea-brown transition-colors"><Mail size={20} /></a>
-              <a href="#" className="text-ink-grey hover:text-tea-brown transition-colors"><ShoppingBag size={20} /></a>
+              <Link to="/products" className="text-ink-grey hover:text-tea-brown transition-colors"><ShoppingBag size={20} /></Link>
             </div>
           </div>
 
@@ -185,7 +201,7 @@ const Footer: React.FC = () => {
 
           <div>
             <h4 className="text-sm font-bold uppercase tracking-widest text-ink-black mb-4">Newsletter</h4>
-            <p className="text-xs text-stone-500 mb-3">Join our community for updates on events.</p>
+            <p className="text-xs text-stone-500 mb-3">Subscribe for workshops, kits, and biweekly Chinese art & culture lifestyle updates.</p>
             <form className="flex flex-col space-y-2">
               <input 
                 type="email" 
@@ -210,6 +226,49 @@ const Footer: React.FC = () => {
 // --- Pages ---
 
 const Home: React.FC = () => {
+    const videoHighlights = [
+    {
+      title: 'Chinese Calligraphy Basics',
+      titleCN: '书法入门介绍',
+      description: 'Learn the history, tools, and beginner-friendly strokes of calligraphy.',
+      descriptionCN: '了解书法的历史、工具与基础笔画。',
+      videoId: 'Q6Nq0KxV2vQ',
+    },
+    {
+      title: 'Ink Wash Painting',
+      titleCN: '水墨画文化',
+      description: 'A gentle introduction to ink wash landscapes and expressive brushwork.',
+      descriptionCN: '认识水墨山水与写意笔法的魅力。',
+      videoId: 'wq5U0vC4p0M',
+    },
+    {
+      title: 'Tea Ceremony & Slow Living',
+      titleCN: '茶道与慢生活',
+      description: 'Discover the calming rituals and etiquette behind Chinese tea culture.',
+      descriptionCN: '走进中国茶文化的仪式感与静心之美。',
+      videoId: 'rF3vQqQG7Xk',
+    },
+  ];
+  const cultureWritings = [
+    {
+      title: 'Ink, Tea, and the Quiet Mind',
+      titleCN: '墨与茶的静心之道',
+      excerpt: 'Notes on finding calm through brushwork and ritual tea preparation.',
+      excerptCN: '记录用笔墨与茶仪式寻找平静的心得。',
+    },
+    {
+      title: 'Artifacts & Motifs in Daily Design',
+      titleCN: '器物纹样与日常设计',
+      excerpt: 'How ancient patterns inspire modern home objects and textiles.',
+      excerptCN: '古老纹样如何启发当代家居与织物设计。',
+    },
+    {
+      title: 'Color Stories from Classical Paintings',
+      titleCN: '传统绘画中的色彩故事',
+      excerpt: 'A palette study from Song and Yuan dynasty landscapes.',
+      excerptCN: '从宋元山水画中提炼色彩的研究。',
+    },
+  ];
   return (
     <div className="animate-fade-in">
       {/* Hero Section */}
@@ -271,6 +330,50 @@ const Home: React.FC = () => {
           </p>
         </div>
       </section>
+{/* Culture Video Highlights */}
+      <section id="culture" className="py-20 px-4 bg-paper-beige scroll-mt-24">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-serif text-ink-black mb-4">Culture Lab 文艺堂</h2>
+            <p className="text-ink-grey">
+              Videos and writings introducing Chinese art, artifacts, and my design thoughts.
+              <span className="block text-sm text-stone-400 mt-2">分享中国艺术、器物与设计思考的视频与文字</span>
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {videoHighlights.map((video) => (
+              <div key={video.videoId} className="bg-white border border-stone-200 shadow-sm">
+                <div className="aspect-video w-full">
+                  <iframe
+                    className="w-full h-full"
+                    src={`https://www.youtube.com/embed/${video.videoId}`}
+                    title={video.title}
+                    loading="lazy"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
+                <div className="p-5">
+                  <h3 className="text-lg font-serif text-ink-black">{video.title}</h3>
+                  <p className="text-xs text-stone-400 mb-3">{video.titleCN}</p>
+                  <p className="text-sm text-ink-grey mb-1">{video.description}</p>
+                  <p className="text-xs text-stone-400">{video.descriptionCN}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+            {cultureWritings.map((writing) => (
+              <div key={writing.title} className="bg-white border border-stone-200 p-5 shadow-sm">
+                <h3 className="text-lg font-serif text-ink-black">{writing.title}</h3>
+                <p className="text-xs text-stone-400 mb-3">{writing.titleCN}</p>
+                <p className="text-sm text-ink-grey mb-1">{writing.excerpt}</p>
+                <p className="text-xs text-stone-400">{writing.excerptCN}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* Featured Sections Grid */}
       <section className="py-16 px-4 md:px-8 max-w-7xl mx-auto">
@@ -299,6 +402,9 @@ const Home: React.FC = () => {
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 grayscale-[20%] group-hover:grayscale-0"
             />
             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
+             <span className="absolute top-4 left-4 bg-ink-black/80 text-white text-[10px] uppercase tracking-widest px-2 py-1">
+              Coming Soon
+            </span>
             <div className="absolute bottom-8 left-8 text-white">
               <h3 className="text-2xl font-serif mb-1">Workshops</h3>
               <p className="text-xs uppercase tracking-widest opacity-80 mb-2">Kids & Parents</p>
@@ -314,6 +420,9 @@ const Home: React.FC = () => {
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 grayscale-[20%] group-hover:grayscale-0"
             />
             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
+             <span className="absolute top-4 left-4 bg-ink-black/80 text-white text-[10px] uppercase tracking-widest px-2 py-1">
+              Coming Soon
+            </span>
             <div className="absolute bottom-8 left-8 text-white">
               <h3 className="text-2xl font-serif mb-1">Slow Living</h3>
               <p className="text-xs uppercase tracking-widest opacity-80 mb-2">Adult Art Sessions</p>
@@ -351,7 +460,7 @@ const Home: React.FC = () => {
         <div className="max-w-xl mx-auto">
           <h2 className="text-3xl font-serif mb-2">Join Our Community</h2>
           <p className="text-stone-400 mb-8 font-light">
-            Receive early access to seasonal workshops and new DIY kit releases.
+            Receive early access to workshops and DIY kits, plus biweekly updates on Chinese art, artifacts, and slow living.
           </p>
           <div className="flex flex-col sm:flex-row gap-3">
             <input 
@@ -369,24 +478,26 @@ const Home: React.FC = () => {
   );
 };
 
-const Products: React.FC = () => {
-  const categories = ['All', 'DIY Kit', 'Gift', 'Seasonal'];
-  type ProductsProps = {
+type ProductsProps = {
   products: ProductItem[];
   onAddToCart: (product: ProductItem) => void;
 };
 
 const Products: React.FC<ProductsProps> = ({ products, onAddToCart }) => {
  
-  const filteredProducts = activeCategory === 'All' 
-    ? products 
+    const categories = ['All', 'DIY Kit', 'Gift', 'Seasonal'];
+  const [activeCategory, setActiveCategory] = useState('All');
+
+  const filteredProducts = activeCategory === 'All'
+    ? products
     : products.filter(p => p.category === activeCategory);
 
   return (
     <div className="pt-12 pb-24 px-4 max-w-7xl mx-auto animate-fade-in">
-      <div className="text-center mb-16">
+      <div className="text-center mb-10">
         <h1 className="text-4xl font-serif text-ink-black mb-2">Curated Shop</h1>
         <p className="text-ink-grey">Tools for creativity and cultural gifts.</p>
+        <p className="text-sm text-stone-400 mt-2">精选文创与礼品</p>
       </div>
 
       {/* Filter */}
@@ -409,7 +520,23 @@ const Products: React.FC<ProductsProps> = ({ products, onAddToCart }) => {
       {/* Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
         {filteredProducts.map(product => (
-          <div key={product.id} className="group cursor-pointer">
+          <div
+            key={product.id}
+            className="group cursor-pointer"
+            role="button"
+            tabIndex={0}
+             type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  onAddToCart(product);
+                }}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                onAddToCart(product);
+              }
+            }}
+          >
             <div className="relative aspect-square overflow-hidden bg-stone-100 mb-4">
               <img 
                 src={product.image} 
@@ -418,7 +545,11 @@ const Products: React.FC<ProductsProps> = ({ products, onAddToCart }) => {
               />
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors" />
               <button
-                onClick={() => onAddToCart(product)}
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  onAddToCart(product);
+                }}
                 className="absolute bottom-4 right-4 bg-white text-ink-black p-2 rounded-full shadow-md opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300"
                 aria-label={`Add ${product.name} to cart`}
               >
@@ -446,6 +577,7 @@ const Products: React.FC<ProductsProps> = ({ products, onAddToCart }) => {
 };
 
 const Workshops: React.FC = () => {
+   const isEventsOpen = false;
   const events = [
     {
       id: 1,
@@ -503,6 +635,11 @@ const Workshops: React.FC = () => {
           <br/>
           <span className="text-sm text-stone-400 mt-2 block">沉浸式艺术体验</span>
         </p>
+         <div className="mt-6 inline-flex flex-col items-center bg-white/80 border border-stone-200 px-6 py-3 text-sm text-ink-black">
+          <span className="uppercase tracking-widest text-xs text-stone-500">Opening Soon</span>
+          <span className="mt-1">Event registration is opening soon. Join our newsletter for early access.</span>
+          <span className="text-xs text-stone-400 mt-1">活动报名即将开放，欢迎订阅获取优先通知。</span>
+        </div>
       </div>
 
       {/* List */}
@@ -542,8 +679,11 @@ const Workshops: React.FC = () => {
                   <span className="text-lg font-serif text-tea-brown">{evt.price}</span>
                 </div>
               </div>
-              <button className="px-6 py-2 border border-ink-black text-ink-black text-xs uppercase tracking-widest hover:bg-ink-black hover:text-white transition-colors">
-                Book Now
+              <button
+                disabled={!isEventsOpen}
+                className="px-6 py-2 border border-ink-black text-ink-black text-xs uppercase tracking-widest hover:bg-ink-black hover:text-white transition-colors disabled:border-stone-300 disabled:text-stone-400 disabled:hover:bg-transparent"
+              >
+                {isEventsOpen ? 'Book Now' : 'Coming Soon'}
               </button>
             </div>
 
@@ -618,6 +758,13 @@ const Contact: React.FC = () => {
             Interested in a private workshop, a collaboration, or just want to say hello? We'd love to hear from you.
           </p>
           
+          <div className="bg-white border border-stone-200 p-5 mb-8">
+            <h2 className="text-base font-serif text-ink-black mb-2">DIY Kit Help</h2>
+            <p className="text-sm text-stone-500 mb-3">
+              Bought a DIY kit and need help? Send your questions here and we’ll guide you.
+            </p>
+            <p className="text-xs text-stone-400">DIY套装使用问题欢迎咨询，我们会尽快回复。</p>
+          </div>
           <div className="space-y-6">
             <div className="flex items-start space-x-4">
               <Mail className="mt-1 text-tea-brown" size={20} />
@@ -651,6 +798,7 @@ const Contact: React.FC = () => {
                   <option>General Inquiry</option>
                   <option>Workshop Booking</option>
                   <option>Collaboration</option>
+                   <option>DIY Kit Help</option>
                   <option>Product Question</option>
                 </select>
               </div>
