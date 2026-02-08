@@ -16,5 +16,20 @@ View your app in AI Studio: https://ai.studio/apps/drive/1FfP8IhizFJ3Fwh17xS-3RB
 1. Install dependencies:
    `npm install`
 2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+3. Configure payments:
+   - Copy `.env.example` to `.env` and fill in Stripe + SMTP values.
+4. Run the app:
+   - Frontend: `npm run dev`
+   - Payment server: `npm run dev:server`
+
+## Payments Setup
+
+The checkout flow uses Stripe Checkout and a webhook to send order details to the studio via SMTP. Configure the
+following in `.env` before going live:
+
+- `STRIPE_SECRET_KEY`
+- `STRIPE_WEBHOOK_SECRET`
+- `FRONTEND_URL` (comma-separated list of allowed origins)
+- `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`
+- `SMTP_FROM`
+- `SHOP_OWNER_EMAIL`
