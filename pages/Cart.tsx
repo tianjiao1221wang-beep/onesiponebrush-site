@@ -1,23 +1,27 @@
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { CartItem, OrderInfo } from '../types';
 import { Trash2, Send, ShoppingBag, ArrowLeft } from 'lucide-react';
-import { Link } from 'react-router-dom';
-
+import { Link, useLocation } from 'react-router-dom';
 interface CartProps {
   cart: CartItem[];
   onRemove: (id: string) => void;
-  onClear: () => void;
 }
 
-const Cart: React.FC<CartProps> = ({ cart, onRemove, onClear }) => {
+const Cart: React.FC<CartProps> = ({ cart, onRemove }) => {
   const [orderInfo, setOrderInfo] = useState<OrderInfo>({
     name: '',
     email: '',
     phone: '',
     notes: ''
   });
-  const [submitted, setSubmitted] = useState(false);
+ const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const location = useLocation();
+  const canceledCheckout = useMemo(() => {
+    const params = new URLSearchParams(location.search);
+    return params.get('canceled') === 'true';
+  }, [location.search]);
 
   const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
@@ -26,30 +30,48 @@ const Cart: React.FC<CartProps> = ({ cart, onRemove, onClear }) => {
     setOrderInfo(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => onClear(), 5000);
+    setErrorMessage(null);
+    setIsSubmitting(true);
+    try {
+      const response = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          items: cart.map(item => ({
+            id: item.id,
+            name: item.name,
+            chineseName: item.chineseName,
+            price: item.price,
+            quantity: item.quantity
+          })),
+          customer: orderInfo,
+          origin: window.location.origin
+        })
+      });
+
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({}));
+        throw new Error(error?.message || 'Unable to start checkout.');
+      }
+
+      const data = await response.json();
+      if (!data?.url) {
+        throw new Error('Checkout session was not created. Please try again.');
+      }
+
+      window.location.href = data.url;
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Something went wrong. Please try again.';
+      setErrorMessage(message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  if (submitted) {
-    return (
-      <div className="py-40 px-4 text-center max-w-2xl mx-auto">
-        <div className="bg-stone-50 border border-stone-200 p-16 rounded-sm">
-          <div className="w-20 h-20 bg-stone-900 rounded-full flex items-center justify-center mx-auto mb-10">
-            <Send className="w-8 h-8 text-white" />
-          </div>
-          <h2 className="text-4xl font-light mb-4 ink-text">Inquiry Sent</h2>
-          <h3 className="chinese-text text-2xl text-stone-600 mb-8">订单需求已发送</h3>
-          <p className="text-stone-500 leading-relaxed mb-10 italic">
-            Thank you, {orderInfo.name}. We have received your selection. 
-            We will contact you shortly to prepare your traditional art experience.
-          </p>
-          <p className="chinese-text text-stone-400">我们将尽快与您联系，为您准备传统艺术体验。</p>
-        </div>
-      </div>
-    );
-  }
 
   if (cart.length === 0) {
     return (
@@ -109,8 +131,21 @@ const Cart: React.FC<CartProps> = ({ cart, onRemove, onClear }) => {
 
         {/* Checkout Form */}
         <div className="bg-stone-50 p-10 md:p-14 border border-stone-200 h-fit rounded-sm shadow-sm">
-          <h2 className="text-3xl font-light mb-4 ink-text uppercase tracking-widest">Inquiry Form</h2>
-          <h3 className="chinese-text text-xl text-stone-500 mb-10">预订信息</h3>
+          <h2 className="text-3xl font-light mb-4 ink-text uppercase tracking-widest">Secure Checkout</h2>
+          <h3 className="chinese-text text-xl text-stone-500 mb-6">安全结账</h3>
+          <p className="text-sm text-stone-500 mb-8 leading-relaxed">
+            We’ll send your order details to the studio after payment. You will be redirected to Stripe to complete the purchase.
+          </p>
+          {canceledCheckout && (
+            <div className="bg-amber-50 border border-amber-200 text-amber-700 px-4 py-3 rounded-sm text-sm mb-6">
+              Your checkout was canceled. You can try again whenever you’re ready.
+            </div>
+          )}
+          {errorMessage && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-sm text-sm mb-6">
+              {errorMessage}
+            </div>
+          )}
           
           <form onSubmit={handleSubmit} className="space-y-8">
             <div className="space-y-6">
@@ -153,9 +188,10 @@ const Cart: React.FC<CartProps> = ({ cart, onRemove, onClear }) => {
             </div>
             <button
               type="submit"
-              className="w-full bg-stone-900 text-white py-6 rounded-sm text-sm font-bold tracking-[0.3em] hover:bg-stone-800 transition-all flex items-center justify-center space-x-3 shadow-xl"
+               disabled={isSubmitting}
+              className="w-full bg-stone-900 text-white py-6 rounded-sm text-sm font-bold tracking-[0.3em] hover:bg-stone-800 transition-all flex items-center justify-center space-x-3 shadow-xl disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              <span>SEND TO STUDIO / 发送至工作室</span>
+             <span>{isSubmitting ? 'REDIRECTING...' : 'PAY WITH STRIPE / 安全支付'}</span>
               <Send className="w-4 h-4" />
             </button>
           </form>
