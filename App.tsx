@@ -7,6 +7,7 @@ import Home from './pages/Home';
 import DIYKit from './pages/DIYKit';
 import CultureLab from './pages/CultureLab';
 import Cart from './pages/Cart';
+import CheckoutSuccess from './pages/CheckoutSuccess';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import { CartItem, Product } from './types';
@@ -47,7 +48,8 @@ const App: React.FC = () => {
             <Route path="/diy-kit" element={<DIYKit onAddToCart={handleAddToCart} />} />
             <Route path="/culture-lab" element={<CultureLab />} />
             <Route path="/contact" element={<Contact />} />
-            <Route path="/cart" element={<Cart cart={cart} onRemove={handleRemoveFromCart} onClear={handleClearCart} />} />
+           <Route path="/cart" element={<Cart cart={cart} onRemove={handleRemoveFromCart} />} />
+            <Route path="/checkout-success" element={<CheckoutSuccess onClear={handleClearCart} />} />
           </Routes>
         </main>
         <Footer />
