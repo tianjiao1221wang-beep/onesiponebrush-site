@@ -35,16 +35,14 @@ following in `.env` before going live:
 - `STRIPE_WEBHOOK_SECRET`
 - `FRONTEND_URL` (comma-separated list of allowed origins)
 - `VITE_CHECKOUT_API_URL` (optional frontend variable for deployed builds; set this to your payment server origin, e.g. `https://payments.example.com`)
-- `VITE_STRIPE_PAYMENT_LINK` (required for this Stripe-only checkout flow)
+- `VITE_STRIPE_PUBLISHABLE_KEY` (required for embedded Stripe Checkout in frontend)
 - `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`
 - `SMTP_FROM`
 - `SHOP_OWNER_EMAIL`
 
-## Stripe Checkout (hosted UI) setup
+## Stripe Checkout (embedded UI) setup
 
-This project uses Stripe Checkout as a **hosted payment UI** at the end of the cart flow (`/cart` -> `Pay with Stripe`).
-
-Checkout redirects to your Stripe Payment Link (`VITE_STRIPE_PAYMENT_LINK`).
+This project uses Stripe Checkout as an **embedded payment UI** (`/cart` -> `/checkout`) so customers stay on your site while Stripe handles payment fields securely.
 1. Create your Stripe account and copy test keys.
 2. Put keys in `.env`:
    - `STRIPE_SECRET_KEY`
@@ -52,8 +50,8 @@ Checkout redirects to your Stripe Payment Link (`VITE_STRIPE_PAYMENT_LINK`).
 3. Start backend + frontend:
    - `npm run dev:server`
    - `npm run dev`
-4. Open the site, add items to cart, and click **PAY WITH STRIPE / 安全支付**.
-5. Checkout redirects directly to that Stripe hosted page.
-6. If redirect does not work, verify `VITE_STRIPE_PAYMENT_LINK` is present in the frontend environment and starts with `https://`.
+4. Set frontend env var `VITE_STRIPE_PUBLISHABLE_KEY` to your Stripe publishable key (`pk_test_...` or `pk_live_...`).
+5. Open the site, add items to cart, click **GO TO CHECKOUT / 安全支付** and complete payment inside the embedded Stripe UI.
+6. If checkout does not render, verify both `VITE_STRIPE_PUBLISHABLE_KEY` and backend `STRIPE_SECRET_KEY` are set for the same Stripe account and mode (test vs live).
 
 Use Stripe test card `4242 4242 4242 4242` (future date, any CVC/ZIP) in test mode.
