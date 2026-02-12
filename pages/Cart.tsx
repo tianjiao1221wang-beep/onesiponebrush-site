@@ -21,30 +21,16 @@ const Cart: React.FC<CartProps> = ({ cart, onRemove }) => {
   const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
   const stripePaymentLink = (import.meta.env.VITE_STRIPE_PAYMENT_LINK || '').trim();
 
-  const handleStripeCheckout = async () => {
-    if (stripePaymentLink) {
-      window.location.href = stripePaymentLink;
+ const handleStripeCheckout = () => {
+    setCheckoutError('');
+
+    if (!stripePaymentLink) {
+      setCheckoutError('Stripe checkout is not configured. Set VITE_STRIPE_PAYMENT_LINK in your frontend environment.');
       return;
     }
-
-    setCheckoutError('');
+   
     setIsRedirectingToStripe(true);
-
-    try {
-      const checkoutApiUrl = (import.meta.env.VITE_CHECKOUT_API_URL || '').trim();
-      const endpoint = checkoutApiUrl
-        ? `${checkoutApiUrl.replace(/\/$/, '')}/api/create-checkout-session`
-        : '/api/create-checkout-session';
-
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          items: cart,
-          origin: window.location.origin
-        })
+    window.location.href = stripePaymentLink;
       });
 
       const data = await response.json();
