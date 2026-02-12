@@ -1,0 +1,138 @@
+import React from 'react';
+import { Link, Navigate } from 'react-router-dom';
+import { CartItem } from '../types';
+
+interface CheckoutProps {
+  cart: CartItem[];
+}
+
+type EmbeddedCheckoutInstance = {
+  mount: (element: string | HTMLElement) => void;
+  destroy: () => void;
+};
+
+type StripeClient = {
+  initEmbeddedCheckout: (options: { fetchClientSecret: () => Promise<string> }) => Promise<EmbeddedCheckoutInstance>;
+};
+
+declare global {
+  interface Window {
+    Stripe?: (publishableKey: string) => StripeClient;
+  }
+}
+
+const checkoutApiBaseUrl = (import.meta.env.VITE_CHECKOUT_API_URL || '').trim();
+const createCheckoutSessionUrl = checkoutApiBaseUrl
+  ? `${checkoutApiBaseUrl}/api/create-checkout-session`
+  : '/api/create-checkout-session';
+
+const loadStripeScript = async (): Promise<void> => {
+  if (window.Stripe) {
+    return;
+  }
+
+  await new Promise<void>((resolve, reject) => {
+    const existingScript = document.querySelector('script[src="https://js.stripe.com/v3/"]');
+    if (existingScript) {
+      existingScript.addEventListener('load', () => resolve(), { once: true });
+      existingScript.addEventListener('error', () => reject(new Error('Failed to load Stripe.js.')), { once: true });
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.src = 'https://js.stripe.com/v3/';
+    script.async = true;
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error('Failed to load Stripe.js.'));
+    document.body.appendChild(script);
+  });
+};
+
+const Checkout: React.FC<CheckoutProps> = ({ cart }) => {
+  const [error, setError] = React.useState('');
+  const checkoutRef = React.useRef<HTMLDivElement | null>(null);
+
+  React.useEffect(() => {
+    let embeddedCheckout: EmbeddedCheckoutInstance | null = null;
+
+    const mountEmbeddedCheckout = async () => {
+      const publishableKey = (import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || '').trim();
+      if (!publishableKey) {
+        setError('Missing VITE_STRIPE_PUBLISHABLE_KEY in frontend environment.');
+        return;
+      }
+
+      if (!checkoutRef.current) {
+        return;
+      }
+
+      try {
+        await loadStripeScript();
+        if (!window.Stripe) {
+          throw new Error('Unable to initialize Stripe.js.');
+        }
+
+        const stripe = window.Stripe(publishableKey);
+
+        embeddedCheckout = await stripe.initEmbeddedCheckout({
+          fetchClientSecret: async () => {
+            const response = await fetch(createCheckoutSessionUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ items: cart, origin: window.location.origin, embedded: true })
+            });
+
+            const data = await response.json();
+            if (!response.ok || !data?.clientSecret) {
+              throw new Error(data?.message || 'Unable to initialize checkout.');
+            }
+
+            return data.clientSecret;
+          }
+        });
+
+        embeddedCheckout.mount(checkoutRef.current);
+      } catch (mountError) {
+        const message = mountError instanceof Error ? mountError.message : 'Unable to initialize embedded checkout.';
+        setError(message);
+      }
+    };
+
+    mountEmbeddedCheckout();
+
+    return () => {
+      embeddedCheckout?.destroy();
+    };
+  }, [cart]);
+
+  if (cart.length === 0) {
+    return <Navigate to="/cart" replace />;
+  }
+
+  return (
+    <div className="py-24 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+      <header className="text-center mb-12">
+        <h1 className="text-4xl font-light ink-text mb-4 tracking-[0.2em] uppercase">Checkout</h1>
+        <h2 className="chinese-text text-2xl text-stone-500 tracking-[0.3em]">Stripe 安全结账</h2>
+      </header>
+
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-sm text-sm mb-6">
+          {error}
+        </div>
+      )}
+
+      <div className="bg-white border border-stone-200 rounded-sm p-4 md:p-8 shadow-sm">
+        <div ref={checkoutRef} id="stripe-embedded-checkout" />
+      </div>
+
+      <div className="mt-8">
+        <Link to="/cart" className="text-sm text-stone-500 hover:text-stone-900 uppercase tracking-widest">
+          ← Back to Cart
+        </Link>
+      </div>
+    </div>
+  );
+};
+
+export default Checkout;
