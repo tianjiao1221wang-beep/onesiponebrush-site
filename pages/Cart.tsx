@@ -24,6 +24,13 @@ const Cart: React.FC<CartProps> = ({ cart, onRemove }) => {
   }, [location.search]);
 
   const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+const checkoutApiBase = (import.meta.env.VITE_CHECKOUT_API_URL || '').trim();
+
+  const createCheckoutSessionUrl = checkoutApiBase
+    ? `${checkoutApiBase.replace(/\/$/, '')}/api/create-checkout-session`
+    : '/api/create-checkout-session';
+  const stripePaymentLink = (import.meta.env.VITE_STRIPE_PAYMENT_LINK || 'https://buy.stripe.com/bJe28r6SBdBfgjf4r0eZ200').trim();
+  const isPaymentLinkCheckout = Boolean(stripePaymentLink);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -35,7 +42,12 @@ const Cart: React.FC<CartProps> = ({ cart, onRemove }) => {
     setErrorMessage(null);
     setIsSubmitting(true);
     try {
-      const response = await fetch('/api/create-checkout-session', {
+      if (isPaymentLinkCheckout) {
+        window.location.href = stripePaymentLink;
+        return;
+      }
+
+      const response = await fetch(createCheckoutSessionUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -134,7 +146,9 @@ const Cart: React.FC<CartProps> = ({ cart, onRemove }) => {
           <h2 className="text-3xl font-light mb-4 ink-text uppercase tracking-widest">Secure Checkout</h2>
           <h3 className="chinese-text text-xl text-stone-500 mb-6">安全结账</h3>
           <p className="text-sm text-stone-500 mb-8 leading-relaxed">
-            We’ll send your order details to the studio after payment. You will be redirected to Stripe to complete the purchase.
+            {isPaymentLinkCheckout
+              ? 'You will be redirected to Stripe’s hosted checkout page to complete your purchase.'
+              : 'We’ll send your order details to the studio after payment. You will be redirected to Stripe to complete the purchase.'}
           </p>
           {canceledCheckout && (
             <div className="bg-amber-50 border border-amber-200 text-amber-700 px-4 py-3 rounded-sm text-sm mb-6">
@@ -150,7 +164,7 @@ const Cart: React.FC<CartProps> = ({ cart, onRemove }) => {
           <form onSubmit={handleSubmit} className="space-y-8">
             <div className="space-y-6">
               <input
-                required
+                required={!isPaymentLinkCheckout}
                 type="text"
                 name="name"
                 value={orderInfo.name}
@@ -160,7 +174,7 @@ const Cart: React.FC<CartProps> = ({ cart, onRemove }) => {
               />
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                 <input
-                  required
+                  required={!isPaymentLinkCheckout}
                   type="email"
                   name="email"
                   value={orderInfo.email}
@@ -169,7 +183,7 @@ const Cart: React.FC<CartProps> = ({ cart, onRemove }) => {
                   placeholder="Email / 邮箱"
                 />
                 <input
-                  required
+                  required={!isPaymentLinkCheckout}
                   type="tel"
                   name="phone"
                   value={orderInfo.phone}
