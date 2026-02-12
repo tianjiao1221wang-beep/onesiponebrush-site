@@ -9,7 +9,7 @@ export const PRODUCTS: Product[] = [
     price: 88,
     description: 'A complete set featuring a hand-carved stone seal, premium pine soot ink, and two professional-grade brushes.',
     chineseDescription: '完整套装，包含手工雕刻石印、高级松烟墨和两支专业级毛笔。',
-    image: 'https://images.unsplash.com/photo-1511130523224-699fd19cf5a3?q=80&w=600&h=400&auto=format&fit=crop',
+    image: '/images/product-eternal-ink.svg',
     category: 'kit'
   },
   {
@@ -19,7 +19,7 @@ export const PRODUCTS: Product[] = [
     price: 125,
     description: 'Minimalist ceramic Gaiwan and three tasting cups designed to capture the slow rhythm of the afternoon.',
     chineseDescription: '简约陶瓷盖碗和三个品茗杯，旨在捕捉午后的慢节奏。',
-    image: 'https://images.unsplash.com/photo-1563201515-adbe35c669c5?q=80&w=600&h=400&auto=format&fit=crop',
+    image: '/images/product-mountain-tea.svg',
     category: 'design'
   },
   {
@@ -29,7 +29,7 @@ export const PRODUCTS: Product[] = [
     price: 65,
     description: 'Three brushes of varying stiffness made from sustainable bamboo and ethically sourced goat hair.',
     chineseDescription: '三支不同硬度的毛笔，由可持续竹材和道德采购的羊毫制成。',
-    image: 'https://images.unsplash.com/photo-1621503909772-2371987679da?q=80&w=600&h=400&auto=format&fit=crop',
+    image: '/images/product-bamboo-brush.svg',
     category: 'kit'
   },
   {
@@ -39,7 +39,7 @@ export const PRODUCTS: Product[] = [
     price: 45,
     description: 'High-quality silk paper scrolls treated for longevity, perfect for landscape painting.',
     chineseDescription: '经过长寿处理的高质量绢本卷轴，非常适合山水画。',
-    image: 'https://images.unsplash.com/photo-1541810459345-d8677c7b744d?q=80&w=600&h=400&auto=format&fit=crop',
+    image: '/images/product-silk-scroll.svg',
     category: 'design'
   }
 ];
@@ -51,7 +51,7 @@ export const CULTURE_POSTS: CulturePost[] = [
     chineseTitle: '墨之魂',
     content: 'In traditional Chinese culture, ink is not just a medium, but a reflection of the artist\'s spirit.',
     chineseContent: '在中国传统文化中，墨不仅是一种媒介，更是艺术家精神的反映。',
-    image: 'https://images.unsplash.com/photo-1574542827104-5858e38f6b96?q=80&w=800&h=500&auto=format&fit=crop',
+    image: '/images/culture-soul-ink.svg',
     date: '2024-05-15',
     type: 'article'
   },
