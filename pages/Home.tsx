@@ -19,7 +19,7 @@ const Home: React.FC<HomeProps> = ({ onAddToCart }) => {
       <section className="relative h-[90vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
-            src="https://images.unsplash.com/photo-1544733422-251e532ca221?q=80&w=2000&h=1200&auto=format&fit=crop" 
+            src="/images/home-hero.svg"  
             alt="Ink and Tea" 
             className="w-full h-full object-cover opacity-40 grayscale"
           />
@@ -108,10 +108,10 @@ const Home: React.FC<HomeProps> = ({ onAddToCart }) => {
 
       {/* Workshop Card (Coming Soon) */}
       <section className="py-32 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
-        <div className="relative group overflow-hidden border border-stone-200 rounded-sm">
+        <div className="relative group overflow-hidden">
           <div className="h-[500px] md:h-[600px] w-full relative">
             <img 
-              src="https://images.unsplash.com/photo-1574542827104-5858e38f6b96?q=80&w=1600&h=1000&auto=format&fit=crop" 
+              src="/images/workshop-preview.svg" 
               alt="Workshop Preview" 
               className="w-full h-full object-cover grayscale opacity-60 group-hover:scale-105 transition-transform duration-[2000ms]"
             />
