@@ -69,10 +69,6 @@ app.post('/api/create-checkout-session', async (req, res) => {
       return res.status(400).json({ message: 'Cart is empty.' });
     }
 
-    if (!customer?.name || !customer?.email || !customer?.phone) {
-      return res.status(400).json({ message: 'Customer information is required.' });
-    }
-
     const lineItems = items.map(item => ({
       price_data: {
         currency: 'usd',
@@ -93,13 +89,13 @@ app.post('/api/create-checkout-session', async (req, res) => {
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
       line_items: lineItems,
-      customer_email: customer.email,
+      customer_email: customer?.email || undefined,
       success_url: `${frontendUrl}/#/checkout-success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${frontendUrl}/#/cart?canceled=true`,
       metadata: {
-        customerName: customer.name,
-        customerPhone: customer.phone,
-        customerNotes: customer.notes || ''
+          customerName: customer?.name || '',
+        customerPhone: customer?.phone || '',
+        customerNotes: customer?.notes || ''
       }
     });
 
