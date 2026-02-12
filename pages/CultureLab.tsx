@@ -22,17 +22,17 @@ const CultureLab: React.FC = () => {
             <div className="flex flex-col md:flex-row gap-16 items-start">
               <div className="w-full md:w-1/2 relative">
                 {post.type === 'video' ? (
-                  <div className="aspect-w-16 aspect-h-9 relative rounded-sm bg-stone-100 overflow-hidden border border-stone-200 shadow-sm">
+                  <div className="aspect-video relative overflow-hidden">
                     <video 
                       className="w-full h-full object-cover" 
                       controls 
-                      poster="https://images.unsplash.com/photo-1544733422-251e532ca221?q=80&w=800&h=450&auto=format&fit=crop"
+                      poster="/images/culture-video-poster.svg"
                     >
                       <source src={post.videoUrl} type="video/mp4" />
                     </video>
                   </div>
                 ) : (
-                  <div className="aspect-w-4 aspect-h-5 overflow-hidden rounded-sm shadow-sm group-hover:shadow-2xl transition-all duration-700">
+                  <div className="aspect-[4/5] overflow-hidden transition-all duration-700">
                     <img 
                       src={post.image} 
                       alt={post.title} 
