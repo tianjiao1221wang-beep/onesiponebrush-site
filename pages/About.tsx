@@ -53,11 +53,10 @@ const About: React.FC = () => {
           </div>
           <div className="relative">
             <img 
-              src="https://images.unsplash.com/photo-1574542827104-5858e38f6b96?q=80&w=1000&h=1200&auto=format&fit=crop" 
-              className="w-full h-auto rounded-sm shadow-xl grayscale" 
+              src="/images/about-story.svg" 
+              className="w-full h-auto object-contain grayscale"  
               alt="Artistic details"
             />
-            <div className="absolute -bottom-8 -right-8 w-48 h-48 bg-stone-100 -z-10 rounded-sm border border-stone-200"></div>
           </div>
         </section>
       </div>
