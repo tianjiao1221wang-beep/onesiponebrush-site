@@ -41,7 +41,7 @@ const Cart: React.FC<CartProps> = ({ cart, onRemove }) => {
         <div className="space-y-10">
           {cart.map((item) => (
             <div key={item.id} className="flex gap-8 border-b border-stone-100 pb-10 group">
-              <div className="w-32 h-32 bg-stone-50 overflow-hidden rounded-sm flex-shrink-0 border border-stone-100">
+              <div className="w-32 h-32 overflow-hidden flex-shrink-0">
                 <img src={item.image} alt={item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
               </div>
               <div className="flex-grow">
