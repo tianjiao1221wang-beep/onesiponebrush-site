@@ -44,8 +44,8 @@ following in `.env` before going live:
 
 This project uses Stripe Checkout as a **hosted payment UI** at the end of the cart flow (`/cart` -> `Pay with Stripe`).
 
-By default this repo is configured to redirect checkout to your Stripe Payment Link:
-`https://buy.stripe.com/bJe28r6SBdBfgjf4r0eZ200`
+If `VITE_STRIPE_PAYMENT_LINK` is configured, checkout redirects to that Stripe Payment Link.
+If it is left empty, the app creates a Stripe Checkout Session via your backend.
 
 1. Create your Stripe account and copy test keys.
 2. Put keys in `.env`:
