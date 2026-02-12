@@ -25,7 +25,23 @@ const checkoutApiBaseUrl = (import.meta.env.VITE_CHECKOUT_API_URL || '').trim();
 const createCheckoutSessionUrl = checkoutApiBaseUrl
   ? `${checkoutApiBaseUrl}/api/create-checkout-session`
   : '/api/create-checkout-session';
+const checkoutConfigUrl = checkoutApiBaseUrl ? `${checkoutApiBaseUrl}/api/config` : '/api/config';
 
+const getPublishableKey = async (): Promise<string> => {
+  const envKey = (import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || '').trim();
+  if (envKey) {
+    return envKey;
+  }
+
+  const response = await fetch(checkoutConfigUrl);
+  const data = await response.json();
+
+  if (!response.ok || !data?.publishableKey) {
+    throw new Error('Missing Stripe publishable key. Set VITE_STRIPE_PUBLISHABLE_KEY or STRIPE_PUBLISHABLE_KEY.');
+  }
+
+  return String(data.publishableKey).trim();
+};
 const loadStripeScript = async (): Promise<void> => {
   if (window.Stripe) {
     return;
@@ -65,15 +81,7 @@ const Checkout: React.FC<CheckoutProps> = ({ cart }) => {
       }
 
       isMountingRef.current = true;
-
-      const publishableKey = (import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || '').trim();
-      if (!publishableKey) {
-        setError('Missing VITE_STRIPE_PUBLISHABLE_KEY in frontend environment.');
-        setLoading(false);
-        isMountingRef.current = false;
-        return;
-      }
-
+  
       if (!checkoutRef.current) {
         isMountingRef.current = false;
         return;
@@ -101,6 +109,11 @@ const Checkout: React.FC<CheckoutProps> = ({ cart }) => {
         }
 
         if (!isMounted) return;
+
+        const publishableKey = await getPublishableKey();
+        if (!publishableKey) {
+          throw new Error('Stripe publishable key is empty.');
+        }
 
         const stripe = window.Stripe(publishableKey);
 
