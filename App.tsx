@@ -11,6 +11,11 @@ import CheckoutSuccess from './pages/CheckoutSuccess';
 import About from './pages/About';
 import Checkout from './pages/checkout';
 import Contact from './pages/Contact';
+import CulturalEventCuration from './pages/CulturalEventCuration';
+import CulturalPopups from './pages/CulturalPopups';
+import CurationWeddings from './pages/CurationWeddings';
+import CurationSchools from './pages/CurationSchools';
+import CurationBrandProduction from './pages/CurationBrandProduction';
 import { CartItem, Product } from './types';
 
 const App: React.FC = () => {
@@ -47,6 +52,12 @@ const App: React.FC = () => {
             <Route path="/" element={<Home onAddToCart={handleAddToCart} />} />
             <Route path="/about" element={<About />} />
             <Route path="/diy-kit" element={<DIYKit onAddToCart={handleAddToCart} />} />
+            <Route path="/shop" element={<DIYKit onAddToCart={handleAddToCart} />} />
+            <Route path="/cultural-event-curation" element={<CulturalEventCuration />} />
+            <Route path="/cultural-event-curation/popups" element={<CulturalPopups />} />
+            <Route path="/cultural-event-curation/weddings" element={<CurationWeddings />} />
+            <Route path="/cultural-event-curation/schools" element={<CurationSchools />} />
+            <Route path="/cultural-event-curation/brand-production" element={<CurationBrandProduction />} />
             <Route path="/culture-lab" element={<CultureLab />} />
             <Route path="/contact" element={<Contact />} />
            <Route path="/cart" element={<Cart cart={cart} onRemove={handleRemoveFromCart} />} />
