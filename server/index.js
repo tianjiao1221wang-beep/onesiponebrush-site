@@ -86,14 +86,12 @@ app.post('/api/create-checkout-session', async (req, res) => {
       return res.status(400).json({ message: 'Missing frontend URL.' });
     }
 
-    const session = await stripe.checkout.sessions.create({
+    const sessionConfig = {
       mode: 'payment',
       line_items: lineItems,
       customer_email: customer?.email || undefined,
-      success_url: `${frontendUrl}/#/checkout-success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${frontendUrl}/#/cart?canceled=true`,
       metadata: {
-          customerName: customer?.name || '',
+        customerName: customer?.name || '',
         customerPhone: customer?.phone || '',
         customerNotes: customer?.notes || ''
       }
@@ -104,7 +102,21 @@ app.post('/api/create-checkout-session', async (req, res) => {
     const message = error instanceof Error ? error.message : 'Failed to create checkout session.';
     return res.status(500).json({ message });
   }
-});
+    };
+
+    if (req.body?.embedded) {
+      sessionConfig.ui_mode = 'embedded';
+      sessionConfig.return_url = `${frontendUrl}/#/checkout-success?session_id={CHECKOUT_SESSION_ID}`;
+    } else {
+      sessionConfig.success_url = `${frontendUrl}/#/checkout-success?session_id={CHECKOUT_SESSION_ID}`;
+      sessionConfig.cancel_url = `${frontendUrl}/#/cart?canceled=true`;
+    }
+
+    const session = await stripe.checkout.sessions.create(sessionConfig);
+
+    if (req.body?.embedded) {
+      return res.json({ clientSecret: session.client_secret });
+    }
 
 app.post('/api/stripe-webhook', async (req, res) => {
   if (!STRIPE_WEBHOOK_SECRET) {
