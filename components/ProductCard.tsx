@@ -10,8 +10,8 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
   return (
-    <div className="group relative bg-white border border-stone-100 p-4 transition-all hover:shadow-xl hover:-translate-y-1">
-      <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden bg-stone-50 lg:h-80 xl:h-96">
+    <div className="group relative bg-white p-4 transition-all hover:shadow-xl hover:-translate-y-1">
+      <div className="aspect-[4/3] w-full overflow-hidden">
         <img
           src={product.image}
           alt={product.name}
