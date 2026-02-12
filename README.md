@@ -34,8 +34,8 @@ following in `.env` before going live:
 - `STRIPE_SECRET_KEY`
 - `STRIPE_WEBHOOK_SECRET`
 - `FRONTEND_URL` (comma-separated list of allowed origins)
-- VITE_CHECKOUT_API_URL` (optional frontend variable for deployed builds; set this to your payment server origin, e.g. `https://payments.example.com`)
-- `VITE_STRIPE_PAYMENT_LINK` (optional, recommended for direct hosted Stripe Payment Link checkout)
+- `VITE_CHECKOUT_API_URL` (optional frontend variable for deployed builds; set this to your payment server origin, e.g. `https://payments.example.com`)
+- `VITE_STRIPE_PAYMENT_LINK` (required for this Stripe-only checkout flow)
 - `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`
 - `SMTP_FROM`
 - `SHOP_OWNER_EMAIL`
@@ -44,9 +44,7 @@ following in `.env` before going live:
 
 This project uses Stripe Checkout as a **hosted payment UI** at the end of the cart flow (`/cart` -> `Pay with Stripe`).
 
-If `VITE_STRIPE_PAYMENT_LINK` is configured, checkout redirects to that Stripe Payment Link.
-If it is left empty, the app creates a Stripe Checkout Session via your backend.
-
+Checkout redirects to your Stripe Payment Link (`VITE_STRIPE_PAYMENT_LINK`).
 1. Create your Stripe account and copy test keys.
 2. Put keys in `.env`:
    - `STRIPE_SECRET_KEY`
@@ -55,7 +53,7 @@ If it is left empty, the app creates a Stripe Checkout Session via your backend.
    - `npm run dev:server`
    - `npm run dev`
 4. Open the site, add items to cart, and click **PAY WITH STRIPE / 安全支付**.
-5. If `VITE_STRIPE_PAYMENT_LINK` is set, checkout redirects directly to that Stripe hosted page.
-6. If `VITE_STRIPE_PAYMENT_LINK` is empty, the server creates a Checkout Session and redirects to Stripe Checkout.
+5. Checkout redirects directly to that Stripe hosted page.
+6. If redirect does not work, verify `VITE_STRIPE_PAYMENT_LINK` is present in the frontend environment and starts with `https://`.
 
 Use Stripe test card `4242 4242 4242 4242` (future date, any CVC/ZIP) in test mode.
