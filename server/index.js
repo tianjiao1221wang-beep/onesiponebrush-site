@@ -60,6 +60,7 @@ const createTransporter = () => {
 
 const formatCurrency = amountInCents => `$${(amountInCents / 100).toFixed(2)}`;
 
+
 app.post('/api/create-checkout-session', async (req, res) => {
   try {
     const { items, customer, origin } = req.body;
