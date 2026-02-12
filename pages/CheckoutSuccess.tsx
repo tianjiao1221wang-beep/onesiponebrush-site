@@ -24,7 +24,7 @@ const CheckoutSuccess: React.FC<CheckoutSuccessProps> = ({ onClear }) => {
         </p>
         <p className="chinese-text text-stone-400 mb-10">我们已收到您的付款，并将为您准备订单。</p>
         <Link
-          to="/"
+          to="/diy-kit"
           className="inline-flex items-center bg-stone-900 text-white px-10 py-4 rounded-sm tracking-widest uppercase text-sm hover:bg-stone-800 transition-all"
         >
           Continue Browsing / 继续探索

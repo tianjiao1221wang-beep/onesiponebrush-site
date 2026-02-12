@@ -95,13 +95,6 @@ app.post('/api/create-checkout-session', async (req, res) => {
         customerPhone: customer?.phone || '',
         customerNotes: customer?.notes || ''
       }
-    });
-
-    return res.json({ url: session.url });
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Failed to create checkout session.';
-    return res.status(500).json({ message });
-  }
     };
 
     if (req.body?.embedded) {
@@ -117,6 +110,13 @@ app.post('/api/create-checkout-session', async (req, res) => {
     if (req.body?.embedded) {
       return res.json({ clientSecret: session.client_secret });
     }
+
+    return res.json({ url: session.url });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to create checkout session.';
+    return res.status(500).json({ message });
+  }
+});
 
 app.post('/api/stripe-webhook', async (req, res) => {
   if (!STRIPE_WEBHOOK_SECRET) {

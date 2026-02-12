@@ -9,7 +9,7 @@ import CultureLab from './pages/CultureLab';
 import Cart from './pages/Cart';
 import CheckoutSuccess from './pages/CheckoutSuccess';
 import About from './pages/About';
-import Checkout from './pages/Checkout';
+import Checkout from './pages/checkout';
 import Contact from './pages/Contact';
 import { CartItem, Product } from './types';
 

@@ -50,31 +50,61 @@ const loadStripeScript = async (): Promise<void> => {
 
 const Checkout: React.FC<CheckoutProps> = ({ cart }) => {
   const [error, setError] = React.useState('');
+  const [loading, setLoading] = React.useState(true);
   const checkoutRef = React.useRef<HTMLDivElement | null>(null);
+  const embeddedCheckoutRef = React.useRef<EmbeddedCheckoutInstance | null>(null);
+  const isMountingRef = React.useRef(false);
 
   React.useEffect(() => {
-    let embeddedCheckout: EmbeddedCheckoutInstance | null = null;
+    let isMounted = true;
 
     const mountEmbeddedCheckout = async () => {
+      // Prevent multiple simultaneous mounts
+      if (isMountingRef.current) {
+        return;
+      }
+
+      isMountingRef.current = true;
+
       const publishableKey = (import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || '').trim();
       if (!publishableKey) {
         setError('Missing VITE_STRIPE_PUBLISHABLE_KEY in frontend environment.');
+        setLoading(false);
+        isMountingRef.current = false;
         return;
       }
 
       if (!checkoutRef.current) {
+        isMountingRef.current = false;
         return;
       }
 
       try {
+        // Destroy any existing instance first
+        if (embeddedCheckoutRef.current) {
+          try {
+            embeddedCheckoutRef.current.destroy();
+            embeddedCheckoutRef.current = null;
+          } catch (e) {
+            console.warn('Error destroying previous checkout:', e);
+          }
+        }
+
+        // Clear the container
+        if (checkoutRef.current) {
+          checkoutRef.current.innerHTML = '';
+        }
+
         await loadStripeScript();
         if (!window.Stripe) {
           throw new Error('Unable to initialize Stripe.js.');
         }
 
+        if (!isMounted) return;
+
         const stripe = window.Stripe(publishableKey);
 
-        embeddedCheckout = await stripe.initEmbeddedCheckout({
+        const checkout = await stripe.initEmbeddedCheckout({
           fetchClientSecret: async () => {
             const response = await fetch(createCheckoutSessionUrl, {
               method: 'POST',
@@ -91,19 +121,43 @@ const Checkout: React.FC<CheckoutProps> = ({ cart }) => {
           }
         });
 
-        embeddedCheckout.mount(checkoutRef.current);
+        if (!isMounted) {
+          checkout.destroy();
+          return;
+        }
+
+        embeddedCheckoutRef.current = checkout;
+
+        if (checkoutRef.current && embeddedCheckoutRef.current) {
+          embeddedCheckoutRef.current.mount(checkoutRef.current);
+          setLoading(false);
+        }
       } catch (mountError) {
-        const message = mountError instanceof Error ? mountError.message : 'Unable to initialize embedded checkout.';
-        setError(message);
+        if (isMounted) {
+          const message = mountError instanceof Error ? mountError.message : 'Unable to initialize embedded checkout.';
+          setError(message);
+          setLoading(false);
+        }
+      } finally {
+        isMountingRef.current = false;
       }
     };
 
     mountEmbeddedCheckout();
 
     return () => {
-      embeddedCheckout?.destroy();
+      isMounted = false;
+      if (embeddedCheckoutRef.current) {
+        try {
+          embeddedCheckoutRef.current.destroy();
+          embeddedCheckoutRef.current = null;
+        } catch (e) {
+          console.warn('Error during cleanup:', e);
+        }
+      }
+      isMountingRef.current = false;
     };
-  }, [cart]);
+  }, []);
 
   if (cart.length === 0) {
     return <Navigate to="/cart" replace />;
@@ -122,7 +176,15 @@ const Checkout: React.FC<CheckoutProps> = ({ cart }) => {
         </div>
       )}
 
-      <div className="bg-white border border-stone-200 rounded-sm p-4 md:p-8 shadow-sm">
+      <div className="bg-white border border-stone-200 rounded-sm p-4 md:p-8 shadow-sm min-h-[500px]">
+        {loading && !error && (
+          <div className="flex items-center justify-center h-[500px]">
+            <div className="text-center">
+              <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-stone-900 mb-4"></div>
+              <p className="text-stone-600 text-sm uppercase tracking-widest">Loading Secure Checkout...</p>
+            </div>
+          </div>
+        )}
         <div ref={checkoutRef} id="stripe-embedded-checkout" />
       </div>
 
