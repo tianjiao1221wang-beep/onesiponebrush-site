@@ -1,7 +1,7 @@
 import React from 'react';
 import { CartItem } from '../types';
 import { Trash2, Send, ShoppingBag, ArrowLeft } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 interface CartProps {
   cart: CartItem[];
@@ -9,41 +9,10 @@ interface CartProps {
 }
 
 const Cart: React.FC<CartProps> = ({ cart, onRemove }) => {
-  const location = useLocation();
-    const [isRedirectingToStripe, setIsRedirectingToStripe] = React.useState(false);
-  const [checkoutError, setCheckoutError] = React.useState('');
-
-  const canceledCheckout = React.useMemo(() => {
-    const params = new URLSearchParams(location.search);
-    return params.get('canceled') === 'true';
-  }, [location.search]);
-
+  const navigate = useNavigate();
   const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
-  const stripePaymentLink = (import.meta.env.VITE_STRIPE_PAYMENT_LINK || '').trim();
-
- const handleStripeCheckout = () => {
-    setCheckoutError('');
-
-    if (!stripePaymentLink) {
-      setCheckoutError('Stripe checkout is not configured. Set VITE_STRIPE_PAYMENT_LINK in your frontend environment.');
-      return;
-    }
-   
-    setIsRedirectingToStripe(true);
-    window.location.href = stripePaymentLink;
-      });
-
-      const data = await response.json();
-      if (!response.ok || !data?.url) {
-        throw new Error(data?.message || 'Unable to start Stripe checkout.');
-      }
-
-      window.location.href = data.url;
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Unable to start Stripe checkout.';
-      setCheckoutError(message);
-      setIsRedirectingToStripe(false);
-    }
+  const handleStripeCheckout = () => {
+    navigate('/checkout');
   };
   
   if (cart.length === 0) {
@@ -69,7 +38,6 @@ const Cart: React.FC<CartProps> = ({ cart, onRemove }) => {
       </header>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-24">
-        {/* List */}
         <div className="space-y-10">
           {cart.map((item) => (
             <div key={item.id} className="flex gap-8 border-b border-stone-100 pb-10 group">
@@ -102,32 +70,19 @@ const Cart: React.FC<CartProps> = ({ cart, onRemove }) => {
           </div>
         </div>
 
-        {/* Stripe-only Checkout */}
         <div className="bg-stone-50 p-10 md:p-14 border border-stone-200 h-fit rounded-sm shadow-sm">
           <h2 className="text-3xl font-light mb-4 ink-text uppercase tracking-widest">Stripe Checkout</h2>
-          <h3 className="chinese-text text-xl text-stone-500 mb-6">仅使用 Stripe 结账</h3>
+          <h3 className="chinese-text text-xl text-stone-500 mb-6">嵌入式 Stripe 结账</h3>
           <p className="text-sm text-stone-500 mb-8 leading-relaxed">
-          No on-site checkout form. Continue to Stripe to complete your payment securely.
+             Continue to an embedded Stripe checkout page to complete your payment securely.
           </p>
-          {canceledCheckout && (
-            <div className="bg-amber-50 border border-amber-200 text-amber-700 px-4 py-3 rounded-sm text-sm mb-6">
-              Your checkout was canceled. You can try again whenever you’re ready.
-            </div>
-          )}
-        
-          {checkoutError && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-sm text-sm mb-6">
-              {checkoutError}
-            </div>
-          )}
 
           <button
             type="button"
             onClick={handleStripeCheckout}
-            disabled={isRedirectingToStripe}
-            className="w-full bg-stone-900 text-white py-6 rounded-sm text-sm font-bold tracking-[0.3em] hover:bg-stone-800 transition-all flex items-center justify-center space-x-3 shadow-xl disabled:opacity-70 disabled:cursor-not-allowed"
+           className="w-full bg-stone-900 text-white py-6 rounded-sm text-sm font-bold tracking-[0.3em] hover:bg-stone-800 transition-all flex items-center justify-center space-x-3 shadow-xl"
           >
-            <span>{isRedirectingToStripe ? 'REDIRECTING TO STRIPE...' : 'PAY WITH STRIPE / 安全支付'}</span>
+             <span>GO TO CHECKOUT / 安全支付</span>
             <Send className="w-4 h-4" />
           </button>
         </div>
