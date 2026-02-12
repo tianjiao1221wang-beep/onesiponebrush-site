@@ -8,6 +8,8 @@ dotenv.config();
 
 const {
   STRIPE_SECRET_KEY,
+  STRIPE_PUBLISHABLE_KEY,
+  VITE_STRIPE_PUBLISHABLE_KEY,
   STRIPE_WEBHOOK_SECRET,
   FRONTEND_URL,
   SMTP_HOST,
@@ -59,6 +61,11 @@ const createTransporter = () => {
 };
 
 const formatCurrency = amountInCents => `$${(amountInCents / 100).toFixed(2)}`;
+
+app.get('/api/config', (_req, res) => {
+  const publishableKey = STRIPE_PUBLISHABLE_KEY || VITE_STRIPE_PUBLISHABLE_KEY || '';
+  res.json({ publishableKey });
+});
 
 
 app.post('/api/create-checkout-session', async (req, res) => {
