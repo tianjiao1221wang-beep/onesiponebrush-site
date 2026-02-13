@@ -3,10 +3,10 @@ import CurationDetailPage from './CurationDetailPage';
 
 const CurationSchools: React.FC = () => (
   <CurationDetailPage
-    titleEn="School Performances & Galas"
-    titleZh="学校演出与晚会"
-    descriptionEn="School-focused cultural performances and curated activations that are educational, vibrant, and family-friendly."
-    descriptionZh="面向校园的文化演出与互动策划，兼具教育性、活力与亲和力。"
+    titleEn="School Chinese Culture Courses"
+    titleZh="学校中国文化课程"
+    descriptionEn="Chinese culture and craft courses for all ages, hands-on educational experiences and classroom DIY workshops."
+    descriptionZh="提供各年龄段中国文化以及中国手工艺相关寓教于乐课程，课堂 DIY 课程。"
   />
 );
 

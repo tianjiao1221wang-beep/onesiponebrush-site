@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, BookOpen, Coffee, Feather } from 'lucide-react';
+import { ArrowRight, BookOpen, Feather, Sparkles } from 'lucide-react';
 import { PRODUCTS } from '../constants';
 import ProductCard from '../components/ProductCard';
 import { Product } from '../types';
@@ -95,21 +95,21 @@ const [activeGallery, setActiveGallery] = useState<GalleryType | null>(null);
               <div className="w-20 h-20 bg-stone-50 rounded-full flex items-center justify-center mb-8 border border-stone-100 group-hover:border-stone-400 transition-colors duration-500">
                 <Feather className="w-8 h-8 text-stone-700" />
               </div>
-              <h3 className="text-2xl font-light mb-2">Ink Wash Design</h3>
-              <p className="chinese-text text-stone-400 mb-4">水墨设计</p>
+              <h3 className="text-2xl font-light mb-2">Traditional Chinese Culture Design</h3>
+              <p className="chinese-text text-stone-400 mb-4">中国传统文化设计</p>
               <p className="text-stone-500 leading-relaxed text-sm">Modern aesthetics meeting traditional calligraphy. We design tools that inspire creativity.</p>
             </div>
             <div className="flex flex-col items-center group">
               <div className="w-20 h-20 bg-stone-50 rounded-full flex items-center justify-center mb-8 border border-stone-100 group-hover:border-stone-400 transition-colors duration-500">
-                <Coffee className="w-8 h-8 text-stone-700" />
+                <BookOpen className="w-8 h-8 text-stone-700" />
               </div>
-              <h3 className="text-2xl font-light mb-2">Tea Culture</h3>
-              <p className="chinese-text text-stone-400 mb-4">慢生活茶文化</p>
-              <p className="text-stone-500 leading-relaxed text-sm">Embracing the 'Slow Life'. Every cup is a meditation, every tea set a bridge to tranquility.</p>
+              <h3 className="text-2xl font-light mb-2">Slow Life Culture</h3>
+              <p className="chinese-text text-stone-400 mb-4">慢生活文化</p>
+              <p className="text-stone-500 leading-relaxed text-sm">Embracing the 'Slow Life'. Every moment is a meditation, a bridge to tranquility.</p>
             </div>
             <div className="flex flex-col items-center group">
               <div className="w-20 h-20 bg-stone-50 rounded-full flex items-center justify-center mb-8 border border-stone-100 group-hover:border-stone-400 transition-colors duration-500">
-                <BookOpen className="w-8 h-8 text-stone-700" />
+                <Sparkles className="w-8 h-8 text-stone-700" />
               </div>
               <h3 className="text-2xl font-light mb-2">Culture Lab</h3>
               <p className="chinese-text text-stone-400 mb-4">文创堂</p>

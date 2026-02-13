@@ -5,43 +5,43 @@ const categories = [
   {
     titleEn: 'Interactive Cultural Pop-Ups',
     titleZh: '互动文化快闪',
-    descriptionEn: 'Hands-on activations that invite guests into Chinese arts, tea, and ritual.',
-    descriptionZh: '沉浸式互动体验，带领宾客走入中华艺术、茶道与礼仪。',
+    descriptionEn: 'Hands-on activations that invite guests into Chinese arts and heritage craft.',
+    descriptionZh: '沉浸式互动体验，带领宾客走入中华艺术与非遗手工艺。',
     path: '/cultural-event-curation/popups',
     image:
       '/images/curation-popups.svg',
     subEvents: [
-      { en: 'Tea ceremony bar', zh: '茶礼体验吧' },
-      { en: 'Live calligraphy station', zh: '现场书法互动' },
-      { en: 'Lantern painting activity', zh: '花灯彩绘体验' },
+      { en: 'Live intangible heritage hands-on', zh: '现场体验非遗手工' },
+      { en: 'Live design interaction', zh: '现场设计互动' },
+      { en: 'School Chinese culture festival with heritage stalls', zh: '学校中国文化节提供非遗摊位' },
     ],
   },
   {
-    titleEn: 'Weddings & Private Celebrations',
-    titleZh: '婚礼与私人庆典',
+    titleEn: 'Weddings & Chinese Celebrations',
+    titleZh: '婚礼与中式庆典',
     descriptionEn: 'Refined cultural moments designed for intimate milestones and family gatherings.',
     descriptionZh: '为重要时刻与家族欢聚定制优雅文化仪式。',
     path: '/cultural-event-curation/weddings',
     image:
       '/images/curation-weddings.svg',
     subEvents: [
-      { en: 'Traditional tea honoring', zh: '敬茶礼仪' },
-      { en: 'Wedding welcome rituals', zh: '婚礼迎宾仪式' },
-      { en: 'Family keepsake workshops', zh: '家庭纪念手作' },
+      { en: "Baby's 100-day celebration", zh: '孩子百日宴' },
+      { en: 'Chinese wedding', zh: '中式婚礼' },
+      { en: 'Chinese celebration', zh: '中式庆典' },
     ],
   },
   {
-    titleEn: 'School Performances & Galas',
-    titleZh: '学校演出与晚会',
-    descriptionEn: 'Educational and engaging cultural showcases tailored for school communities.',
-    descriptionZh: '为校园社群打造兼具教育性与参与感的文化呈现。',
+    titleEn: 'School Chinese Culture Courses',
+    titleZh: '学校中国文化课程',
+    descriptionEn: 'Educational Chinese culture and craft courses for all ages, hands-on DIY classes.',
+    descriptionZh: '提供各年龄段中国文化以及中国手工艺相关寓教于乐课程，课堂 DIY 课程。',
     path: '/cultural-event-curation/schools',
     image:
       '/images/curation-schools.svg',
     subEvents: [
-      { en: 'Cultural stage performances', zh: '文化主题舞台演出' },
-      { en: 'Interactive assembly demos', zh: '互动式集会展示' },
-      { en: 'Student heritage showcases', zh: '学生文化成果展' },
+      { en: 'Age-appropriate Chinese culture curriculum', zh: '各年龄段中国文化课程' },
+      { en: 'Chinese craft hands-on learning', zh: '中国手工艺寓教于乐' },
+      { en: 'Classroom DIY workshops', zh: '课堂 DIY 课程' },
     ],
   },
   {
@@ -81,13 +81,14 @@ const CulturalEventCuration: React.FC = () => {
               Request a Proposal
               <span className="block chinese-text normal-case tracking-normal mt-1">申请方案</span>
             </Link>
-            <a
-              href="#what-we-curate"
+            <button
+              type="button"
+              onClick={() => document.getElementById('what-we-curate')?.scrollIntoView({ behavior: 'smooth' })}
               className="bg-white border border-stone-300 text-stone-800 px-8 py-4 rounded-sm text-sm tracking-widest uppercase hover:bg-stone-50 transition-colors"
             >
               View Experience Types
               <span className="block chinese-text normal-case tracking-normal mt-1">查看体验类型</span>
-            </a>
+            </button>
           </div>
         </div>
       </section>
