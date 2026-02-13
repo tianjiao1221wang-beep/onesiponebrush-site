@@ -29,24 +29,27 @@ MAILCHIMP_LIST_ID=你的Audience ID
 
 本地开发时，在项目根目录的 `.env` 中同样添加上述变量。
 
-## 二、联系表单
+## 二、联系表单（Resend）
 
-联系表单会将用户提交的留言通过 SMTP 邮件发送到 `SHOP_OWNER_EMAIL`。
+联系表单会将用户提交的留言通过 [Resend](https://resend.com) 发送到 `SHOP_OWNER_EMAIL`。
 
-### 配置
+### 1. 注册 Resend
 
-确保 `.env` 中已配置 SMTP 和收件人邮箱（订单邮件使用的是同一套配置）：
+1. 打开 [resend.com](https://resend.com) 注册账号
+2. 进入 **API Keys** 创建 API Key，复制（格式 `re_xxxxxx`）
+3. 在 Resend 后台 **Domains** 中**添加并验证**你的域名（如 `onesiponebrush.com`）
+
+### 2. 配置环境变量
+
+在 Railway 的 Variables 中添加：
 
 ```
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=your-email@gmail.com
-SMTP_PASS=应用专用密码
-SMTP_FROM="One Sip One Brush <sipbrush@gmail.com>"
+RESEND_API_KEY=re_你的API密钥
+RESEND_FROM="One Sip One Brush <noreply@你的域名.com>"
 SHOP_OWNER_EMAIL=sipbrush@gmail.com
 ```
 
-Gmail 用户需在 Google 账户中开启「两步验证」并生成「应用专用密码」。
+`RESEND_FROM` 必须使用**已验证域名**下的邮箱。未验证域名前，可暂时使用 `onboarding@resend.dev` 做测试（可能进垃圾箱）。
 
 ## 三、前端配置
 

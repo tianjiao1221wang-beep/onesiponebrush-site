@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 import express from 'express';
 import Stripe from 'stripe';
 import cors from 'cors';
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 
 dotenv.config();
 
@@ -12,11 +12,8 @@ const {
   VITE_STRIPE_PUBLISHABLE_KEY,
   STRIPE_WEBHOOK_SECRET,
   FRONTEND_URL,
-  SMTP_HOST,
-  SMTP_PORT,
-  SMTP_USER,
-  SMTP_PASS,
-  SMTP_FROM,
+  RESEND_API_KEY,
+  RESEND_FROM,
   SHOP_OWNER_EMAIL,
   MAILCHIMP_API_KEY,
   MAILCHIMP_LIST_ID,
@@ -42,24 +39,9 @@ app.use(cors({ origin: true }));
 app.use('/api/stripe-webhook', express.raw({ type: 'application/json' }));
 app.use(express.json());
 
-const createTransporter = () => {
-  if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS || !SMTP_FROM || !SHOP_OWNER_EMAIL) {
-    return null;
-  }
+const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
 
-  const port = SMTP_PORT ? Number(SMTP_PORT) : 587;
-  return nodemailer.createTransport({
-    host: SMTP_HOST,
-    port,
-    secure: port === 465,
-    auth: {
-      user: SMTP_USER,
-      pass: SMTP_PASS
-    },
-    connectionTimeout: 10000,
-    greetingTimeout: 10000
-  });
-};
+const canSendEmail = () => Boolean(resend && RESEND_FROM && SHOP_OWNER_EMAIL);
 
 const formatCurrency = amountInCents => `$${(amountInCents / 100).toFixed(2)}`;
 
@@ -72,25 +54,27 @@ app.get('/api/config', (_req, res) => {
   res.json({ publishableKey });
 });
 
-// SMTP 连接测试，用于排查 contact 表单发信失败
+// Resend 连接测试
 app.get('/api/smtp-test', async (_req, res) => {
-  const transporter = createTransporter();
-  if (!transporter) {
+  if (!canSendEmail()) {
     return res.json({
       ok: false,
-      error: 'SMTP 未配置完整。请确认 SMTP_HOST, SMTP_USER, SMTP_PASS, SMTP_FROM, SHOP_OWNER_EMAIL 都已设置。'
+      error: 'Resend 未配置。请设置 RESEND_API_KEY, RESEND_FROM, SHOP_OWNER_EMAIL。'
     });
   }
-  const timeoutMs = 10000;
   try {
-    await Promise.race([
-      transporter.verify(),
-      new Promise((_, reject) => setTimeout(() => reject(new Error('SMTP 连接超时（10 秒）。可能是主机/端口错误，或 Gmail 阻断了 Railway 的请求。')), timeoutMs))
-    ]);
-    return res.json({ ok: true, message: 'SMTP 连接成功' });
+    const { data, error } = await resend.emails.send({
+      from: RESEND_FROM,
+      to: SHOP_OWNER_EMAIL,
+      subject: 'Resend 测试邮件',
+      text: '这是一封测试邮件，说明 Resend 已配置成功。'
+    });
+    if (error) {
+      return res.json({ ok: false, error: error.message || JSON.stringify(error) });
+    }
+    return res.json({ ok: true, message: 'Resend 发送成功', id: data?.id });
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
-    console.error('SMTP verify error:', msg);
     return res.json({ ok: false, error: msg });
   }
 });
@@ -229,7 +213,7 @@ app.post('/api/subscribe', async (req, res) => {
   }
 });
 
-// Contact form – send email to shop owner
+// Contact form – send email to shop owner (Resend)
 app.post('/api/contact', async (req, res) => {
   try {
     const { name, email, subject, message } = req.body;
@@ -243,27 +227,26 @@ app.post('/api/contact', async (req, res) => {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)) {
       return res.status(400).json({ message: 'Invalid email address.' });
     }
-    const transporter = createTransporter();
-    if (!transporter) {
-      return res.status(503).json({ message: 'Contact form is not configured. Please set SMTP settings.' });
+    if (!canSendEmail()) {
+      return res.status(503).json({ message: 'Contact form is not configured. Please set Resend (RESEND_API_KEY, RESEND_FROM, SHOP_OWNER_EMAIL).' });
     }
     const subjectLabels = { general: 'General Inquiry', tutorial: 'DIY Kit Tutorial Help', order: 'Order Question', partnership: 'Collaboration' };
     const subjectText = subjectLabels[s] || s;
-    await transporter.sendMail({
-      from: SMTP_FROM,
+    const text = [`From: ${n} <${e}>`, `Subject: ${subjectText}`, '', m].join('\n');
+    const { error } = await resend.emails.send({
+      from: RESEND_FROM,
       to: SHOP_OWNER_EMAIL,
       replyTo: e,
       subject: `[One Sip One Brush] ${subjectText} – ${n}`,
-      text: [
-        `From: ${n} <${e}>`,
-        `Subject: ${subjectText}`,
-        '',
-        m
-      ].join('\n')
+      text
     });
+    if (error) {
+      console.error('Contact Resend error:', error);
+      return res.status(500).json({ message: error.message || 'Failed to send message.' });
+    }
     return res.json({ success: true });
   } catch (error) {
-    console.error('Contact SMTP error:', error instanceof Error ? error.message : String(error), error);
+    console.error('Contact error:', error);
     return res.status(500).json({ message: 'Failed to send message.' });
   }
 });
@@ -290,32 +273,32 @@ app.post('/api/stripe-webhook', async (req, res) => {
         expand: ['line_items', 'customer_details']
       });
 
-      const transporter = createTransporter();
-      if (transporter) {
+      if (canSendEmail()) {
         const lineItems = checkoutSession.line_items?.data ?? [];
         const itemLines = lineItems.map(item => {
           const name = item.description || item.price?.product?.name || 'Item';
           return `${item.quantity || 1} x ${name} (${formatCurrency(item.amount_total || 0)})`;
         });
-
-        await transporter.sendMail({
-          from: SMTP_FROM,
+        const text = [
+          `Name: ${checkoutSession.customer_details?.name || 'N/A'}`,
+          `Email: ${checkoutSession.customer_details?.email || 'N/A'}`,
+          `Phone: ${checkoutSession.metadata?.customerPhone || 'N/A'}`,
+          `Shipping: ${checkoutSession.metadata?.shippingMethod === 'upgrade' ? 'Express 1-3 days' : 'Standard 2-5 days'}`,
+          `Notes: ${checkoutSession.metadata?.customerNotes || 'None'}`,
+          '',
+          'Items:',
+          ...itemLines,
+          '',
+          `Total: ${formatCurrency(checkoutSession.amount_total || 0)}`,
+          `Session: ${checkoutSession.id}`
+        ].join('\n');
+        const { error } = await resend.emails.send({
+          from: RESEND_FROM,
           to: SHOP_OWNER_EMAIL,
           subject: `New Order: ${checkoutSession.customer_details?.name || 'Customer'}`,
-          text: [
-            `Name: ${checkoutSession.customer_details?.name || 'N/A'}`,
-            `Email: ${checkoutSession.customer_details?.email || 'N/A'}`,
-            `Phone: ${checkoutSession.metadata?.customerPhone || 'N/A'}`,
-            `Shipping: ${checkoutSession.metadata?.shippingMethod === 'upgrade' ? 'Express 1-3 days' : 'Standard 2-5 days'}`,
-            `Notes: ${checkoutSession.metadata?.customerNotes || 'None'}`,
-            '',
-            'Items:',
-            ...itemLines,
-            '',
-            `Total: ${formatCurrency(checkoutSession.amount_total || 0)}`,
-            `Session: ${checkoutSession.id}`
-          ].join('\n')
+          text
         });
+        if (error) console.error('Order email error:', error);
       }
     } catch (error) {
       console.error('Failed to send order email', error);
