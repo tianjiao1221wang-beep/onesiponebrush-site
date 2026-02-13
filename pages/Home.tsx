@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, BookOpen, Coffee, Feather } from 'lucide-react';
 import { PRODUCTS } from '../constants';
@@ -10,17 +10,48 @@ interface HomeProps {
   onAddToCart: (product: Product) => void;
 }
 
+type GalleryType = 'midAutumn' | 'schoolGala';
+
 const Home: React.FC<HomeProps> = ({ onAddToCart }) => {
   const featuredProducts = PRODUCTS.slice(0, 3);
+const [activeGallery, setActiveGallery] = useState<GalleryType | null>(null);
 
+  const galleries: Record<GalleryType, { title: string; subtitle: string; photos: { src: string; alt: string }[] }> = {
+    midAutumn: {
+      title: 'Curated Event Photo Gallery',
+      subtitle: '活动回顾影像集',
+      photos: [
+        { src: '/images/workshop-preview.svg', alt: 'Tea and calligraphy session' },
+        { src: '/images/about-story.svg', alt: 'Community curated event moment' },
+        { src: '/images/workshop-preview.svg', alt: 'Interactive brush practice table' },
+        { src: '/images/about-story.svg', alt: 'Guests enjoying tea ceremony' },
+        { src: '/images/workshop-preview.svg', alt: 'Curated heritage showcase' },
+        { src: '/images/about-story.svg', alt: 'Closing group experience' },
+      ],
+    },
+    schoolGala: {
+      title: 'School New Year Gala Gallery',
+      subtitle: '校园新年庆典影像集',
+      photos: [
+        { src: '/images/about-story.svg', alt: 'Students opening the New Year gala program' },
+        { src: '/images/workshop-preview.svg', alt: 'Family-friendly ink and tea activity booth' },
+        { src: '/images/about-story.svg', alt: 'Cultural performance and stage presentation' },
+        { src: '/images/workshop-preview.svg', alt: 'Interactive calligraphy learning corner' },
+        { src: '/images/about-story.svg', alt: 'Community photo moment with students and parents' },
+        { src: '/images/workshop-preview.svg', alt: 'Closing celebration for the school New Year gala' },
+      ],
+    },
+  };
+
+  const currentGallery = activeGallery ? galleries[activeGallery] : null;
   return (
     <div className="paper-bg min-h-screen">
       {/* Hero Section */}
       <section className="relative h-[90vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img 
-            src="/images/home-hero.svg"  
-            alt="Ink and Tea" 
+         <img
+            src="/images/home-hero.svg"
+            alt="Ink and Tea"
             className="w-full h-full object-cover opacity-40 grayscale"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#fdfbf7]/40 to-[#fdfbf7]"></div>
@@ -35,7 +66,7 @@ const Home: React.FC<HomeProps> = ({ onAddToCart }) => {
             一墨一茗
           </h2>
           <p className="text-xl md:text-2xl text-stone-600 italic mb-12 max-w-3xl mx-auto leading-relaxed">
-            "A drop of ink to paint the world, a sip of tea to calm the soul."<br/>
+           "A drop of ink to paint the world, a sip of tea to calm the soul."<br />
             <span className="chinese-text text-lg block mt-2 not-italic">“一滴墨汁绘就世界，一盏清茶安抚灵魂。”</span>
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
@@ -105,6 +136,66 @@ const Home: React.FC<HomeProps> = ({ onAddToCart }) => {
           ))}
         </div>
       </section>
+ {/* Past Curated Event Cards */}
+      <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-8">
+          <div className="relative overflow-hidden rounded-sm border border-stone-200 bg-white">
+            <div className="grid grid-cols-1 lg:grid-cols-2 h-full">
+              <div className="h-[320px] lg:h-auto">
+                <img
+                  src="/images/about-story.svg"
+                  alt="Past curated event"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="p-10 md:p-12 flex flex-col justify-center">
+                <span className="text-xs uppercase tracking-[0.4em] text-stone-500 mb-5">Past Curated Event</span>
+                <h2 className="text-3xl font-light text-stone-900 mb-5">Mid-Autumn Ink & Tea Gathering</h2>
+                <p className="chinese-text text-stone-500 text-xl mb-6">中秋茶墨雅集</p>
+                <p className="text-stone-600 leading-relaxed mb-8">
+                  A reflective cultural evening featuring guided brushwork, tea appreciation, and community storytelling.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setActiveGallery('midAutumn')}
+                  className="self-start bg-stone-900 text-white px-8 py-4 text-sm tracking-widest uppercase hover:bg-stone-800 transition-colors inline-flex items-center"
+                >
+                  Open Photo Gallery
+                  <ArrowRight className="ml-2 w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="relative overflow-hidden rounded-sm border border-stone-200 bg-white">
+            <div className="grid grid-cols-1 lg:grid-cols-2 h-full">
+              <div className="h-[320px] lg:h-auto">
+                <img
+                  src="/images/workshop-preview.svg"
+                  alt="School New Year Gala"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="p-10 md:p-12 flex flex-col justify-center">
+                <span className="text-xs uppercase tracking-[0.4em] text-stone-500 mb-5">School Featured Event</span>
+                <h2 className="text-3xl font-light text-stone-900 mb-5">School New Year Gala</h2>
+                <p className="chinese-text text-stone-500 text-xl mb-6">校园新年庆典</p>
+                <p className="text-stone-600 leading-relaxed mb-8">
+                  A festive school collaboration with student performances, family participation, and Chinese cultural workshops.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setActiveGallery('schoolGala')}
+                  className="self-start bg-stone-900 text-white px-8 py-4 text-sm tracking-widest uppercase hover:bg-stone-800 transition-colors inline-flex items-center"
+                >
+                  Open Photo Gallery
+                  <ArrowRight className="ml-2 w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Workshop Card (Coming Soon) */}
       <section className="py-32 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
@@ -125,7 +216,7 @@ const Home: React.FC<HomeProps> = ({ onAddToCart }) => {
               Coming Soon / 敬请期待
             </div>
             <p className="text-white/80 mt-12 max-w-xl italic text-lg leading-relaxed font-light">
-              "To grind ink is to grind the self. To steep tea is to steep the soul."<br/>
+              "To grind ink is to grind the self. To steep tea is to steep the soul."<br />
               Join us for a journey of mindfulness and traditional ceremony.
             </p>
           </div>
@@ -135,4 +226,31 @@ const Home: React.FC<HomeProps> = ({ onAddToCart }) => {
   );
 };
 
+      {currentGallery && (
+        <div className="fixed inset-0 z-50 bg-stone-950/80 backdrop-blur-sm p-4 sm:p-8">
+          <div className="max-w-6xl mx-auto bg-[#fdfbf7] h-full overflow-y-auto rounded-sm border border-stone-200">
+            <div className="sticky top-0 bg-[#fdfbf7]/95 backdrop-blur-sm border-b border-stone-200 px-6 py-5 flex items-center justify-between">
+              <div>
+                <h3 className="text-2xl font-light text-stone-900">{currentGallery.title}</h3>
+                <p className="chinese-text text-stone-500">{currentGallery.subtitle}</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setActiveGallery(null)}
+                className="text-sm uppercase tracking-[0.3em] text-stone-700 hover:text-stone-900"
+              >
+                Close
+              </button>
+            </div>
+            <div className="p-6 md:p-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {currentGallery.photos.map((photo) => (
+                <figure key={photo.alt} className="bg-white border border-stone-200 p-3">
+                  <img src={photo.src} alt={photo.alt} className="w-full h-56 object-cover" />
+                  <figcaption className="text-sm text-stone-600 mt-3">{photo.alt}</figcaption>
+                </figure>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 export default Home;
