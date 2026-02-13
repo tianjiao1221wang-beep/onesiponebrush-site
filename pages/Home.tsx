@@ -10,13 +10,27 @@ interface HomeProps {
   onAddToCart: (product: Product) => void;
 }
 
-type GalleryType = 'midAutumn' | 'schoolGala';
+type GalleryType = 'midAutumn' | 'schoolGala' | 'lunarNewYear2026';
 
 const Home: React.FC<HomeProps> = ({ onAddToCart }) => {
   const featuredProducts = PRODUCTS.slice(0, 3);
-const [activeGallery, setActiveGallery] = useState<GalleryType | null>(null);
+  const [activeGallery, setActiveGallery] = useState<GalleryType | null>(null);
 
   const galleries: Record<GalleryType, { title: string; subtitle: string; photos: { src: string; alt: string }[] }> = {
+    lunarNewYear2026: {
+      title: 'Lunar New Year at Little Red Schoolhouse',
+      subtitle: '红屋自然中心春节活动回顾',
+      photos: [
+        { src: '/images/events/event-lny2026-01.png', alt: 'Cloisonné craft — girl in traditional dress with butterfly hair clips' },
+        { src: '/images/events/event-lny2026-02.png', alt: 'Full event scene — children crafting with Cloisonné Enamel' },
+        { src: '/images/events/event-lny2026-03.png', alt: 'Cultural animation and craft teaching moment' },
+        { src: '/images/events/event-lny2026-04.png', alt: 'Calligraphy and craft supplies at table' },
+        { src: '/images/events/event-lny2026-05.png', alt: 'Children focused on wooden cutout crafts' },
+        { src: '/images/events/event-lny2026-06.png', alt: 'Children in traditional attire crafting together' },
+        { src: '/images/events/event-lny2026-07.png', alt: 'Woman in qipao with cultural products display' },
+        { src: '/images/events/event-lny2026-08.png', alt: 'Cloisonné workshop — adult guiding child' },
+      ],
+    },
     midAutumn: {
       title: 'Curated Event Photo Gallery',
       subtitle: '活动回顾影像集',
@@ -143,8 +157,37 @@ const [activeGallery, setActiveGallery] = useState<GalleryType | null>(null);
             <div className="grid grid-cols-1 lg:grid-cols-2 h-full">
               <div className="h-[320px] lg:h-auto">
                 <img
+                  src="/images/events/event-lny2026-hero.png"
+                  alt="Lunar New Year at Little Red Schoolhouse Nature Center — cultural crafts and community engagement"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="p-10 md:p-12 flex flex-col justify-center">
+                <span className="text-xs uppercase tracking-[0.4em] text-stone-500 mb-5">Past Curated Event</span>
+                <h2 className="text-3xl font-light text-stone-900 mb-5">Lunar New Year at Little Red Schoolhouse</h2>
+                <p className="chinese-text text-stone-500 text-xl mb-6">红屋自然中心春节活动</p>
+                <p className="text-sm text-stone-500 mb-2">Sunday, Feb 8, 2026</p>
+                <p className="text-stone-600 leading-relaxed mb-8">
+                  A festive day of cultural crafts at Little Red Schoolhouse Nature Center — Cloisonné enamel workshops, calligraphy, traditional dress, and family engagement.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setActiveGallery('lunarNewYear2026')}
+                  className="self-start bg-stone-900 text-white px-8 py-4 text-sm tracking-widest uppercase hover:bg-stone-800 transition-colors inline-flex items-center"
+                >
+                  Open Photo Gallery
+                  <ArrowRight className="ml-2 w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="relative overflow-hidden rounded-sm border border-stone-200 bg-white">
+            <div className="grid grid-cols-1 lg:grid-cols-2 h-full">
+              <div className="h-[320px] lg:h-auto">
+                <img
                   src="/images/about-story.svg"
-                  alt="Past curated event"
+                  alt="Mid-Autumn Ink & Tea Gathering"
                   className="w-full h-full object-cover"
                 />
               </div>
