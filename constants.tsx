@@ -35,8 +35,8 @@ export const PRODUCTS: Product[] = [
     name: 'Zen Hanging Incense Holder',
     chineseName: '禅意倒挂线香炉（静 · 呼吸）',
     price: 39,
-    description: 'A lotus-shaped hanging incense holder designed for inverted burning. As the incense gently falls, it creates a quiet rhythm that slows the space and the mind. Inspired by Eastern Zen philosophy, the lotus symbolizes purity and inner clarity. The inverted design transforms incense from fragrance into ritual — an everyday practice of stillness and awareness.',
-    chineseDescription: '以莲花为形，线香倒悬而燃。一件让时间慢下来的香器，让空间在烟雾升落之间回归安静。灵感源自东方禅意与"静观自省"的生活哲学。莲象征清净与初心，倒挂点香使香灰自然垂落，将日常焚香转化为一场关于专注与呼吸的仪式。',
+    description: 'A lotus-shaped hanging incense holder designed for inverted burning. Incense included. As the incense gently falls, it creates a quiet rhythm that slows the space and the mind. Inspired by Eastern Zen philosophy, the lotus symbolizes purity and inner clarity. The inverted design transforms incense from fragrance into ritual — an everyday practice of stillness and awareness.',
+    chineseDescription: '以莲花为形，线香倒悬而燃。含线香。一件让时间慢下来的香器，让空间在烟雾升落之间回归安静。灵感源自东方禅意与"静观自省"的生活哲学。莲象征清净与初心，倒挂点香使香灰自然垂落，将日常焚香转化为一场关于专注与呼吸的仪式。',
     image: '/images/product-zen-incense-zen.png',
     category: 'design',
     variants: [
@@ -75,8 +75,8 @@ export const PRODUCTS: Product[] = [
     name: 'Mindful Copybook',
     chineseName: '静心抄写本（练 · 沉淀）',
     price: 29,
-    description: 'A mindful copybook designed for small script and running script practice (10 sheets). Soft-toned paper and restrained grid lines guide the hand back to rhythm and focus. Inspired by the tradition of meditative copying in Chinese culture, it is not only for handwriting — but for cultivating inner structure and calm.',
-    chineseDescription: '为小楷与行书临摹而设计的静心抄写本，10张装。纸色温润，格线克制，让书写回归专注与节奏。灵感来自东方"抄经修习"的传统。在反复书写之间，不只是练字，更是在建立内在的秩序与安静。',
+    description: 'A mindful copybook designed for small script and running script practice. 10 sheets, 34×69cm (13.4"×27.2"). Soft-toned paper and restrained grid lines guide the hand back to rhythm and focus. Inspired by the tradition of meditative copying in Chinese culture, it is not only for handwriting — but for cultivating inner structure and calm.',
+    chineseDescription: '为小楷与行书临摹而设计的静心抄写本，10张装，单张约34×69cm（约13.4×27.2英寸）。纸色温润，格线克制，让书写回归专注与节奏。灵感来自东方"抄经修习"的传统。',
     image: '/images/product-copybook.png',
     category: 'design'
   },
@@ -84,14 +84,17 @@ export const PRODUCTS: Product[] = [
     id: '7',
     name: 'Golden Branches Jade Leaves · Embroidered Book Cover',
     chineseName: '金枝玉叶 · 刺绣布书衣（藏 · 承载）',
-    price: 68,
-    description: 'A handcrafted embroidered book cover inspired by the motif "Golden Branches and Jade Leaves." Designed to wrap journals and copybooks in a layer of softness and protection. Rooted in traditional Chinese embroidery, the golden threads and floral forms symbolize growth and quiet refinement. More than a cover, it honors the act of writing and self-reflection.',
-    chineseDescription: '以"金枝玉叶"为意象的立体刺绣布书衣。将日常笔记、手账或抄写本包裹其中，让书写拥有一层温柔的守护。刺绣源自东方织绣传统，金线与花叶象征珍贵与生长。它不仅是封套，更是对自我记录与内在世界的一种珍视。',
+    price: 38,
+    description: 'A handcrafted embroidered book cover inspired by the motif "Golden Branches and Jade Leaves." Comes with A5-size blank page infill. Designed to wrap journals and copybooks in a layer of softness and protection. Rooted in traditional Chinese embroidery, the golden threads and floral forms symbolize growth and quiet refinement.',
+    chineseDescription: '以"金枝玉叶"为意象的立体刺绣布书衣，内衬 A5 尺寸空白页。将日常笔记、手账或抄写本包裹其中，让书写拥有一层温柔的守护。刺绣源自东方织绣传统，金线与花叶象征珍贵与生长。',
     image: '/images/product-embroidered-cover-cream.png',
     category: 'design',
     variants: [
       { id: 'cream', name: 'Cream Gold', chineseName: '奶油金枝', image: '/images/product-embroidered-cover-cream.png' },
       { id: 'black', name: 'Black Gold', chineseName: '墨黑金枝', image: '/images/product-embroidered-cover-black.png' },
+      { id: 'floral-wave', name: 'Floral Wave', chineseName: '花漾水韵', image: '/images/product-embroidered-cover-floral-wave.png' },
+      { id: 'mythical', name: 'Mythical Crane', chineseName: '祥瑞仙鹤', image: '/images/product-embroidered-cover-mythical.png' },
+      { id: 'cream-peony', name: 'Cream Peony', chineseName: '米金牡丹流苏', image: '/images/product-embroidered-cover-cream-peony.png' },
     ]
   }
 ];
