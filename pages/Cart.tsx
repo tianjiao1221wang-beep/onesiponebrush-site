@@ -18,7 +18,7 @@ const createCheckoutSessionUrl = checkoutApiBaseUrl
 
 // Shipping: standard $5.99 (2–5 days), free over threshold; upgrade +$7 (1–3 days)
 const SHIPPING_STANDARD = Number(import.meta.env.VITE_SHIPPING_STANDARD) || 5.99;
-const FREE_SHIPPING_THRESHOLD = Number(import.meta.env.VITE_FREE_SHIPPING_THRESHOLD) || 69;
+const FREE_SHIPPING_THRESHOLD = Number(import.meta.env.VITE_FREE_SHIPPING_THRESHOLD) || 79;
 const SHIPPING_UPGRADE_ADD = Number(import.meta.env.VITE_SHIPPING_UPGRADE_ADD) || 7;
 
 export type ShippingMethod = 'standard' | 'upgrade';

@@ -25,12 +25,9 @@ const Navbar: React.FC<NavbarProps> = ({ cartCount }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-24">
           <div className="flex-shrink-0 flex items-center">
-            <Link to="/" className="flex items-center h-12 sm:h-14 hover:opacity-90 transition-opacity">
-              <img
-                src="/images/logo-navbar.png"
-                alt="One Sip One Brush - 一墨一茗"
-                className="h-full w-auto max-w-[150px] sm:max-w-[180px] object-contain object-left"
-              />
+            <Link to="/" className="flex flex-col items-start">
+              <span className="text-xl font-semibold tracking-widest uppercase ink-text">One Sip One Brush</span>
+              <span className="chinese-text text-xs text-stone-500 tracking-[0.4em]">一墨一茗</span>
             </Link>
           </div>
           

@@ -24,7 +24,7 @@ const {
 } = process.env;
 
 const shippingStandard = Number(SHIPPING_STANDARD) || 5.99;
-const freeShippingThreshold = Number(FREE_SHIPPING_THRESHOLD) || 69;
+const freeShippingThreshold = Number(FREE_SHIPPING_THRESHOLD) || 79;
 const shippingUpgradeAdd = Number(SHIPPING_UPGRADE_ADD) || 7;
 
 if (!STRIPE_SECRET_KEY) {
