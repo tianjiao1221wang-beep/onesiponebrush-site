@@ -18,6 +18,8 @@ const {
   SMTP_PASS,
   SMTP_FROM,
   SHOP_OWNER_EMAIL,
+  MAILCHIMP_API_KEY,
+  MAILCHIMP_LIST_ID,
   PORT,
   SHIPPING_STANDARD,
   FREE_SHIPPING_THRESHOLD,
@@ -155,6 +157,88 @@ app.post('/api/create-checkout-session', async (req, res) => {
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to create checkout session.';
     return res.status(500).json({ message });
+  }
+});
+
+// Mailchimp newsletter subscribe
+app.post('/api/subscribe', async (req, res) => {
+  try {
+    const { email } = req.body;
+    const e = (email || '').trim().toLowerCase();
+    if (!e || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)) {
+      return res.status(400).json({ message: 'Invalid email address.' });
+    }
+    if (!MAILCHIMP_API_KEY || !MAILCHIMP_LIST_ID) {
+      return res.status(503).json({ message: 'Newsletter subscription is not configured.' });
+    }
+    const lastHyphen = MAILCHIMP_API_KEY.lastIndexOf('-');
+    const dcPart = lastHyphen >= 0 ? MAILCHIMP_API_KEY.slice(lastHyphen + 1) : 'us1';
+    const url = `https://${dcPart}.api.mailchimp.com/3.0/lists/${MAILCHIMP_LIST_ID}/members`;
+    const auth = Buffer.from(`anystring:${MAILCHIMP_API_KEY}`).toString('base64');
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Basic ${auth}`
+      },
+      body: JSON.stringify({
+        email_address: e,
+        status: 'subscribed'
+      })
+    });
+    const data = await resp.json().catch(() => ({}));
+    if (resp.status === 200) {
+      return res.json({ success: true });
+    }
+    if (resp.status === 400 && data?.title === 'Member Exists') {
+      return res.json({ success: true });
+    }
+    console.error('Mailchimp error', resp.status, data);
+    return res.status(resp.status >= 400 ? resp.status : 500).json({
+      message: data?.detail || data?.title || 'Subscription failed.'
+    });
+  } catch (error) {
+    console.error('Subscribe error', error);
+    return res.status(500).json({ message: 'Subscription failed.' });
+  }
+});
+
+// Contact form – send email to shop owner
+app.post('/api/contact', async (req, res) => {
+  try {
+    const { name, email, subject, message } = req.body;
+    const n = (name || '').trim();
+    const e = (email || '').trim().toLowerCase();
+    const s = (subject || 'general').trim();
+    const m = (message || '').trim();
+    if (!n || !e || !m) {
+      return res.status(400).json({ message: 'Name, email, and message are required.' });
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)) {
+      return res.status(400).json({ message: 'Invalid email address.' });
+    }
+    const transporter = createTransporter();
+    if (!transporter) {
+      return res.status(503).json({ message: 'Contact form is not configured. Please set SMTP settings.' });
+    }
+    const subjectLabels = { general: 'General Inquiry', tutorial: 'DIY Kit Tutorial Help', order: 'Order Question', partnership: 'Collaboration' };
+    const subjectText = subjectLabels[s] || s;
+    await transporter.sendMail({
+      from: SMTP_FROM,
+      to: SHOP_OWNER_EMAIL,
+      replyTo: e,
+      subject: `[One Sip One Brush] ${subjectText} – ${n}`,
+      text: [
+        `From: ${n} <${e}>`,
+        `Subject: ${subjectText}`,
+        '',
+        m
+      ].join('\n')
+    });
+    return res.json({ success: true });
+  } catch (error) {
+    console.error('Contact error', error);
+    return res.status(500).json({ message: 'Failed to send message.' });
   }
 });
 

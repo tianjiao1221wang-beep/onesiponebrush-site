@@ -3,6 +3,9 @@ import React, { useState } from 'react';
 import { Send, MessageCircle, Mail, HelpCircle } from 'lucide-react';
 import { ContactSubject } from '../types';
 
+const apiBase = (import.meta.env.VITE_CHECKOUT_API_URL || '').trim().replace(/\/+$/, '')
+  || (import.meta.env.DEV ? 'http://localhost:4242' : '');
+
 const Contact: React.FC = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -10,12 +13,62 @@ const Contact: React.FC = () => {
     subject: 'general' as ContactSubject,
     message: ''
   });
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [newsletterSubscribed, setNewsletterSubscribed] = useState(false);
+  const [newsletterError, setNewsletterError] = useState('');
   const [isSent, setIsSent] = useState(false);
+  const [contactError, setContactError] = useState('');
+  const [contactLoading, setContactLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSent(true);
-    setTimeout(() => setIsSent(false), 5000);
+    if (!newsletterEmail || !apiBase) return;
+    setNewsletterError('');
+    try {
+      const res = await fetch(`${apiBase}/api/subscribe`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: newsletterEmail })
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data?.success) {
+        setNewsletterSubscribed(true);
+        setNewsletterEmail('');
+      } else {
+        setNewsletterError(data?.message || 'Subscription failed.');
+      }
+    } catch {
+      setNewsletterError('Could not connect. Please try again.');
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!apiBase) {
+      setContactError('Contact form is not configured.');
+      return;
+    }
+    setContactError('');
+    setContactLoading(true);
+    try {
+      const res = await fetch(`${apiBase}/api/contact`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data?.success) {
+        setIsSent(true);
+        setFormData({ name: '', email: '', subject: 'general', message: '' });
+        setTimeout(() => setIsSent(false), 5000);
+      } else {
+        setContactError(data?.message || 'Failed to send message.');
+      }
+    } catch {
+      setContactError('Could not connect. Please try again later.');
+    } finally {
+      setContactLoading(false);
+    }
   };
 
   return (
@@ -57,16 +110,26 @@ const Contact: React.FC = () => {
             <div className="bg-stone-900 text-white p-10 rounded-sm space-y-6">
               <h4 className="text-xl font-light tracking-widest uppercase">Subscribe to the Feed</h4>
               <p className="text-stone-400 text-sm">Join our newsletter for monthly insights into Chinese art, slow living tips, and exclusive kit updates.</p>
-              <form className="flex border-b border-stone-700 pb-2">
-                <input 
-                  type="email" 
-                  placeholder="Your Email / 您的邮箱" 
-                  className="bg-transparent text-sm w-full outline-none placeholder:text-stone-600"
-                />
-                <button type="button" className="text-stone-400 hover:text-white transition-colors">
-                  <Send className="w-4 h-4" />
-                </button>
-              </form>
+              {newsletterSubscribed ? (
+                <div className="text-green-400 text-sm">Thank you for subscribing!</div>
+              ) : (
+                <form onSubmit={handleNewsletterSubmit} className="space-y-2">
+                  <div className="flex border-b border-stone-700 pb-2">
+                    <input
+                      type="email"
+                      value={newsletterEmail}
+                      onChange={(e) => { setNewsletterEmail(e.target.value); setNewsletterError(''); }}
+                      placeholder="Your Email / 您的邮箱"
+                      className="bg-transparent text-sm w-full outline-none placeholder:text-stone-600"
+                      required
+                    />
+                    <button type="submit" className="text-stone-400 hover:text-white transition-colors">
+                      <Send className="w-4 h-4" />
+                    </button>
+                  </div>
+                  {newsletterError && <p className="text-red-400 text-xs">{newsletterError}</p>}
+                </form>
+              )}
             </div>
           </div>
 
@@ -88,6 +151,8 @@ const Contact: React.FC = () => {
                   <input
                     required
                     type="text"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     className="w-full border-b border-stone-200 py-3 outline-none focus:border-stone-900 transition-colors text-lg"
                     placeholder="Enter your name..."
                   />
@@ -97,6 +162,8 @@ const Contact: React.FC = () => {
                   <input
                     required
                     type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     className="w-full border-b border-stone-200 py-3 outline-none focus:border-stone-900 transition-colors text-lg"
                     placeholder="name@example.com"
                   />
@@ -106,7 +173,7 @@ const Contact: React.FC = () => {
                   <select
                     className="w-full border-b border-stone-200 py-3 outline-none focus:border-stone-900 transition-colors bg-transparent appearance-none"
                     value={formData.subject}
-                    onChange={(e) => setFormData({...formData, subject: e.target.value as ContactSubject})}
+                    onChange={(e) => setFormData({ ...formData, subject: e.target.value as ContactSubject })}
                   >
                     <option value="general">General Inquiry / 一般咨询</option>
                     <option value="tutorial">DIY Kit Tutorial Help / 套装教程求助</option>
@@ -118,15 +185,19 @@ const Contact: React.FC = () => {
                   <label className="block text-xs uppercase tracking-widest text-stone-400 mb-3">Your Message / 留言</label>
                   <textarea
                     required
+                    value={formData.message}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     className="w-full border-b border-stone-200 py-3 outline-none focus:border-stone-900 transition-colors min-h-[150px] resize-none text-lg"
                     placeholder="How can we assist you today?..."
                   />
                 </div>
+                {contactError && <p className="text-red-500 text-sm">{contactError}</p>}
                 <button
                   type="submit"
-                  className="w-full bg-stone-900 text-white py-5 rounded-sm text-sm tracking-widest uppercase font-bold hover:bg-stone-800 transition-all flex items-center justify-center space-x-3"
+                  disabled={contactLoading}
+                  className="w-full bg-stone-900 text-white py-5 rounded-sm text-sm tracking-widest uppercase font-bold hover:bg-stone-800 transition-all flex items-center justify-center space-x-3 disabled:opacity-70 disabled:cursor-not-allowed"
                 >
-                  <span>SEND MESSAGE</span>
+                  <span>{contactLoading ? 'SENDING...' : 'SEND MESSAGE'}</span>
                   <Send className="w-4 h-4" />
                 </button>
               </form>

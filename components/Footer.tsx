@@ -2,15 +2,40 @@
 import React, { useState } from 'react';
 import { Send } from 'lucide-react';
 
+const apiBase = (import.meta.env.VITE_CHECKOUT_API_URL || '').trim().replace(/\/+$/, '')
+  || (import.meta.env.DEV ? 'http://localhost:4242' : '');
+
 const Footer: React.FC = () => {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email) {
-      setSubscribed(true);
-      setEmail('');
+    if (!email || !apiBase) {
+      setError(apiBase ? 'Please enter your email.' : 'Newsletter is not configured.');
+      return;
+    }
+    setError('');
+    setLoading(true);
+    try {
+      const res = await fetch(`${apiBase}/api/subscribe`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data?.success) {
+        setSubscribed(true);
+        setEmail('');
+      } else {
+        setError(data?.message || 'Subscription failed. Please try again.');
+      }
+    } catch {
+      setError('Could not connect. Please try again later.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -54,18 +79,22 @@ const Footer: React.FC = () => {
             {subscribed ? (
               <div className="text-green-400 text-sm animate-pulse">Welcome to the inner circle!</div>
             ) : (
-              <form onSubmit={handleSubscribe} className="flex border-b border-stone-700 pb-2">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Your Email"
-                  className="bg-transparent text-sm w-full outline-none placeholder:text-stone-600"
-                  required
-                />
-                <button type="submit" className="text-stone-400 hover:text-white transition-colors">
-                  <Send className="w-4 h-4" />
-                </button>
+              <form onSubmit={handleSubscribe} className="space-y-2">
+                <div className="flex border-b border-stone-700 pb-2">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => { setEmail(e.target.value); setError(''); }}
+                    placeholder="Your Email"
+                    className="bg-transparent text-sm w-full outline-none placeholder:text-stone-600"
+                    required
+                    disabled={loading}
+                  />
+                  <button type="submit" disabled={loading} className="text-stone-400 hover:text-white transition-colors disabled:opacity-50">
+                    <Send className="w-4 h-4" />
+                  </button>
+                </div>
+                {error && <p className="text-red-400 text-xs">{error}</p>}
               </form>
             )}
           </div>
