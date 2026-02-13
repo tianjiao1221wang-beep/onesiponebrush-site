@@ -5,3 +5,9 @@
 html {
   scroll-behavior: smooth;
 }
+
+/* Hero image with natural edge fade */
+.hero-ink-fade {
+  mask-image: radial-gradient(ellipse 85% 75% at 50% 50%, black 30%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 85% 75% at 50% 50%, black 30%, transparent 100%);
+}

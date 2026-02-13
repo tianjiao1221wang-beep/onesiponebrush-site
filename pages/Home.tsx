@@ -50,11 +50,11 @@ const [activeGallery, setActiveGallery] = useState<GalleryType | null>(null);
       <section className="relative h-[90vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
          <img
-            src="/images/home-hero.svg"
-            alt="Ink and Tea"
-            className="w-full h-full object-cover opacity-40 grayscale"
+            src="/images/hero-ink-painting.png"
+            alt="Chinese ink abstract painting"
+            className="w-full h-full object-cover object-center opacity-50 hero-ink-fade"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#fdfbf7]/40 to-[#fdfbf7]"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#fdfbf7]/30 to-[#fdfbf7]"></div>
         </div>
         
         <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
