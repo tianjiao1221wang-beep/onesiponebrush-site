@@ -127,7 +127,7 @@ const Cart: React.FC<CartProps> = ({ cart, onRemove }) => {
             type="button"
             onClick={handleStripeCheckout}
             disabled={loading}
-            className="w-full bg-stone-900 text-white py-6 rounded-sm text-sm font-bold tracking-[0.3em] hover:bg-stone-800 transition-all flex items-center justify-center space-x-3 shadow-xl disabled:opacity-70 disabled:cursor-not-allowed"
+            className="w-full bg-stone-900 text-white py-6 rounded-sm text-sm font-bold tracking-[0.3em] hover:bg-stone-800 transition-all flex items-center justify-center gap-3 shadow-xl disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {loading ? (
               <>
@@ -136,8 +136,11 @@ const Cart: React.FC<CartProps> = ({ cart, onRemove }) => {
               </>
             ) : (
               <>
-                <span>GO TO CHECKOUT / 安全支付</span>
-                <Send className="w-4 h-4" />
+                <span className="flex flex-col items-center leading-tight">
+                  <span>GO TO CHECKOUT</span>
+                  <span className="chinese-text font-normal tracking-wide">安全支付</span>
+                </span>
+                <Send className="w-4 h-4 flex-shrink-0" />
               </>
             )}
           </button>
