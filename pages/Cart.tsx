@@ -1,11 +1,12 @@
 import React from 'react';
 import { CartItem } from '../types';
+import { getCartItemKey } from '../types';
 import { Trash2, Send, ShoppingBag, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface CartProps {
   cart: CartItem[];
-  onRemove: (id: string) => void;
+  onRemove: (cartItemKey: string) => void;
 }
 
 const stripePaymentLinkUrl = (import.meta.env.VITE_STRIPE_PAYMENT_LINK_URL || '').trim();
@@ -117,7 +118,7 @@ const Cart: React.FC<CartProps> = ({ cart, onRemove }) => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-24">
         <div className="space-y-10">
           {cart.map((item) => (
-            <div key={item.id} className="flex gap-8 border-b border-stone-100 pb-10 group">
+            <div key={getCartItemKey(item)} className="flex gap-8 border-b border-stone-100 pb-10 group">
               <div className="w-32 h-32 overflow-hidden flex-shrink-0">
                 <img src={item.image} alt={item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
               </div>
@@ -125,9 +126,14 @@ const Cart: React.FC<CartProps> = ({ cart, onRemove }) => {
                 <div className="flex justify-between items-start">
                   <div>
                     <h3 className="text-xl font-medium text-stone-900">{item.name}</h3>
-                    <p className="chinese-text text-base text-stone-500">{item.chineseName}</p>
+                    <p className="chinese-text text-base text-stone-500">
+                      {item.chineseName}
+                      {item.variantName && (
+                        <span className="text-stone-400"> · {item.variantChineseName || item.variantName}</span>
+                      )}
+                    </p>
                   </div>
-                  <button onClick={() => onRemove(item.id)} className="text-stone-300 hover:text-red-900 transition-colors p-2">
+                  <button onClick={() => onRemove(getCartItemKey(item))} className="text-stone-300 hover:text-red-900 transition-colors p-2">
                     <Trash2 className="w-5 h-5" />
                   </button>
                 </div>

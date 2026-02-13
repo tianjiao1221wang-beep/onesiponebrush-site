@@ -94,17 +94,20 @@ app.post('/api/create-checkout-session', async (req, res) => {
       return res.status(400).json({ message: 'Cart is empty.' });
     }
 
-    const lineItems = items.map(item => ({
-      price_data: {
-        currency: 'usd',
-        product_data: {
-          name: item.name,
-          description: item.chineseName
+    const lineItems = items.map(item => {
+      const desc = item.variantName ? `${item.chineseName} · ${item.variantChineseName || item.variantName}` : item.chineseName;
+      return {
+        price_data: {
+          currency: 'usd',
+          product_data: {
+            name: item.name,
+            description: desc
+          },
+          unit_amount: Math.round(Number(item.price) * 100)
         },
-        unit_amount: Math.round(Number(item.price) * 100)
-      },
-      quantity: item.quantity
-    }));
+        quantity: item.quantity
+      };
+    });
 
     const subtotal = items.reduce((sum, item) => sum + Number(item.price) * (item.quantity || 1), 0);
     const shippingMethod = req.body?.shippingMethod || 'standard';

@@ -16,25 +16,36 @@ import CulturalPopups from './pages/CulturalPopups';
 import CurationWeddings from './pages/CurationWeddings';
 import CurationSchools from './pages/CurationSchools';
 import CurationBrandProduction from './pages/CurationBrandProduction';
-import { CartItem, Product } from './types';
+import { CartItem, getCartItemKey, Product, ProductVariant } from './types';
 
 const App: React.FC = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
 
-  const handleAddToCart = (product: Product) => {
+  const handleAddToCart = (product: Product, variant?: ProductVariant) => {
+    const variantId = variant?.id;
+    const cartItem: CartItem = {
+      ...product,
+      image: variant?.image ?? product.image,
+      price: variant?.price ?? product.price,
+      quantity: 1,
+      variantId,
+      variantName: variant?.name,
+      variantChineseName: variant?.chineseName,
+    };
     setCart(prev => {
-      const existing = prev.find(item => item.id === product.id);
+      const key = getCartItemKey(cartItem);
+      const existing = prev.find(item => getCartItemKey(item) === key);
       if (existing) {
-        return prev.map(item => 
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+        return prev.map(item =>
+          getCartItemKey(item) === key ? { ...item, quantity: item.quantity + 1 } : item
         );
       }
-      return [...prev, { ...product, quantity: 1 }];
+      return [...prev, cartItem];
     });
   };
 
-  const handleRemoveFromCart = (id: string) => {
-    setCart(prev => prev.filter(item => item.id !== id));
+  const handleRemoveFromCart = (key: string) => {
+    setCart(prev => prev.filter(item => getCartItemKey(item) !== key));
   };
 
   const handleClearCart = () => {
