@@ -1,51 +1,18 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, BookOpen, Feather, Sparkles } from 'lucide-react';
 import { PRODUCTS } from '../constants';
 import ProductCard from '../components/ProductCard';
 import { Product } from '../types';
+import { CURATED_EVENTS } from '../constants/curatedEvents';
 
 interface HomeProps {
   onAddToCart: (product: Product) => void;
 }
 
-type GalleryType = 'lunarNewYear2026' | 'ruihua2025';
-
 const Home: React.FC<HomeProps> = ({ onAddToCart }) => {
   const featuredProducts = PRODUCTS.slice(0, 3);
-  const [activeGallery, setActiveGallery] = useState<GalleryType | null>(null);
-
-  const galleries: Record<GalleryType, { title: string; subtitle: string; photos: { src: string; alt: string }[] }> = {
-    lunarNewYear2026: {
-      title: 'Lunar New Year at Little Red Schoolhouse',
-      subtitle: '红屋自然中心春节活动回顾',
-      photos: [
-        { src: '/images/events/event-lny2026-01.png', alt: 'Cloisonné craft — girl in traditional dress with butterfly hair clips' },
-        { src: '/images/events/event-lny2026-02.png', alt: 'Full event scene — children crafting with Cloisonné Enamel' },
-        { src: '/images/events/event-lny2026-03.png', alt: 'Cultural animation and craft teaching moment' },
-        { src: '/images/events/event-lny2026-04.png', alt: 'Calligraphy and craft supplies at table' },
-        { src: '/images/events/event-lny2026-05.png', alt: 'Children focused on wooden cutout crafts' },
-        { src: '/images/events/event-lny2026-06.png', alt: 'Children in traditional attire crafting together' },
-        { src: '/images/events/event-lny2026-07.png', alt: 'Woman in qipao with cultural products display' },
-        { src: '/images/events/event-lny2026-08.png', alt: 'Cloisonné workshop — adult guiding child' },
-      ],
-    },
-    ruihua2025: {
-      title: 'Ruihua Chinese School 2025 Spring Festival Temple Fair & Gala',
-      subtitle: '瑞华中文学校2025首届春节庙会暨联欢晚会',
-      photos: [
-        { src: '/images/events/event-ruihua2025-hero.png', alt: 'Stage performance — fan dance with 福 and New Year banners' },
-        { src: '/images/events/event-ruihua2025-01.png', alt: 'Group photo on stage with 福 and 新年快乐' },
-        { src: '/images/events/event-ruihua2025-02.png', alt: 'Temple fair venue — gym with red lanterns and stalls' },
-        { src: '/images/events/event-ruihua2025-03.png', alt: 'Temple fair scene — balloon booth and festive crowd' },
-        { src: '/images/events/event-ruihua2025-04.png', alt: 'Participants with red festive decorations' },
-        { src: '/images/events/event-ruihua2025-05.png', alt: 'Lady in qipao with flowers and red lantern decor' },
-      ],
-    },
-  };
-
-  const currentGallery = activeGallery ? galleries[activeGallery] : null;
   return (
     <div className="paper-bg min-h-screen">
       {/* Hero Section */}
@@ -138,66 +105,35 @@ const Home: React.FC<HomeProps> = ({ onAddToCart }) => {
           ))}
         </div>
       </section>
- {/* Past Curated Event Cards */}
+      {/* Past Curated Event Cards — latest first, single-color Chinese backgrounds */}
       <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col md:flex-row justify-between items-baseline mb-12 border-b border-stone-200 pb-6">
+          <h2 className="text-3xl font-light ink-text mb-2">Past Curated Events</h2>
+          <Link to="/curated-events" className="mt-4 md:mt-0 text-sm tracking-widest uppercase font-semibold text-stone-900 hover:text-stone-600 transition-colors flex items-center">
+            View All / 查看全部 <ArrowRight className="ml-2 w-4 h-4" />
+          </Link>
+        </div>
         <div className="grid grid-cols-1 gap-8">
-          <div className="relative overflow-hidden rounded-sm border border-stone-200 bg-white">
-            <div className="grid grid-cols-1 lg:grid-cols-2 h-full">
-              <div className="h-[320px] lg:h-auto">
-                <img
-                  src="/images/events/event-ruihua2025-hero.png"
-                  alt="Ruihua Chinese School 2025 Spring Festival Temple Fair & Gala — stage performance and temple fair"
-                  className="w-full h-full object-cover"
-                />
+          {CURATED_EVENTS.map((event) => (
+            <Link
+              key={event.slug}
+              to={`/curated-events/${event.slug}`}
+              className={`relative overflow-hidden rounded-sm min-h-[280px] group flex flex-col justify-end ${event.cardColor}`}
+            >
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity bg-white" />
+              <div className="relative p-10 md:p-12 text-white">
+                <span className="text-xs uppercase tracking-[0.4em] text-white/80 mb-4 block">Past Curated Event</span>
+                <h2 className="text-3xl font-light mb-4">{event.titleEn}</h2>
+                <p className="chinese-text text-xl text-white/90 mb-4">{event.titleZh}</p>
+                <p className="text-sm text-white/70 mb-5">{event.dateLabel}</p>
+                <p className="text-white/90 leading-relaxed mb-6 max-w-2xl">{event.descriptionEn}</p>
+                <span className="inline-flex items-center text-sm tracking-widest uppercase group-hover:gap-4 gap-2 transition-all">
+                  View Gallery / 查看相册
+                  <ArrowRight className="w-4 h-4" />
+                </span>
               </div>
-              <div className="p-10 md:p-12 flex flex-col justify-center">
-                <span className="text-xs uppercase tracking-[0.4em] text-stone-500 mb-5">Past Curated Event</span>
-                <h2 className="text-3xl font-light text-stone-900 mb-5">Ruihua Chinese School 2025 Spring Festival Temple Fair & Gala</h2>
-                <p className="chinese-text text-stone-500 text-xl mb-6">瑞华中文学校2025首届春节庙会暨联欢晚会</p>
-                <p className="text-sm text-stone-500 mb-2">Saturday, Feb 15, 2025</p>
-                <p className="text-stone-600 leading-relaxed mb-8">
-                  Stage design, temple fair venue layout, poster design, product procurement, and bilingual (中英) materials. A vibrant celebration of Chinese New Year with performances, stalls, and community gathering.
-                </p>
-                <button
-                  type="button"
-                  onClick={() => setActiveGallery('ruihua2025')}
-                  className="self-start bg-stone-900 text-white px-8 py-4 text-sm tracking-widest uppercase hover:bg-stone-800 transition-colors inline-flex items-center"
-                >
-                  Open Photo Gallery / 查看相册
-                  <ArrowRight className="ml-2 w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div className="relative overflow-hidden rounded-sm border border-stone-200 bg-white">
-            <div className="grid grid-cols-1 lg:grid-cols-2 h-full">
-              <div className="h-[320px] lg:h-auto">
-                <img
-                  src="/images/events/event-lny2026-hero.png"
-                  alt="Lunar New Year at Little Red Schoolhouse Nature Center — cultural crafts and community engagement"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="p-10 md:p-12 flex flex-col justify-center">
-                <span className="text-xs uppercase tracking-[0.4em] text-stone-500 mb-5">Past Curated Event</span>
-                <h2 className="text-3xl font-light text-stone-900 mb-5">Lunar New Year at Little Red Schoolhouse</h2>
-                <p className="chinese-text text-stone-500 text-xl mb-6">红屋自然中心春节活动</p>
-                <p className="text-sm text-stone-500 mb-2">Sunday, Feb 8, 2026</p>
-                <p className="text-stone-600 leading-relaxed mb-8">
-                  A festive day of cultural crafts at Little Red Schoolhouse Nature Center — Cloisonné enamel workshops, calligraphy, traditional dress, and family engagement.
-                </p>
-                <button
-                  type="button"
-                  onClick={() => setActiveGallery('lunarNewYear2026')}
-                  className="self-start bg-stone-900 text-white px-8 py-4 text-sm tracking-widest uppercase hover:bg-stone-800 transition-colors inline-flex items-center"
-                >
-                  Open Photo Gallery
-                  <ArrowRight className="ml-2 w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          </div>
+            </Link>
+          ))}
         </div>
       </section>
 
@@ -227,33 +163,6 @@ const Home: React.FC<HomeProps> = ({ onAddToCart }) => {
         </div>
       </section>
 
-      {currentGallery && (
-        <div className="fixed inset-0 z-50 bg-stone-950/80 backdrop-blur-sm p-4 sm:p-8">
-          <div className="max-w-6xl mx-auto bg-[#fdfbf7] h-full overflow-y-auto rounded-sm border border-stone-200">
-            <div className="sticky top-0 bg-[#fdfbf7]/95 backdrop-blur-sm border-b border-stone-200 px-6 py-5 flex items-center justify-between">
-              <div>
-                <h3 className="text-2xl font-light text-stone-900">{currentGallery.title}</h3>
-                <p className="chinese-text text-stone-500">{currentGallery.subtitle}</p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setActiveGallery(null)}
-                className="text-sm uppercase tracking-[0.3em] text-stone-700 hover:text-stone-900"
-              >
-                Close
-              </button>
-            </div>
-            <div className="p-6 md:p-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {currentGallery.photos.map((photo) => (
-                <figure key={photo.alt} className="bg-white border border-stone-200 p-3">
-                  <img src={photo.src} alt={photo.alt} className="w-full h-56 object-cover" />
-                  <figcaption className="text-sm text-stone-600 mt-3">{photo.alt}</figcaption>
-                </figure>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
           </div>
   );
 };

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { CURATION_CARD_COLORS } from '../constants/curatedEvents';
 
 const categories = [
   {
@@ -8,8 +9,6 @@ const categories = [
     descriptionEn: 'Hands-on activations that invite guests into Chinese arts and heritage craft.',
     descriptionZh: '沉浸式互动体验，带领宾客走入中华艺术与非遗手工艺。',
     path: '/cultural-event-curation/popups',
-    image:
-      '/images/curation-popups.svg',
     subEvents: [
       { en: 'Live intangible heritage hands-on', zh: '现场体验非遗手工' },
       { en: 'Live design interaction', zh: '现场设计互动' },
@@ -22,8 +21,6 @@ const categories = [
     descriptionEn: 'Refined cultural moments designed for intimate milestones and family gatherings.',
     descriptionZh: '为重要时刻与家族欢聚定制优雅文化仪式。',
     path: '/cultural-event-curation/weddings',
-    image:
-      '/images/curation-weddings.svg',
     subEvents: [
       { en: "Baby's 100-day celebration", zh: '孩子百日宴' },
       { en: 'Chinese wedding', zh: '中式婚礼' },
@@ -36,8 +33,6 @@ const categories = [
     descriptionEn: 'Educational Chinese culture and craft courses for all ages, hands-on DIY classes.',
     descriptionZh: '提供各年龄段中国文化以及中国手工艺相关寓教于乐课程，课堂 DIY 课程。',
     path: '/cultural-event-curation/schools',
-    image:
-      '/images/curation-schools.svg',
     subEvents: [
       { en: 'Age-appropriate Chinese culture curriculum', zh: '各年龄段中国文化课程' },
       { en: 'Chinese craft hands-on learning', zh: '中国手工艺寓教于乐' },
@@ -50,8 +45,6 @@ const categories = [
     descriptionEn: 'Authentic Chinese cultural direction for campaigns, productions, and branded events.',
     descriptionZh: '为广告、影像与品牌活动提供专业且真实的中华文化指导。',
     path: '/cultural-event-curation/brand-production',
-    image:
-      '/images/curation-brand.svg',
     subEvents: [
       { en: 'Set cultural styling', zh: '片场文化美术指导' },
       { en: 'Campaign cultural consulting', zh: '项目文化顾问支持' },
@@ -81,6 +74,13 @@ const CulturalEventCuration: React.FC = () => {
               Request a Proposal
               <span className="block chinese-text normal-case tracking-normal mt-1">申请方案</span>
             </Link>
+            <Link
+              to="/curated-events"
+              className="bg-white border border-stone-300 text-stone-800 px-8 py-4 rounded-sm text-sm tracking-widest uppercase hover:bg-stone-50 transition-colors text-center"
+            >
+              Past Curated Events
+              <span className="block chinese-text normal-case tracking-normal mt-1">往期策划活动</span>
+            </Link>
             <button
               type="button"
               onClick={() => document.getElementById('what-we-curate')?.scrollIntoView({ behavior: 'smooth' })}
@@ -98,18 +98,13 @@ const CulturalEventCuration: React.FC = () => {
           <h2 className="text-3xl md:text-4xl font-light ink-text mb-2">What We Curate</h2>
           <p className="chinese-text text-xl text-stone-600 mb-10">我们策划的内容</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {categories.map((category) => (
+            {categories.map((category, i) => (
               <Link
                 key={category.path}
                 to={category.path}
-                className="relative overflow-hidden min-h-[320px] group"
+                className={`relative overflow-hidden min-h-[320px] group ${CURATION_CARD_COLORS[i % CURATION_CARD_COLORS.length]}`}
               >
-                <img
-                  src={category.image}
-                  alt={category.titleEn}
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-stone-900/55 group-hover:bg-stone-900/45 transition-colors" />
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity bg-white" />
                 <div className="relative h-full p-7 text-white flex flex-col justify-end text-left">
                   <h3 className="text-2xl font-light mb-3 min-h-[92px]">
                     <span className="block">{category.titleEn}</span>
@@ -131,6 +126,14 @@ const CulturalEventCuration: React.FC = () => {
               </Link>
             ))}
           </div>
+        </div>
+        <div className="mt-16 text-center">
+          <Link
+            to="/curated-events"
+            className="inline-flex items-center gap-2 text-stone-600 hover:text-stone-900 text-sm tracking-widest uppercase"
+          >
+            View Past Curated Events / 查看往期活动
+          </Link>
         </div>
       </section>
     </div>

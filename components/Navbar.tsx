@@ -14,6 +14,7 @@ const Navbar: React.FC<NavbarProps> = ({ cartCount }) => {
   const navLinks = [
     { name: 'Home', chinese: '首页', path: '/' },
     { name: 'Cultural Event Curation', chinese: '文化活动策展', path: '/cultural-event-curation' },
+    { name: 'Past Events', chinese: '往期活动', path: '/curated-events' },
     { name: 'Shop', chinese: '商店', path: '/shop' },
     { name: 'Culture Lab', chinese: '文创堂', path: '/culture-lab' },
     { name: 'About', chinese: '关于', path: '/about' },
