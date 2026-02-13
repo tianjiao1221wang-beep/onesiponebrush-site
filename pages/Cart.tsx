@@ -23,7 +23,8 @@ const Cart: React.FC<CartProps> = ({ cart, onRemove }) => {
   const handleStripeCheckout = async () => {
     setError('');
     if (stripePaymentLinkUrl) {
-      window.location.href = stripePaymentLinkUrl;
+      setLoading(true);
+      window.location.assign(stripePaymentLinkUrl);
       return;
     }
     setLoading(true);
@@ -42,7 +43,7 @@ const Cart: React.FC<CartProps> = ({ cart, onRemove }) => {
         throw new Error(data?.message || '无法创建结账会话');
       }
       if (data.url) {
-        window.location.href = data.url;
+        window.location.assign(data.url);
         return;
       }
       throw new Error('未返回支付链接');
