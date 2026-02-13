@@ -69,6 +69,25 @@ app.get('/api/config', (_req, res) => {
   res.json({ publishableKey });
 });
 
+// SMTP 连接测试，用于排查 contact 表单发信失败
+app.get('/api/smtp-test', async (_req, res) => {
+  const transporter = createTransporter();
+  if (!transporter) {
+    return res.json({
+      ok: false,
+      error: 'SMTP 未配置完整。请确认 SMTP_HOST, SMTP_USER, SMTP_PASS, SMTP_FROM, SHOP_OWNER_EMAIL 都已设置。'
+    });
+  }
+  try {
+    await transporter.verify();
+    return res.json({ ok: true, message: 'SMTP 连接成功' });
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    console.error('SMTP verify error:', msg);
+    return res.json({ ok: false, error: msg });
+  }
+});
+
 app.all('/api/create-checkout-session', (req, res, next) => {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: '请使用 POST 请求。此接口需从购物车页面的结账按钮发起。' });
@@ -237,7 +256,7 @@ app.post('/api/contact', async (req, res) => {
     });
     return res.json({ success: true });
   } catch (error) {
-    console.error('Contact error', error);
+    console.error('Contact SMTP error:', error instanceof Error ? error.message : String(error), error);
     return res.status(500).json({ message: 'Failed to send message.' });
   }
 });
