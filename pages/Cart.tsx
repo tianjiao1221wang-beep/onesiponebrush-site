@@ -38,7 +38,25 @@ const Cart: React.FC<CartProps> = ({ cart, onRemove }) => {
           embedded: false
         })
       });
-      const data = await response.json();
+      const contentType = response.headers.get('content-type');
+      let data: { url?: string; message?: string } = {};
+      if (contentType?.includes('application/json')) {
+        data = await response.json();
+      } else {
+        const text = await response.text();
+        if (text.startsWith('<')) {
+          throw new Error(
+            checkoutApiBaseUrl
+              ? '支付服务器返回了错误页面，请检查 Railway 部署状态。'
+              : '请求地址有误（收到 HTML 而非 JSON）。请在 Netlify 环境变量中设置 VITE_CHECKOUT_API_URL 并重新部署。'
+          );
+        }
+        try {
+          data = JSON.parse(text);
+        } catch {
+          throw new Error(text || '支付服务器响应异常');
+        }
+      }
       if (!response.ok) {
         throw new Error(data?.message || '无法创建结账会话');
       }

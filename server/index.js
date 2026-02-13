@@ -60,6 +60,12 @@ app.get('/api/config', (_req, res) => {
   res.json({ publishableKey });
 });
 
+app.all('/api/create-checkout-session', (req, res, next) => {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ message: '请使用 POST 请求。此接口需从购物车页面的结账按钮发起。' });
+  }
+  next();
+});
 
 app.post('/api/create-checkout-session', async (req, res) => {
   try {
