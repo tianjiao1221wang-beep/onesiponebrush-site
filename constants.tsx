@@ -9,8 +9,12 @@ export const PRODUCTS: Product[] = [
     price: 68,
     description: 'Inspired by the folding fan and scroll, this DIY book lamp unfolds like a landscape. Through making and light, it invites a slower, more intentional moment.',
     chineseDescription: '以折扇与书卷为灵感，这是一套可亲手完成的东方书灯。展开如山水，点亮成境，让制作与光影成为一段慢下来的时刻。',
-    image: '/images/product-fan-book-lamp.jpg',
-    category: 'kit'
+    image: '/images/product-fan-book-lamp-lanting.png',
+    category: 'kit',
+    variants: [
+      { id: 'lanting', name: 'Orchid Pavilion', chineseName: '兰亭序', image: '/images/product-fan-book-lamp-lanting.png' },
+      { id: 'qianli', name: 'Thousand Li Mountains', chineseName: '千里江山图', image: '/images/product-fan-book-lamp-qianli.png' },
+    ]
   },
   {
     id: '2',
@@ -19,11 +23,11 @@ export const PRODUCTS: Product[] = [
     price: 68,
     description: 'Inspired by the koi and the traditional peace buckle, this piece carries symbols of fortune and wholeness. A blessing not only meant to be wished — but worn.',
     chineseDescription: '以锦鲤与平安扣为意象，将吉祥与圆满化为可随身佩戴的符号。让东方祝福，不只是寓意，而是日常的一部分。',
-    image: '/images/product-koi-buckle.jpg',
+    image: '/images/product-koi-buckle.png',
     category: 'design',
     variants: [
-      { id: 'classic', name: 'Classic Gold', chineseName: '经典金', image: '/images/product-koi-buckle.jpg' },
-      { id: 'ink', name: 'Ink Black', chineseName: '墨色', image: '/images/product-koi-buckle.jpg' },
+      { id: 'necklace', name: 'Necklace Set', chineseName: '项链款', image: '/images/product-koi-buckle.png' },
+      { id: 'bracelet', name: 'Bracelet Set', chineseName: '手链款', image: '/images/product-koi-buckle.png' },
     ]
   },
   {
@@ -33,8 +37,12 @@ export const PRODUCTS: Product[] = [
     price: 68,
     description: 'A lotus-shaped hanging incense holder designed for inverted burning. As the incense gently falls, it creates a quiet rhythm that slows the space and the mind. Inspired by Eastern Zen philosophy, the lotus symbolizes purity and inner clarity. The inverted design transforms incense from fragrance into ritual — an everyday practice of stillness and awareness.',
     chineseDescription: '以莲花为形，线香倒悬而燃。一件让时间慢下来的香器，让空间在烟雾升落之间回归安静。灵感源自东方禅意与"静观自省"的生活哲学。莲象征清净与初心，倒挂点香使香灰自然垂落，将日常焚香转化为一场关于专注与呼吸的仪式。',
-    image: '/images/product-zen-incense.jpg',
-    category: 'design'
+    image: '/images/product-zen-incense-zen.png',
+    category: 'design',
+    variants: [
+      { id: 'zen', name: 'Zen Character', chineseName: '禅字款', image: '/images/product-zen-incense-zen.png' },
+      { id: 'chuxin', name: 'Original Heart', chineseName: '初心款', image: '/images/product-zen-incense-chuxin.png' },
+    ]
   },
   {
     id: '4',
@@ -59,7 +67,7 @@ export const PRODUCTS: Product[] = [
     price: 68,
     description: 'A fine-tip brush designed for small regular script and mindful copying. Soft yet precise, it turns writing into a quiet dialogue with oneself. Rooted in the tradition of the Four Treasures of the Study, this brush is not only for calligraphy — but for cultivating focus and inner stillness.',
     chineseDescription: '一支为小楷与抄经而生的细尖毛笔。笔锋轻柔，落墨安静，让书写成为与自己对话的片刻。灵感源自传统文房四宝中的修习精神。在一笔一画之间，练的不只是字，而是专注与沉静——让书写回归初心。',
-    image: '/images/product-small-brush.jpg',
+    image: '/images/product-small-brush.png',
     category: 'design'
   },
   {
@@ -69,7 +77,7 @@ export const PRODUCTS: Product[] = [
     price: 68,
     description: 'A mindful copybook designed for small script and running script practice. Soft-toned paper and restrained grid lines guide the hand back to rhythm and focus. Inspired by the tradition of meditative copying in Chinese culture, it is not only for handwriting — but for cultivating inner structure and calm.',
     chineseDescription: '为小楷与行书临摹而设计的静心抄写本。纸色温润，格线克制，让书写回归专注与节奏。灵感来自东方"抄经修习"的传统。在反复书写之间，不只是练字，更是在建立内在的秩序与安静。',
-    image: '/images/product-copybook.jpg',
+    image: '/images/product-copybook.png',
     category: 'design'
   },
   {
@@ -79,8 +87,12 @@ export const PRODUCTS: Product[] = [
     price: 68,
     description: 'A handcrafted embroidered book cover inspired by the motif "Golden Branches and Jade Leaves." Designed to wrap journals and copybooks in a layer of softness and protection. Rooted in traditional Chinese embroidery, the golden threads and floral forms symbolize growth and quiet refinement. More than a cover, it honors the act of writing and self-reflection.',
     chineseDescription: '以"金枝玉叶"为意象的立体刺绣布书衣。将日常笔记、手账或抄写本包裹其中，让书写拥有一层温柔的守护。刺绣源自东方织绣传统，金线与花叶象征珍贵与生长。它不仅是封套，更是对自我记录与内在世界的一种珍视。',
-    image: '/images/product-embroidered-cover.jpg',
-    category: 'design'
+    image: '/images/product-embroidered-cover-cream.png',
+    category: 'design',
+    variants: [
+      { id: 'cream', name: 'Cream Gold', chineseName: '奶油金枝', image: '/images/product-embroidered-cover-cream.png' },
+      { id: 'black', name: 'Black Gold', chineseName: '墨黑金枝', image: '/images/product-embroidered-cover-black.png' },
+    ]
   }
 ];
 

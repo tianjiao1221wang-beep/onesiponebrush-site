@@ -27,11 +27,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
 
   return (
     <div className="group relative bg-white p-4 transition-all hover:shadow-xl hover:-translate-y-1">
-      <div className="aspect-[4/3] w-full overflow-hidden">
+      <div className="aspect-[4/3] w-full overflow-hidden flex items-center justify-center bg-stone-50">
         <img
           src={displayImage}
           alt={product.name}
-          className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
+          className="h-full w-full object-contain object-center group-hover:scale-105 transition-transform duration-700"
         />
       </div>
       {product.variants && product.variants.length > 0 && (
@@ -46,7 +46,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
               }`}
               title={`${v.name}${v.chineseName ? ` / ${v.chineseName}` : ''}`}
             >
-              <img src={v.image} alt={v.name} className="w-full h-full object-cover" />
+              <img src={v.image} alt={v.name} className="w-full h-full object-contain" />
             </button>
           ))}
         </div>
@@ -66,7 +66,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
         <p className="chinese-text text-xs text-stone-400 line-clamp-1">{product.chineseDescription}</p>
       </div>
       <button
-        onClick={() => onAddToCart(product)}
+        onClick={handleAdd}
         className="mt-6 w-full flex items-center justify-center bg-stone-900 text-white px-6 py-3 text-sm font-medium hover:bg-stone-800 transition-colors tracking-widest uppercase"
       >
         <Plus className="w-4 h-4 mr-2" />
