@@ -10,7 +10,7 @@ interface HomeProps {
   onAddToCart: (product: Product) => void;
 }
 
-type GalleryType = 'lunarNewYear2026';
+type GalleryType = 'lunarNewYear2026' | 'ruihua2025';
 
 const Home: React.FC<HomeProps> = ({ onAddToCart }) => {
   const featuredProducts = PRODUCTS.slice(0, 3);
@@ -29,6 +29,18 @@ const Home: React.FC<HomeProps> = ({ onAddToCart }) => {
         { src: '/images/events/event-lny2026-06.png', alt: 'Children in traditional attire crafting together' },
         { src: '/images/events/event-lny2026-07.png', alt: 'Woman in qipao with cultural products display' },
         { src: '/images/events/event-lny2026-08.png', alt: 'Cloisonné workshop — adult guiding child' },
+      ],
+    },
+    ruihua2025: {
+      title: 'Ruihua Chinese School 2025 Spring Festival Temple Fair & Gala',
+      subtitle: '瑞华中文学校2025首届春节庙会暨联欢晚会',
+      photos: [
+        { src: '/images/events/event-ruihua2025-hero.png', alt: 'Stage performance — fan dance with 福 and New Year banners' },
+        { src: '/images/events/event-ruihua2025-01.png', alt: 'Group photo on stage with 福 and 新年快乐' },
+        { src: '/images/events/event-ruihua2025-02.png', alt: 'Temple fair venue — gym with red lanterns and stalls' },
+        { src: '/images/events/event-ruihua2025-03.png', alt: 'Temple fair scene — balloon booth and festive crowd' },
+        { src: '/images/events/event-ruihua2025-04.png', alt: 'Participants with red festive decorations' },
+        { src: '/images/events/event-ruihua2025-05.png', alt: 'Lady in qipao with flowers and red lantern decor' },
       ],
     },
   };
@@ -129,6 +141,35 @@ const Home: React.FC<HomeProps> = ({ onAddToCart }) => {
  {/* Past Curated Event Cards */}
       <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-8">
+          <div className="relative overflow-hidden rounded-sm border border-stone-200 bg-white">
+            <div className="grid grid-cols-1 lg:grid-cols-2 h-full">
+              <div className="h-[320px] lg:h-auto">
+                <img
+                  src="/images/events/event-ruihua2025-hero.png"
+                  alt="Ruihua Chinese School 2025 Spring Festival Temple Fair & Gala — stage performance and temple fair"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="p-10 md:p-12 flex flex-col justify-center">
+                <span className="text-xs uppercase tracking-[0.4em] text-stone-500 mb-5">Past Curated Event</span>
+                <h2 className="text-3xl font-light text-stone-900 mb-5">Ruihua Chinese School 2025 Spring Festival Temple Fair & Gala</h2>
+                <p className="chinese-text text-stone-500 text-xl mb-6">瑞华中文学校2025首届春节庙会暨联欢晚会</p>
+                <p className="text-sm text-stone-500 mb-2">Saturday, Feb 15, 2025</p>
+                <p className="text-stone-600 leading-relaxed mb-8">
+                  Stage design, temple fair venue layout, poster design, product procurement, and bilingual (中英) materials. A vibrant celebration of Chinese New Year with performances, stalls, and community gathering.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setActiveGallery('ruihua2025')}
+                  className="self-start bg-stone-900 text-white px-8 py-4 text-sm tracking-widest uppercase hover:bg-stone-800 transition-colors inline-flex items-center"
+                >
+                  Open Photo Gallery / 查看相册
+                  <ArrowRight className="ml-2 w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+
           <div className="relative overflow-hidden rounded-sm border border-stone-200 bg-white">
             <div className="grid grid-cols-1 lg:grid-cols-2 h-full">
               <div className="h-[320px] lg:h-auto">
