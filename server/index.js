@@ -105,7 +105,7 @@ app.post('/api/create-checkout-session', async (req, res) => {
       quantity: item.quantity
     }));
 
-    const frontendUrl = FRONTEND_URL || origin;
+    const frontendUrl = origin || FRONTEND_URL;
     if (!frontendUrl) {
       return res.status(400).json({ message: 'Missing frontend URL.' });
     }
