@@ -39,6 +39,14 @@
 <link rel="stylesheet" href="/index.css">
 </head>
 <body>
+    <script>
+      (function(){
+        var p=location.pathname,s=location.search;
+        if((p==='/checkout-success'||p==='/cart')&&(s||p==='/checkout-success')){
+          location.replace('/#'+p+s);
+        }
+      })();
+    </script>
     <div id="root"></div>
 <script type="module" src="/index.tsx"></script>
 </body>

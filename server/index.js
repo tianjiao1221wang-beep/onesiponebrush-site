@@ -81,10 +81,12 @@ app.post('/api/create-checkout-session', async (req, res) => {
       quantity: item.quantity
     }));
 
-    const frontendUrl = origin || FRONTEND_URL;
-    if (!frontendUrl) {
+    const baseUrl = (origin || FRONTEND_URL || '').trim().replace(/\/+$/, '');
+    if (!baseUrl) {
       return res.status(400).json({ message: 'Missing frontend URL.' });
     }
+    const successUrl = `${baseUrl}/checkout-success?session_id={CHECKOUT_SESSION_ID}`;
+    const cancelUrl = `${baseUrl}/cart?canceled=true`;
 
     const sessionConfig = {
       mode: 'payment',
@@ -99,10 +101,10 @@ app.post('/api/create-checkout-session', async (req, res) => {
 
     if (req.body?.embedded) {
       sessionConfig.ui_mode = 'embedded';
-      sessionConfig.return_url = `${frontendUrl}/#/checkout-success?session_id={CHECKOUT_SESSION_ID}`;
+      sessionConfig.return_url = successUrl;
     } else {
-      sessionConfig.success_url = `${frontendUrl}/#/checkout-success?session_id={CHECKOUT_SESSION_ID}`;
-      sessionConfig.cancel_url = `${frontendUrl}/#/cart?canceled=true`;
+      sessionConfig.success_url = successUrl;
+      sessionConfig.cancel_url = cancelUrl;
     }
 
     const session = await stripe.checkout.sessions.create(sessionConfig);
