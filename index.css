@@ -1,0 +1,7 @@
+/* Global styles - Tailwind is loaded via CDN in index.html */
+* {
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+}
