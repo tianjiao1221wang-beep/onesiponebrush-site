@@ -33,6 +33,14 @@ export function getCartItemKey(item: CartItem): string {
   return item.variantId ? `${item.id}__${item.variantId}` : item.id;
 }
 
+export interface CulturePostSection {
+  title: string;
+  chineseTitle: string;
+  content: string;
+  chineseContent: string;
+  image?: string;
+}
+
 export interface CulturePost {
   id: string;
   title: string;
@@ -43,6 +51,8 @@ export interface CulturePost {
   videoUrl?: string;
   date: string;
   type: 'article' | 'video' | 'gallery';
+  /** 长文分节内容，用于阅读全文 */
+  sections?: CulturePostSection[];
 }
 
 export interface OrderInfo {

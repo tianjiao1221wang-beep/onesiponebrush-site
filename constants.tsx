@@ -1,6 +1,52 @@
 
 import { Product, CulturePost } from './types';
 
+/** 一墨一茗品牌文章 - 分节内容及英译 */
+const YIMOYIMING_SECTIONS = [
+  {
+    title: 'Prologue',
+    chineseTitle: '开篇',
+    content: 'Lin Yutang wrote in My Country and My People that Chinese aesthetics embodies a "wisdom of leisure" — an ability to loosen time and settle the heart. Chiang Hsun said in Ten Lectures on Life, "If life has no feeling, it is left with only a busy body." What One Sip One Brush hopes to do is bring feeling back into life.',
+    chineseContent: '林语堂在《吾国吾民》中形容中国人的美学是一种"闲适的智慧"，是一种让时间松弛、让心安顿的能力。蒋勋在《生活十讲》中说，"生活若没有感受，便只剩下一具忙碌的身体。"而「一墨一茗」想做的，是让感受重新回到生活。',
+    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80'
+  },
+  {
+    title: 'Art is not a skill, but a way of being',
+    chineseTitle: '艺术，不是一种技艺，是一种存在方式',
+    content: 'The art we practice is not limited to any single medium — ink, watercolor, gold leaf, canvas, wood, paper, clay, metal, print… They are all merely vehicles for touching the soul. We care less about "making a good piece" and more about the relationship one rebuilds with oneself and the world while creating. Art is: the warmth of fingers touching material; the memory a color evokes in the heart; the arc of a single stroke that determines the direction of emotion; the emergence of form from nothing, a second breath of life. A child creating discovers the world. An adult creating rediscovers themselves. A foreigner creating in an Eastern style meets another culture with tenderness. A Chinese person creating returns to the inner landscape of their heart. Art is a universal language.',
+    chineseContent: '我们所做的艺术，不被限定于某种材料——墨、水彩、金箔、布面、木材、纸张、黏土、金属、印刷……它们都只是触碰心灵的媒介。我们在乎的不是"做好一个作品"，而是人在创造时，与自己和世界重新建立的关系。艺术，是：手指触碰材质的温度；颜色在心里唤起的记忆；一笔线条的弧度决定了情绪的方向；形状从无到有，是生命的第二次呼吸。一个孩子在创作时，是在发现世界。一个成年人在创作时，是在重新发现自己。一个外国人在创作东方风格的作品时，是在与另一种文化温柔地相遇。一个中国人在创作时，是在回到自己内心深处的山水。艺术，是一种通用语言。',
+    image: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800&q=80'
+  },
+  {
+    title: 'Slow is not standing still, but letting the soul catch up',
+    chineseTitle: '慢，并非止步，而是让灵魂跟上脚步',
+    content: 'Eastern aesthetics value negative space. The painting has unpainted places; the calligraphy has unspoken meaning; the tea has a temperature left unsaid. Slowness is an attitude: letting life unfold in detail rather than be hastily closed. In the One Sip One Brush experience, some capture light with a sheet of gold leaf, some shape form with a piece of wood, some steady the heart with a cup of tea. Every material reminds us: beauty is not produced — it is felt.',
+    chineseContent: '东方的美，讲究留白。画有未画之处，字有未写之意，茶有未说出口的温度。慢，是一种态度：让生活在细节里展开，而不是被匆忙合上。在一墨一茗的体验里，有人用一片金箔捕捉光，有人用一块木板塑造形状，有人用一杯茶安顿心绪。每一种材料都在提醒人：美不是生产出来的，是被感受出来的。',
+    image: 'https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?w=800&q=80'
+  },
+  {
+    title: 'Tea: stillness within time, distance between hearts',
+    chineseTitle: '茶：时间之内的静，心灵之间的距离',
+    content: 'Tea is the gentlest ritual in Eastern life. It does not dazzle, does not clamor, neither rushes nor stalls. It tells us: some things only have flavor when we give them time. Tea faces all cultures, needing no words: The Chinese recall home in tea; foreigners understand "the Eastern breath" in tea; children learn to wait in its fragrance; adults find a moment of peace in its vapor. Tea and art are both arts of time. Both require presence.',
+    chineseContent: '茶，是东方生活里最温柔的仪式。它不炫目，不喧哗，不急也不慢。它告诉我们：有些事，只有花时间，才会有味道。茶面向所有文化，无需语言：中国人会从茶里想起故乡；外国人会从茶里理解"东方的呼吸"；孩子会从茶香学会等待；大人会在茶气里找到片刻安宁。茶与艺术都是时间的艺术。都需要人在场。',
+    image: 'https://images.unsplash.com/photo-1571934811356-5cc061b6821f?w=800&q=80'
+  },
+  {
+    title: 'One Sip One Brush: where East and West meet in beauty',
+    chineseTitle: '一墨一茗：让东西方在美里相遇',
+    content: 'We are not a traditional calligraphy studio, nor an ordinary handicraft class. We are more like — a place where the world becomes soft again. Here: Chinese children see culture in modern form; foreign friends experience the depth of Eastern aesthetics; adults regain the courage to create; children build an intuitive sense of beauty in freedom; families find rare stillness and warmth in shared creation. Art is connection, tea is warmth, culture is the bridge. One Sip One Brush hopes to be a way for Chinese culture to reach the world, and a door for the world to enter Eastern aesthetics.',
+    chineseContent: '我们不是传统的书画机构，也不是普通的手作教室。我们更像是——一个让世界重新变柔软的地方。在这里：中国孩子能看到文化的现代形态；外国朋友能体验东方审美的深度；大人能重拾创作的勇气；孩子能在自由中建立美的直觉；家庭能在共同创作中拥有难得的静与暖。艺术是连接，茶是温度，文化是桥梁。一墨一茗希望成为中国文化走向世界的方式，也是世界走进东方美学的一扇门。',
+    image: 'https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=800&q=80'
+  },
+  {
+    title: 'One Sip One Brush: lighting a small Eastern light for every rhythm of life',
+    chineseTitle: '一墨一茗：为每一种生活节奏，点亮一小盏东方之光',
+    content: 'Our wish is simple: May you still have a corner to slow down amid the fast pace; may you still meet beauty amid pressure; may you see yourself again in creation; may you understand in tea\'s fragrance that life need not be loud. One sip, one breath — let life have warmth again, let the world have aesthetics again, let the heart have space again.',
+    chineseContent: '我们的愿望很简单：愿你在快节奏中，仍有一隅可以慢下来；愿你在压力之中，仍能与美相遇；愿你在创作里，重新看见自己；愿你在茶香里，理解生活不必喧哗。一墨一茗，一念一息，让生活重新有温度、让世界重新有审美、让心重新有空间。',
+    image: 'https://images.unsplash.com/photo-1516641051054-9df6a1aad654?w=800&q=80'
+  }
+];
+
 export const PRODUCTS: Product[] = [
   {
     id: '1',
@@ -101,23 +147,14 @@ export const PRODUCTS: Product[] = [
 
 export const CULTURE_POSTS: CulturePost[] = [
   {
-    id: 'p1',
-    title: 'The Soul of Ink',
-    chineseTitle: '墨之魂',
-    content: 'In traditional Chinese culture, ink is not just a medium, but a reflection of the artist\'s spirit.',
-    chineseContent: '在中国传统文化中，墨不仅是一种媒介，更是艺术家精神的反映。',
-    image: '/images/culture-soul-ink.jpg',
-    date: '2024-05-15',
-    type: 'article'
-  },
-  {
-    id: 'p2',
-    title: 'Slow Life: The Art of Tea',
-    chineseTitle: '慢生活：茶道艺术',
-    content: 'Waiting for the water to reach the perfect temperature is the first lesson in patience.',
-    chineseContent: '等待水温达到完美状态是关于耐心的第一课。',
-    videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
-    date: '2024-05-10',
-    type: 'video'
+    id: 'yimoyiming',
+    title: 'One Sip One Brush: Where Slowness Meets the Soul',
+    chineseTitle: '一墨一茗：让感受重新回到生活',
+    content: 'We live in an age of constant acceleration. Time is sliced into schedules, people are pushed forward, even breathing feels rushed. Yet in Eastern culture there is another rhythm: slow, delicate, implicit — like ink spreading on paper, like tea fragrance rising gently in the air.',
+    chineseContent: '我们生活在一个不断加速的时代。时间被切割成一格格日程，人被推着前进，连呼吸都显得仓促。可东方文化里，有另一种节奏：缓慢、细腻、含蓄，如水墨在纸上散开，如茶香在空气中缓缓升起。',
+    image: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800&q=80',
+    date: '2025-02-13',
+    type: 'article',
+    sections: YIMOYIMING_SECTIONS
   }
 ];

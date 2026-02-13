@@ -1,9 +1,13 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { CULTURE_POSTS } from '../constants';
-import { Calendar, User, ArrowRight } from 'lucide-react';
+import { CulturePost, CulturePostSection } from '../types';
+import { Calendar, ArrowRight, X, Languages } from 'lucide-react';
 
 const CultureLab: React.FC = () => {
+  const [expandedPost, setExpandedPost] = useState<CulturePost | null>(null);
+  const [langEn, setLangEn] = useState(false);
+
   return (
     <div className="py-24 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto min-h-screen">
       <header className="text-center mb-32">
@@ -61,14 +65,91 @@ const CultureLab: React.FC = () => {
                     {post.chineseContent}
                   </p>
                 </div>
-                <button className="flex items-center text-stone-900 border-b-2 border-stone-900 pb-2 text-sm font-bold tracking-[0.2em] uppercase hover:text-stone-400 hover:border-stone-200 transition-all">
-                  Read Story / 阅读全文 <ArrowRight className="ml-3 w-4 h-4" />
-                </button>
+                {post.sections ? (
+                  <button 
+                    onClick={() => { setExpandedPost(post); setLangEn(false); }}
+                    className="flex items-center text-stone-900 border-b-2 border-stone-900 pb-2 text-sm font-bold tracking-[0.2em] uppercase hover:text-stone-400 hover:border-stone-200 transition-all"
+                  >
+                    Read Story / 阅读全文 <ArrowRight className="ml-3 w-4 h-4" />
+                  </button>
+                ) : (
+                  <button className="flex items-center text-stone-900 border-b-2 border-stone-900 pb-2 text-sm font-bold tracking-[0.2em] uppercase hover:text-stone-400 hover:border-stone-200 transition-all">
+                    Read Story / 阅读全文 <ArrowRight className="ml-3 w-4 h-4" />
+                  </button>
+                )}
               </div>
             </div>
           </article>
         ))}
       </div>
+
+      {/* Full Article Modal */}
+      {expandedPost?.sections && (
+        <div 
+          className="fixed inset-0 z-50 bg-stone-50/95 backdrop-blur-sm overflow-y-auto"
+          onClick={() => setExpandedPost(null)}
+        >
+          <div 
+            className="max-w-3xl mx-auto py-16 px-4 sm:px-6"
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="flex justify-between items-center mb-12">
+              <h2 className="text-3xl font-light ink-text">
+                {expandedPost.title}
+              </h2>
+              <button
+                onClick={() => setExpandedPost(null)}
+                className="p-2 text-stone-500 hover:text-stone-900 transition-colors"
+                aria-label="Close"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            {/* Translate Toggle */}
+            <div className="flex items-center gap-3 mb-16 pb-6 border-b border-stone-200">
+              <Languages className="w-5 h-5 text-stone-500" />
+              <span className="text-sm text-stone-500 uppercase tracking-wider">Language / 语言</span>
+              <button
+                onClick={() => setLangEn(false)}
+                className={`px-4 py-2 rounded-sm text-sm font-medium transition-colors ${!langEn ? 'bg-stone-900 text-white' : 'bg-stone-100 text-stone-500 hover:bg-stone-200'}`}
+              >
+                中文
+              </button>
+              <button
+                onClick={() => setLangEn(true)}
+                className={`px-4 py-2 rounded-sm text-sm font-medium transition-colors ${langEn ? 'bg-stone-900 text-white' : 'bg-stone-100 text-stone-500 hover:bg-stone-200'}`}
+              >
+                English
+              </button>
+            </div>
+
+            <div className="space-y-24">
+              {expandedPost.sections.map((section: CulturePostSection, idx: number) => (
+                <section key={idx} className="space-y-6">
+                  {section.image && (
+                    <div className="aspect-[16/10] overflow-hidden rounded-sm">
+                      <img 
+                        src={section.image} 
+                        alt={langEn ? section.title : section.chineseTitle}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )}
+                  <h3 className={`text-2xl font-light ${langEn ? 'ink-text' : 'chinese-text'}`}>
+                    {langEn ? section.title : section.chineseTitle}
+                  </h3>
+                  <div className="space-y-4">
+                    <p className={`leading-relaxed ${langEn ? 'text-stone-700' : 'chinese-text text-stone-600'}`}>
+                      {langEn ? section.content : section.chineseContent}
+                    </p>
+                  </div>
+                </section>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
