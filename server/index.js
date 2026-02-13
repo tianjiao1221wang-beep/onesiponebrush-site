@@ -28,35 +28,7 @@ if (!STRIPE_SECRET_KEY) {
 const stripe = new Stripe(STRIPE_SECRET_KEY);
 const app = express();
 
-// Build allowed origins: from FRONTEND_URL, and add both localhost + 127.0.0.1 for same port
-const allowedOrigins = FRONTEND_URL
-  ? FRONTEND_URL.split(',')
-      .map(origin => origin.trim())
-      .filter(Boolean)
-      .flatMap(origin => {
-        const list = [origin];
-        try {
-          const u = new URL(origin);
-          if (u.hostname === 'localhost') {
-            list.push(origin.replace(/localhost/, '127.0.0.1'));
-          } else if (u.hostname === '127.0.0.1') {
-            list.push(origin.replace(/127\.0\.0\.1/, 'localhost'));
-          }
-        } catch (_) {}
-        return list;
-      })
-  : [];
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    }
-  })
-);
+app.use(cors({ origin: true }));
 
 app.use('/api/stripe-webhook', express.raw({ type: 'application/json' }));
 app.use(express.json());

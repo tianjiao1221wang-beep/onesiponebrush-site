@@ -9,7 +9,7 @@ interface CartProps {
 }
 
 const stripePaymentLinkUrl = (import.meta.env.VITE_STRIPE_PAYMENT_LINK_URL || '').trim();
-const envApiUrl = (import.meta.env.VITE_CHECKOUT_API_URL || '').trim();
+const envApiUrl = (import.meta.env.VITE_CHECKOUT_API_URL || '').trim().replace(/\/+$/, '');
 const checkoutApiBaseUrl = envApiUrl || (import.meta.env.DEV ? 'http://localhost:4242' : '');
 const createCheckoutSessionUrl = checkoutApiBaseUrl
   ? `${checkoutApiBaseUrl}/api/create-checkout-session`
@@ -48,7 +48,12 @@ const Cart: React.FC<CartProps> = ({ cart, onRemove }) => {
       }
       throw new Error('未返回支付链接');
     } catch (e) {
-      const msg = e instanceof Error ? e.message : '无法连接支付服务器，请确认后端已启动 (端口 4242)。';
+      let msg = e instanceof Error ? e.message : '无法连接支付服务器';
+      if (!checkoutApiBaseUrl && !import.meta.env.DEV) {
+        msg = '支付服务未配置。请在 Netlify 环境变量中设置 VITE_CHECKOUT_API_URL 为 Railway 后端地址，并重新部署。';
+      } else if (!checkoutApiBaseUrl) {
+        msg = '请确认后端已启动 (npm run dev:server，端口 4242)。';
+      }
       setError(msg);
     } finally {
       setLoading(false);
