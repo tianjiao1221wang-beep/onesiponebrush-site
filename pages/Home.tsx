@@ -10,7 +10,7 @@ interface HomeProps {
   onAddToCart: (product: Product) => void;
 }
 
-type GalleryType = 'midAutumn' | 'schoolGala' | 'lunarNewYear2026';
+type GalleryType = 'lunarNewYear2026';
 
 const Home: React.FC<HomeProps> = ({ onAddToCart }) => {
   const featuredProducts = PRODUCTS.slice(0, 3);
@@ -29,30 +29,6 @@ const Home: React.FC<HomeProps> = ({ onAddToCart }) => {
         { src: '/images/events/event-lny2026-06.png', alt: 'Children in traditional attire crafting together' },
         { src: '/images/events/event-lny2026-07.png', alt: 'Woman in qipao with cultural products display' },
         { src: '/images/events/event-lny2026-08.png', alt: 'Cloisonné workshop — adult guiding child' },
-      ],
-    },
-    midAutumn: {
-      title: 'Curated Event Photo Gallery',
-      subtitle: '活动回顾影像集',
-      photos: [
-        { src: '/images/workshop-preview.svg', alt: 'Tea and calligraphy session' },
-        { src: '/images/about-story.svg', alt: 'Community curated event moment' },
-        { src: '/images/workshop-preview.svg', alt: 'Interactive brush practice table' },
-        { src: '/images/about-story.svg', alt: 'Guests enjoying tea ceremony' },
-        { src: '/images/workshop-preview.svg', alt: 'Curated heritage showcase' },
-        { src: '/images/about-story.svg', alt: 'Closing group experience' },
-      ],
-    },
-    schoolGala: {
-      title: 'School New Year Gala Gallery',
-      subtitle: '校园新年庆典影像集',
-      photos: [
-        { src: '/images/about-story.svg', alt: 'Students opening the New Year gala program' },
-        { src: '/images/workshop-preview.svg', alt: 'Family-friendly ink and tea activity booth' },
-        { src: '/images/about-story.svg', alt: 'Cultural performance and stage presentation' },
-        { src: '/images/workshop-preview.svg', alt: 'Interactive calligraphy learning corner' },
-        { src: '/images/about-story.svg', alt: 'Community photo moment with students and parents' },
-        { src: '/images/workshop-preview.svg', alt: 'Closing celebration for the school New Year gala' },
       ],
     },
   };
@@ -173,62 +149,6 @@ const Home: React.FC<HomeProps> = ({ onAddToCart }) => {
                 <button
                   type="button"
                   onClick={() => setActiveGallery('lunarNewYear2026')}
-                  className="self-start bg-stone-900 text-white px-8 py-4 text-sm tracking-widest uppercase hover:bg-stone-800 transition-colors inline-flex items-center"
-                >
-                  Open Photo Gallery
-                  <ArrowRight className="ml-2 w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div className="relative overflow-hidden rounded-sm border border-stone-200 bg-white">
-            <div className="grid grid-cols-1 lg:grid-cols-2 h-full">
-              <div className="h-[320px] lg:h-auto">
-                <img
-                  src="/images/about-story.svg"
-                  alt="Mid-Autumn Ink & Tea Gathering"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="p-10 md:p-12 flex flex-col justify-center">
-                <span className="text-xs uppercase tracking-[0.4em] text-stone-500 mb-5">Past Curated Event</span>
-                <h2 className="text-3xl font-light text-stone-900 mb-5">Mid-Autumn Ink & Tea Gathering</h2>
-                <p className="chinese-text text-stone-500 text-xl mb-6">中秋茶墨雅集</p>
-                <p className="text-stone-600 leading-relaxed mb-8">
-                  A reflective cultural evening featuring guided brushwork, tea appreciation, and community storytelling.
-                </p>
-                <button
-                  type="button"
-                  onClick={() => setActiveGallery('midAutumn')}
-                  className="self-start bg-stone-900 text-white px-8 py-4 text-sm tracking-widest uppercase hover:bg-stone-800 transition-colors inline-flex items-center"
-                >
-                  Open Photo Gallery
-                  <ArrowRight className="ml-2 w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div className="relative overflow-hidden rounded-sm border border-stone-200 bg-white">
-            <div className="grid grid-cols-1 lg:grid-cols-2 h-full">
-              <div className="h-[320px] lg:h-auto">
-                <img
-                  src="/images/workshop-preview.svg"
-                  alt="School New Year Gala"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="p-10 md:p-12 flex flex-col justify-center">
-                <span className="text-xs uppercase tracking-[0.4em] text-stone-500 mb-5">School Featured Event</span>
-                <h2 className="text-3xl font-light text-stone-900 mb-5">School New Year Gala</h2>
-                <p className="chinese-text text-stone-500 text-xl mb-6">校园新年庆典</p>
-                <p className="text-stone-600 leading-relaxed mb-8">
-                  A festive school collaboration with student performances, family participation, and Chinese cultural workshops.
-                </p>
-                <button
-                  type="button"
-                  onClick={() => setActiveGallery('schoolGala')}
                   className="self-start bg-stone-900 text-white px-8 py-4 text-sm tracking-widest uppercase hover:bg-stone-800 transition-colors inline-flex items-center"
                 >
                   Open Photo Gallery
