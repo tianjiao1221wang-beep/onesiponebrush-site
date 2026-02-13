@@ -21,7 +21,11 @@ declare global {
   }
 }
 
-const checkoutApiBaseUrl = (import.meta.env.VITE_CHECKOUT_API_URL || '').trim();
+// In dev, default to backend on 4242 so checkout works even without Vite proxy
+const envApiUrl = (import.meta.env.VITE_CHECKOUT_API_URL || '').trim();
+const checkoutApiBaseUrl =
+  envApiUrl ||
+  (import.meta.env.DEV ? 'http://localhost:4242' : '');
 const createCheckoutSessionUrl = checkoutApiBaseUrl
   ? `${checkoutApiBaseUrl}/api/create-checkout-session`
   : '/api/create-checkout-session';
@@ -33,13 +37,21 @@ const getPublishableKey = async (): Promise<string> => {
     return envKey;
   }
 
-  const response = await fetch(checkoutConfigUrl);
-  const data = await response.json();
-
+  let response: Response;
+  let data: { publishableKey?: string };
+  try {
+    response = await fetch(checkoutConfigUrl);
+    data = await response.json();
+  } catch {
+    throw new Error(
+      import.meta.env.DEV
+        ? '无法连接支付服务器，请确认后端已启动 (端口 4242)。'
+        : '无法连接支付服务，请检查网络。'
+    );
+  }
   if (!response.ok || !data?.publishableKey) {
     throw new Error('Missing Stripe publishable key. Set VITE_STRIPE_PUBLISHABLE_KEY or STRIPE_PUBLISHABLE_KEY.');
   }
-
   return String(data.publishableKey).trim();
 };
 const loadStripeScript = async (): Promise<void> => {
@@ -119,17 +131,25 @@ const Checkout: React.FC<CheckoutProps> = ({ cart }) => {
 
         const checkout = await stripe.initEmbeddedCheckout({
           fetchClientSecret: async () => {
-            const response = await fetch(createCheckoutSessionUrl, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ items: cart, origin: window.location.origin, embedded: true })
-            });
-
-            const data = await response.json();
+            let response: Response;
+            let data: { clientSecret?: string; message?: string };
+            try {
+              response = await fetch(createCheckoutSessionUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ items: cart, origin: window.location.origin, embedded: true })
+              });
+              data = await response.json();
+            } catch (networkError) {
+              const msg =
+                import.meta.env.DEV
+                  ? '无法连接支付服务器，请确认后端已启动 (npm run server 或 node server/index.js，端口 4242)。'
+                  : '无法连接支付服务器，请检查网络或稍后重试。';
+              throw new Error(msg);
+            }
             if (!response.ok || !data?.clientSecret) {
               throw new Error(data?.message || 'Unable to initialize checkout.');
             }
-
             return data.clientSecret;
           }
         });

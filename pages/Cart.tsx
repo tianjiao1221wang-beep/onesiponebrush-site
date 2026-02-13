@@ -8,10 +8,16 @@ interface CartProps {
   onRemove: (id: string) => void;
 }
 
+const stripePaymentLinkUrl = (import.meta.env.VITE_STRIPE_PAYMENT_LINK_URL || '').trim();
+
 const Cart: React.FC<CartProps> = ({ cart, onRemove }) => {
   const navigate = useNavigate();
   const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
   const handleStripeCheckout = () => {
+    if (stripePaymentLinkUrl) {
+      window.location.href = stripePaymentLinkUrl;
+      return;
+    }
     navigate('/checkout');
   };
   
@@ -72,9 +78,13 @@ const Cart: React.FC<CartProps> = ({ cart, onRemove }) => {
 
         <div className="bg-stone-50 p-10 md:p-14 border border-stone-200 h-fit rounded-sm shadow-sm">
           <h2 className="text-3xl font-light mb-4 ink-text uppercase tracking-widest">Stripe Checkout</h2>
-          <h3 className="chinese-text text-xl text-stone-500 mb-6">嵌入式 Stripe 结账</h3>
+          <h3 className="chinese-text text-xl text-stone-500 mb-6">
+            {stripePaymentLinkUrl ? 'Stripe 安全结账' : '嵌入式 Stripe 结账'}
+          </h3>
           <p className="text-sm text-stone-500 mb-8 leading-relaxed">
-             Continue to an embedded Stripe checkout page to complete your payment securely.
+            {stripePaymentLinkUrl
+              ? '点击后将跳转到 Stripe 安全支付页面完成付款。'
+              : 'Continue to an embedded Stripe checkout page to complete your payment securely.'}
           </p>
 
           <button
