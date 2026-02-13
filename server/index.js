@@ -47,14 +47,17 @@ const createTransporter = () => {
     return null;
   }
 
+  const port = SMTP_PORT ? Number(SMTP_PORT) : 587;
   return nodemailer.createTransport({
     host: SMTP_HOST,
-    port: SMTP_PORT ? Number(SMTP_PORT) : 587,
-    secure: SMTP_PORT === '465',
+    port,
+    secure: port === 465,
     auth: {
       user: SMTP_USER,
       pass: SMTP_PASS
-    }
+    },
+    connectionTimeout: 10000,
+    greetingTimeout: 10000
   });
 };
 
@@ -78,8 +81,12 @@ app.get('/api/smtp-test', async (_req, res) => {
       error: 'SMTP 未配置完整。请确认 SMTP_HOST, SMTP_USER, SMTP_PASS, SMTP_FROM, SHOP_OWNER_EMAIL 都已设置。'
     });
   }
+  const timeoutMs = 10000;
   try {
-    await transporter.verify();
+    await Promise.race([
+      transporter.verify(),
+      new Promise((_, reject) => setTimeout(() => reject(new Error('SMTP 连接超时（10 秒）。可能是主机/端口错误，或 Gmail 阻断了 Railway 的请求。')), timeoutMs))
+    ]);
     return res.json({ ok: true, message: 'SMTP 连接成功' });
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
