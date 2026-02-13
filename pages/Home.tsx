@@ -147,15 +147,8 @@ const Home: React.FC<HomeProps> = ({ onAddToCart }) => {
 
       {/* Workshop Card (Coming Soon) */}
       <section className="py-32 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
-        <div className="relative group overflow-hidden">
-          <div className="h-[500px] md:h-[600px] w-full relative">
-            <img 
-              src="/images/workshop-preview.svg" 
-              alt="Workshop Preview" 
-              className="w-full h-full object-cover grayscale opacity-60 group-hover:scale-105 transition-transform duration-[2000ms]"
-            />
-            <div className="absolute inset-0 bg-stone-900/40 mix-blend-multiply"></div>
-          </div>
+        <div className="relative group overflow-hidden rounded-sm">
+          <div className="h-[500px] md:h-[600px] w-full bg-gradient-to-br from-[#1a1a1a] via-[#2d2a26] to-[#3d3630] group-hover:from-[#252222] group-hover:via-[#35302a] group-hover:to-[#4a433a] transition-all duration-[2000ms]" />
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-12">
             <span className="text-white/80 uppercase tracking-[0.6em] text-xs mb-6">Experience the Ritual</span>
             <h2 className="text-5xl md:text-7xl text-white font-light mb-2 tracking-tight">Interactive Workshops</h2>
