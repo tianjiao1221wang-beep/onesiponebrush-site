@@ -58,10 +58,10 @@ export const CURATED_EVENTS: CuratedEvent[] = [
   },
 ];
 
-/** Chinese-inspired solid colors for event curation category cards */
+/** Chinese-inspired translucent ink colors for event curation category cards */
 export const CURATION_CARD_COLORS = [
-  'bg-[#9d2933]', // 胭脂 Rouge
-  'bg-[#1a4d2e]', // 竹青 Ink green
-  'bg-[#5c4a72]', // 黛色 Dark blue-purple
-  'bg-[#8b4513]', // 赭石 Ochre
+  'bg-[#9d2933]/35', // 胭脂 Rouge – 水墨透明
+  'bg-[#1a4d2e]/35', // 竹青 Ink green – 水墨透明
+  'bg-[#5c4a72]/35', // 黛色 Dark blue-purple – 水墨透明
+  'bg-[#8b4513]/35', // 赭石 Ochre – 水墨透明
 ] as const;

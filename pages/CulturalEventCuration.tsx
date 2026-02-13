@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { CURATION_CARD_COLORS } from '../constants/curatedEvents';
+import { ArrowRight } from 'lucide-react';
+import { CURATION_CARD_COLORS, CURATED_EVENTS } from '../constants/curatedEvents';
 
 const categories = [
   {
@@ -74,13 +75,6 @@ const CulturalEventCuration: React.FC = () => {
               Request a Proposal
               <span className="block chinese-text normal-case tracking-normal mt-1">申请方案</span>
             </Link>
-            <Link
-              to="/curated-events"
-              className="bg-white border border-stone-300 text-stone-800 px-8 py-4 rounded-sm text-sm tracking-widest uppercase hover:bg-stone-50 transition-colors text-center"
-            >
-              Past Curated Events
-              <span className="block chinese-text normal-case tracking-normal mt-1">往期策划活动</span>
-            </Link>
             <button
               type="button"
               onClick={() => document.getElementById('what-we-curate')?.scrollIntoView({ behavior: 'smooth' })}
@@ -102,23 +96,23 @@ const CulturalEventCuration: React.FC = () => {
               <Link
                 key={category.path}
                 to={category.path}
-                className={`relative overflow-hidden min-h-[320px] group ${CURATION_CARD_COLORS[i % CURATION_CARD_COLORS.length]}`}
+                className={`curation-card relative overflow-hidden min-h-[320px] group rounded-xl ${CURATION_CARD_COLORS[i % CURATION_CARD_COLORS.length]}`}
               >
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity bg-white" />
-                <div className="relative h-full p-7 text-white flex flex-col justify-end text-left">
-                  <h3 className="text-2xl font-light mb-3 min-h-[92px]">
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity bg-stone-100" />
+                <div className="relative h-full p-7 flex flex-col justify-end text-left">
+                  <h3 className="text-2xl font-light mb-3 min-h-[92px] ink-text">
                     <span className="block">{category.titleEn}</span>
-                    <span className="block chinese-text text-lg text-stone-200 mt-1">{category.titleZh}</span>
+                    <span className="block chinese-text text-lg text-stone-600 mt-1">{category.titleZh}</span>
                   </h3>
-                  <p className="text-stone-100 mb-4 min-h-[82px]">
+                  <p className="text-stone-700 mb-4 min-h-[82px]">
                     <span className="block">{category.descriptionEn}</span>
-                    <span className="block chinese-text text-sm text-stone-200 mt-1">{category.descriptionZh}</span>
+                    <span className="block chinese-text text-sm text-stone-600 mt-1">{category.descriptionZh}</span>
                   </p>
-                  <ul className="list-disc list-inside space-y-1 text-sm text-stone-100">
+                  <ul className="list-disc list-inside space-y-1 text-sm text-stone-600">
                     {category.subEvents.map((subEvent) => (
                       <li key={subEvent.en}>
                         <span className="block">{subEvent.en}</span>
-                        <span className="block chinese-text text-xs text-stone-200">{subEvent.zh}</span>
+                        <span className="block chinese-text text-xs text-stone-500 mt-1">{subEvent.zh}</span>
                       </li>
                     ))}
                   </ul>
@@ -127,13 +121,42 @@ const CulturalEventCuration: React.FC = () => {
             ))}
           </div>
         </div>
-        <div className="mt-16 text-center">
-          <Link
-            to="/curated-events"
-            className="inline-flex items-center gap-2 text-stone-600 hover:text-stone-900 text-sm tracking-widest uppercase"
-          >
-            View Past Curated Events / 查看往期活动
-          </Link>
+      </section>
+
+      <section id="past-events" className="py-20 md:py-24 border-t border-stone-200">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl md:text-4xl font-light ink-text mb-2">Past Curated Events</h2>
+          <p className="chinese-text text-xl text-stone-600 mb-10">往期策划活动</p>
+          <div className="grid grid-cols-1 gap-8">
+            {CURATED_EVENTS.map((event) => (
+              <Link
+                key={event.slug}
+                to={`/curated-events/${event.slug}`}
+                className="relative overflow-hidden rounded-sm border border-stone-200 bg-white group"
+              >
+                <div className="grid grid-cols-1 lg:grid-cols-2 h-full">
+                  <div className="h-[320px] lg:h-auto">
+                    <img
+                      src={event.heroImage}
+                      alt={event.heroAlt}
+                      className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
+                    />
+                  </div>
+                  <div className="p-10 md:p-12 flex flex-col justify-center">
+                    <span className="text-xs uppercase tracking-[0.4em] text-stone-500 mb-5">Past Curated Event</span>
+                    <h3 className="text-3xl font-light text-stone-900 mb-5">{event.titleEn}</h3>
+                    <p className="chinese-text text-stone-500 text-xl mb-6">{event.titleZh}</p>
+                    <p className="text-sm text-stone-500 mb-2">{event.dateLabel}</p>
+                    <p className="text-stone-600 leading-relaxed mb-8">{event.descriptionEn}</p>
+                    <span className="inline-flex items-center text-sm tracking-widest uppercase text-stone-900 group-hover:gap-4 gap-2 transition-all">
+                      View Gallery / 查看相册
+                      <ArrowRight className="w-4 h-4" />
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
     </div>

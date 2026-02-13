@@ -109,7 +109,7 @@ const Home: React.FC<HomeProps> = ({ onAddToCart }) => {
       <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row justify-between items-baseline mb-12 border-b border-stone-200 pb-6">
           <h2 className="text-3xl font-light ink-text mb-2">Past Curated Events</h2>
-          <Link to="/curated-events" className="mt-4 md:mt-0 text-sm tracking-widest uppercase font-semibold text-stone-900 hover:text-stone-600 transition-colors flex items-center">
+          <Link to="/cultural-event-curation" className="mt-4 md:mt-0 text-sm tracking-widest uppercase font-semibold text-stone-900 hover:text-stone-600 transition-colors flex items-center">
             View All / 查看全部 <ArrowRight className="ml-2 w-4 h-4" />
           </Link>
         </div>

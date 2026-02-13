@@ -12,7 +12,6 @@ import About from './pages/About';
 import Checkout from './pages/checkout';
 import Contact from './pages/Contact';
 import CulturalEventCuration from './pages/CulturalEventCuration';
-import CuratedEvents from './pages/CuratedEvents';
 import CuratedEventDetail from './pages/CuratedEventDetail';
 import CulturalPopups from './pages/CulturalPopups';
 import CurationWeddings from './pages/CurationWeddings';
@@ -67,7 +66,6 @@ const App: React.FC = () => {
             <Route path="/diy-kit" element={<DIYKit onAddToCart={handleAddToCart} />} />
             <Route path="/shop" element={<DIYKit onAddToCart={handleAddToCart} />} />
             <Route path="/cultural-event-curation" element={<CulturalEventCuration />} />
-            <Route path="/curated-events" element={<CuratedEvents />} />
             <Route path="/curated-events/:slug" element={<CuratedEventDetail />} />
             <Route path="/cultural-event-curation/popups" element={<CulturalPopups />} />
             <Route path="/cultural-event-curation/weddings" element={<CurationWeddings />} />

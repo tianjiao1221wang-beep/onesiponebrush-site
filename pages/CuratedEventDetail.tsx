@@ -15,8 +15,8 @@ const CuratedEventDetail: React.FC = () => {
       <div className="paper-bg min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-light text-stone-900 mb-4">Event not found</h1>
-          <Link to="/curated-events" className="text-stone-600 hover:text-stone-900 underline">
-            Back to Curated Events
+          <Link to="/cultural-event-curation" className="text-stone-600 hover:text-stone-900 underline">
+            Back to Cultural Event Curation
           </Link>
         </div>
       </div>
@@ -29,11 +29,11 @@ const CuratedEventDetail: React.FC = () => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <Link
-              to="/curated-events"
+              to="/cultural-event-curation"
               className="text-stone-500 hover:text-stone-900 transition-colors flex items-center gap-2 text-sm uppercase tracking-widest"
             >
               <X className="w-4 h-4" />
-              All Events
+              Back to Curation
             </Link>
             <nav className="flex items-center gap-2 text-sm text-stone-500">
               <span className="hidden sm:inline">—</span>
@@ -94,10 +94,10 @@ const CuratedEventDetail: React.FC = () => {
             <span />
           )}
           <Link
-            to="/curated-events"
+            to="/cultural-event-curation"
             className="text-sm uppercase tracking-widest text-stone-500 hover:text-stone-900"
           >
-            All Events / 全部活动
+            Back to Curation / 返回策展
           </Link>
           {nextEvent ? (
             <Link
