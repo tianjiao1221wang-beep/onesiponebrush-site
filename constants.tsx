@@ -142,6 +142,103 @@ export const PRODUCTS: Product[] = [
       { id: 'mythical', name: 'Mythical Crane', chineseName: '祥瑞仙鹤', image: '/images/product-embroidered-cover-mythical.png' },
       { id: 'cream-peony', name: 'Cream Peony', chineseName: '米金牡丹流苏', image: '/images/product-embroidered-cover-cream-peony.png' },
     ]
+  },
+  {
+    id: '8',
+    name: 'Embroidery DIY Kit',
+    chineseName: '刺绣 DIY 材料包（绣 · 专注）',
+    price: 29,
+    description: 'A beginner embroidery DIY kit inspired by traditional Chinese stitching. With each thread and stitch, the hands slow — and the mind follows. Rooted in Eastern embroidery heritage, it transforms craft into a practice of patience, focus, and quiet presence.',
+    chineseDescription: '一套以传统绣艺为灵感的入门刺绣 DIY 材料包。在一针一线之间，让双手慢下来，让心绪沉静。刺绣源自东方织绣传统，将图案与时间层层叠加于布面。它不仅是手作练习，更是一种关于耐心与专注的生活修习。',
+    image: '/images/product-embroidery-kit-bird-flower.png',
+    category: 'kit',
+    variants: [
+      { id: 'bird-flower', name: 'Bird and Flowers', chineseName: '鸟语花香', image: '/images/product-embroidery-kit-bird-flower.png' },
+      { id: 'xianghun', name: 'Xianghun', chineseName: '香魂', image: '/images/product-embroidery-kit-xianghun.png' },
+    ]
+  },
+  {
+    id: '9',
+    name: 'Blessing Sachet DIY',
+    chineseName: '祈福香囊 DIY（福 · 随身）',
+    price: 25,
+    description: 'A DIY blessing sachet inspired by the Dragon Boat Festival tradition. Through handcrafting, fragrance and intention are woven into everyday life. In Chinese culture, sachets symbolize protection and well-being. By making it yourself, tradition becomes personal — a gentle blessing carried close.',
+    chineseDescription: '一套以端午祈福传统为灵感的香囊 DIY 材料包。在手工编织之间，将香气与祝福缝入日常。香囊自古寓意平安与守护。通过亲手制作，让节气与心意不止停留于仪式，而成为可随身携带的温柔象征。',
+    image: '/images/product-sachet-crochet-pink.png',
+    category: 'kit',
+    variants: [
+      { id: 'pink', name: 'Pink Flower', chineseName: '粉花款', image: '/images/product-sachet-crochet-pink.png' },
+      { id: 'green', name: 'Green Flower', chineseName: '绿花款', image: '/images/product-sachet-crochet-green.png' },
+    ]
+  },
+  {
+    id: '10',
+    name: 'Suzhou Embroidery Handkerchief DIY',
+    chineseName: '苏绣手帕 DIY（赠 · 心意）',
+    price: 28,
+    description: 'A DIY embroidered handkerchief inspired by Suzhou embroidery. With each delicate stitch, intention quietly takes shape. Suzhou embroidery is known for refinement and subtlety. More than a craft, it transforms time and care into something meant to be given.',
+    chineseDescription: '一套以苏绣传统为灵感的手帕刺绣 DIY 材料包。在细密针脚之间，将心意悄然织入布面。苏绣讲究精细与含蓄，一针一线不仅是图案的呈现，更是情感的沉淀。亲手完成，让赠予不止于礼物，而是一段被认真对待的时间。',
+    image: '/images/product-handkerchief-orchid.png',
+    category: 'kit',
+    variants: [
+      { id: 'orchid', name: 'Orchid', chineseName: '兰花', image: '/images/product-handkerchief-orchid.png' },
+      { id: 'plum', name: 'Red Plum', chineseName: '红梅', image: '/images/product-handkerchief-plum.png' },
+    ]
+  },
+  {
+    id: '11',
+    name: 'Cross-Stitch DIY Kit',
+    chineseName: '十字绣 DIY（织 · 时间）',
+    price: 26,
+    description: 'A cross-stitch DIY kit inspired by classical motifs. Through steady repetition, time gradually takes form on fabric. Built on rhythm and structure, each stitch becomes a quiet practice of patience and balance.',
+    chineseDescription: '一套以古风图案为灵感的十字绣 DIY 材料包。在规律交织之间，让时间在布面缓缓显现。十字绣以重复与秩序构成画面。一针一线的叠加，不只是图案的完成，更是一种关于耐心与节奏的修习。',
+    image: '/images/product-crossstitch-lotus.png',
+    category: 'kit',
+    variants: [
+      { id: 'lotus', name: 'Lotus', chineseName: '荷花', image: '/images/product-crossstitch-lotus.png' },
+      { id: 'goldfoil', name: 'Gold Foil Motifs', chineseName: '金箔款', image: '/images/product-crossstitch-goldfoil.png' },
+    ]
+  },
+  {
+    id: '12',
+    name: 'Embroidered Bookmark DIY',
+    chineseName: '刺绣书签 DIY（阅 · 留痕）',
+    price: 5,
+    description: 'A set of embroidered bookmark DIY kits where stitching meets reading. Between fabric and page, texture and time quietly unfold. More than a page marker, each stitch preserves a moment of reflection within the act of reading.',
+    chineseDescription: '一套刺绣书签 DIY 材料包，将针线与阅读相遇。在布面与书页之间，留下属于自己的纹理与时间。书签不仅标记页码，更标记一段阅读的心境。一针一线的叠加，让书写与手作在日常中彼此呼应。',
+    image: '/images/product-bookmark-lavender.png',
+    category: 'kit',
+    variants: [
+      { id: 'lavender', name: 'Lavender', chineseName: '薰衣草', image: '/images/product-bookmark-lavender.png' },
+      { id: 'bellflower', name: 'Bellflower', chineseName: '风铃草', image: '/images/product-bookmark-bellflower.png' },
+      { id: 'cow-parsley', name: 'Cow Parsley', chineseName: '牛欧芹', image: '/images/product-bookmark-cowparsley.png' },
+      { id: 'feverfew', name: 'Feverfew', chineseName: '雏菊', image: '/images/product-bookmark-feverfew.png' },
+      { id: 'digitalis', name: 'Digitalis', chineseName: '毛地黄', image: '/images/product-bookmark-digitalis.png' },
+    ]
+  },
+  {
+    id: '13',
+    name: 'Water-Pattern Round Fan DIY',
+    chineseName: '水纹团扇 DIY（风 · 流动）',
+    price: 32,
+    description: 'A fan DIY kit inspired by flowing water motifs. Through layered textures and movement, it captures a quiet sense of rhythm. In Chinese tradition, the fan represents refinement and seasonal grace. By crafting it by hand, heritage becomes tactile — and personal.',
+    chineseDescription: '一套以水波纹为灵感的国风团扇 DIY 材料包。在层层笔触与结构之间，让风与纹理自然流动。扇自古象征文雅与节气之美。通过亲手制作，使传统意象不再停留于观赏，而成为可被触摸与参与的生活片刻。',
+    image: '/images/product-water-fan-apricot.png',
+    category: 'kit',
+    variants: [
+      { id: 'apricot', name: 'Apricot Blossom', chineseName: '杏花水扇', image: '/images/product-water-fan-apricot.png' },
+      { id: 'ephemeral', name: 'Ephemeral Flower', chineseName: '昙花水扇', image: '/images/product-water-fan-ephemeral.png' },
+    ]
+  },
+  {
+    id: '14',
+    name: 'Gold Foil Art DIY',
+    chineseName: '金箔画 DIY（映 · 光泽）',
+    price: 38,
+    description: 'A DIY gold-foil art kit inspired by traditional gilding techniques. Through pressing and layering, patterns emerge in luminous detail. Gold foil has long symbolized light and refinement in Chinese culture. By crafting it yourself, heritage transforms into a tangible, contemporary expression.',
+    chineseDescription: '一套以金箔拓印工艺为灵感的手作材料包。在轻贴与烧箔之间，让图案在光泽中缓缓浮现。金箔自古象征尊贵与光明。通过亲手完成，使传统工艺不再遥远，而成为触手可及的日常创作。',
+    image: '/images/product-goldfoil-art.png',
+    category: 'kit'
   }
 ];
 
