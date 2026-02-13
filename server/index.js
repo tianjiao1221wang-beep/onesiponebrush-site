@@ -170,7 +170,7 @@ app.post('/api/stripe-webhook', async (req, res) => {
   res.json({ received: true });
 });
 
-const port = PORT || 4242;
-app.listen(port, () => {
+const port = Number(PORT) || 4242;
+app.listen(port, '0.0.0.0', () => {
   console.log(`Payment server running on port ${port}`);
 });
