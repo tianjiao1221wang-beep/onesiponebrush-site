@@ -105,7 +105,7 @@ const Home: React.FC<HomeProps> = ({ onAddToCart }) => {
           ))}
         </div>
       </section>
-      {/* Past Curated Event Cards — latest first, single-color Chinese backgrounds */}
+      {/* Past Curated Event Cards — latest first, photo mode */}
       <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row justify-between items-baseline mb-12 border-b border-stone-200 pb-6">
           <h2 className="text-3xl font-light ink-text mb-2">Past Curated Events</h2>
@@ -118,19 +118,27 @@ const Home: React.FC<HomeProps> = ({ onAddToCart }) => {
             <Link
               key={event.slug}
               to={`/curated-events/${event.slug}`}
-              className={`relative overflow-hidden rounded-sm min-h-[280px] group flex flex-col justify-end ${event.cardColor}`}
+              className="relative overflow-hidden rounded-sm border border-stone-200 bg-white group"
             >
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity bg-white" />
-              <div className="relative p-10 md:p-12 text-white">
-                <span className="text-xs uppercase tracking-[0.4em] text-white/80 mb-4 block">Past Curated Event</span>
-                <h2 className="text-3xl font-light mb-4">{event.titleEn}</h2>
-                <p className="chinese-text text-xl text-white/90 mb-4">{event.titleZh}</p>
-                <p className="text-sm text-white/70 mb-5">{event.dateLabel}</p>
-                <p className="text-white/90 leading-relaxed mb-6 max-w-2xl">{event.descriptionEn}</p>
-                <span className="inline-flex items-center text-sm tracking-widest uppercase group-hover:gap-4 gap-2 transition-all">
-                  View Gallery / 查看相册
-                  <ArrowRight className="w-4 h-4" />
-                </span>
+              <div className="grid grid-cols-1 lg:grid-cols-2 h-full">
+                <div className="h-[320px] lg:h-auto">
+                  <img
+                    src={event.heroImage}
+                    alt={event.heroAlt}
+                    className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
+                  />
+                </div>
+                <div className="p-10 md:p-12 flex flex-col justify-center">
+                  <span className="text-xs uppercase tracking-[0.4em] text-stone-500 mb-5">Past Curated Event</span>
+                  <h2 className="text-3xl font-light text-stone-900 mb-5">{event.titleEn}</h2>
+                  <p className="chinese-text text-stone-500 text-xl mb-6">{event.titleZh}</p>
+                  <p className="text-sm text-stone-500 mb-2">{event.dateLabel}</p>
+                  <p className="text-stone-600 leading-relaxed mb-8">{event.descriptionEn}</p>
+                  <span className="inline-flex items-center text-sm tracking-widest uppercase text-stone-900 group-hover:gap-4 gap-2 transition-all">
+                    View Gallery / 查看相册
+                    <ArrowRight className="w-4 h-4" />
+                  </span>
+                </div>
               </div>
             </Link>
           ))}

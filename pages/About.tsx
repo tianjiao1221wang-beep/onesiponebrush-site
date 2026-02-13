@@ -51,11 +51,11 @@ const About: React.FC = () => {
               </p>
             </div>
           </div>
-          <div className="relative">
+          <div className="relative flex items-center justify-center">
             <img 
-              src="/images/about-story.svg" 
-              className="w-full h-auto object-contain grayscale"  
-              alt="Artistic details"
+              src="/images/logo.png" 
+              className="w-full max-w-xs h-auto object-contain"  
+              alt="One Sip One Brush Logo"
             />
           </div>
         </section>

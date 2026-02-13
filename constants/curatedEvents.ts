@@ -7,9 +7,10 @@ export interface CuratedEvent {
   dateLabel: string;
   descriptionEn: string;
   descriptionZh: string;
+  /** Hero image for card display */
+  heroImage: string;
+  heroAlt: string;
   photos: { src: string; alt: string }[];
-  /** Chinese-inspired background color for card (e.g. vermillion, ink, celadon) */
-  cardColor: string;
 }
 
 export const CURATED_EVENTS: CuratedEvent[] = [
@@ -22,7 +23,8 @@ export const CURATED_EVENTS: CuratedEvent[] = [
     descriptionEn:
       'A festive day of cultural crafts at Little Red Schoolhouse Nature Center — Cloisonné enamel workshops, calligraphy, traditional dress, and family engagement.',
     descriptionZh: '红屋自然中心春节文化手工日——景泰蓝、书法、传统服饰与家庭互动体验。',
-    cardColor: 'bg-[#c63d2f]', // 朱砂 Vermillion
+    heroImage: '/images/events/event-lny2026-hero.png',
+    heroAlt: 'Lunar New Year at Little Red Schoolhouse Nature Center — cultural crafts and community engagement',
     photos: [
       { src: '/images/events/event-lny2026-01.png', alt: 'Cloisonné craft — girl in traditional dress with butterfly hair clips' },
       { src: '/images/events/event-lny2026-02.png', alt: 'Full event scene — children crafting with Cloisonné Enamel' },
@@ -43,7 +45,8 @@ export const CURATED_EVENTS: CuratedEvent[] = [
     descriptionEn:
       'Stage design, temple fair venue layout, poster design, product procurement, and bilingual (中英) materials. A vibrant celebration of Chinese New Year with performances, stalls, and community gathering.',
     descriptionZh: '舞台设计、庙会场地布局、海报设计、物料采购及中英双语物料。表演、摊位与社区团聚的春节庆典。',
-    cardColor: 'bg-[#1a4d2e]', // 竹青 / 墨绿 Ink green
+    heroImage: '/images/events/event-ruihua2025-hero.png',
+    heroAlt: 'Ruihua Chinese School 2025 Spring Festival Temple Fair & Gala — stage performance and temple fair',
     photos: [
       { src: '/images/events/event-ruihua2025-hero.png', alt: 'Stage performance — fan dance with 福 and New Year banners' },
       { src: '/images/events/event-ruihua2025-01.png', alt: 'Group photo on stage with 福 and 新年快乐' },

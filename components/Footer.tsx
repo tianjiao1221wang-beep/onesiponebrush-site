@@ -1,5 +1,5 @@
-
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Send } from 'lucide-react';
 
 const apiBase = (import.meta.env.VITE_CHECKOUT_API_URL || '').trim().replace(/\/+$/, '')
@@ -56,20 +56,20 @@ const Footer: React.FC = () => {
           <div>
             <h4 className="text-xs uppercase tracking-widest mb-8 text-stone-400">The Studio</h4>
             <ul className="space-y-4 text-sm text-stone-300">
-              <li><a href="#" className="hover:text-white transition-colors">Our Story</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Culture Lab</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Workshops</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
+              <li><Link to="/about" className="hover:text-white transition-colors">Our Story</Link></li>
+              <li><Link to="/culture-lab" className="hover:text-white transition-colors">Culture Lab</Link></li>
+              <li><Link to="/" className="hover:text-white transition-colors">Workshops</Link></li>
+              <li><Link to="/contact" className="hover:text-white transition-colors">Contact</Link></li>
             </ul>
           </div>
 
           <div>
             <h4 className="text-xs uppercase tracking-widest mb-8 text-stone-400">Support</h4>
             <ul className="space-y-4 text-sm text-stone-300">
-              <li><a href="#" className="hover:text-white transition-colors">Shipping</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Returns</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Care Guide</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">FAQ</a></li>
+              <li><Link to="/contact" className="hover:text-white transition-colors">Shipping</Link></li>
+              <li><Link to="/contact" className="hover:text-white transition-colors">Returns</Link></li>
+              <li><Link to="/contact" className="hover:text-white transition-colors">Care Guide</Link></li>
+              <li><Link to="/contact" className="hover:text-white transition-colors">FAQ</Link></li>
             </ul>
           </div>
 
@@ -102,11 +102,6 @@ const Footer: React.FC = () => {
         
         <div className="mt-20 pt-8 border-t border-stone-800 flex flex-col md:flex-row justify-between items-center text-[10px] text-stone-500 uppercase tracking-widest">
           <p>© 2024 ONE SIP ONE BRUSH. ALL RIGHTS RESERVED.</p>
-          <div className="flex space-x-8 mt-4 md:mt-0">
-            <a href="#">Instagram</a>
-            <a href="#">WeChat</a>
-            <a href="#">Xiaohongshu</a>
-          </div>
         </div>
       </div>
     </footer>
