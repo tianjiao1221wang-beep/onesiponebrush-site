@@ -222,9 +222,6 @@ const [activeGallery, setActiveGallery] = useState<GalleryType | null>(null);
           </div>
         </div>
       </section>
-    </div>
-  );
-};
 
       {currentGallery && (
         <div className="fixed inset-0 z-50 bg-stone-950/80 backdrop-blur-sm p-4 sm:p-8">
@@ -253,4 +250,8 @@ const [activeGallery, setActiveGallery] = useState<GalleryType | null>(null);
           </div>
         </div>
       )}
+          </div>
+  );
+};
+
 export default Home;
