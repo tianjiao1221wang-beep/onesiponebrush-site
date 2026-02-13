@@ -18,8 +18,15 @@ const {
   SMTP_PASS,
   SMTP_FROM,
   SHOP_OWNER_EMAIL,
-  PORT
+  PORT,
+  SHIPPING_STANDARD,
+  FREE_SHIPPING_THRESHOLD,
+  SHIPPING_UPGRADE_ADD
 } = process.env;
+
+const shippingStandard = Number(SHIPPING_STANDARD) || 5.99;
+const freeShippingThreshold = Number(FREE_SHIPPING_THRESHOLD) || 69;
+const shippingUpgradeAdd = Number(SHIPPING_UPGRADE_ADD) || 7;
 
 if (!STRIPE_SECRET_KEY) {
   throw new Error('Missing STRIPE_SECRET_KEY.');
@@ -87,6 +94,30 @@ app.post('/api/create-checkout-session', async (req, res) => {
       quantity: item.quantity
     }));
 
+    const subtotal = items.reduce((sum, item) => sum + Number(item.price) * (item.quantity || 1), 0);
+    const shippingMethod = req.body?.shippingMethod || 'standard';
+    const standardFee = subtotal >= freeShippingThreshold ? 0 : shippingStandard;
+    const shippingFee = shippingMethod === 'upgrade'
+      ? standardFee + shippingUpgradeAdd
+      : standardFee;
+
+    if (shippingFee > 0) {
+      const shippingName = shippingMethod === 'upgrade'
+        ? 'Express Shipping (1-3 days) / 加急配送 (1-3 天)'
+        : 'Standard Shipping (2-5 days) / 标准配送 (2-5 天)';
+      lineItems.push({
+        price_data: {
+          currency: 'usd',
+          product_data: {
+            name: shippingName,
+            description: shippingMethod === 'upgrade' ? 'Express 1-3 days' : 'Standard 2-5 days'
+          },
+          unit_amount: Math.round(shippingFee * 100)
+        },
+        quantity: 1
+      });
+    }
+
     const baseUrl = (origin || FRONTEND_URL || '').trim().replace(/\/+$/, '');
     if (!baseUrl) {
       return res.status(400).json({ message: 'Missing frontend URL.' });
@@ -101,7 +132,8 @@ app.post('/api/create-checkout-session', async (req, res) => {
       metadata: {
         customerName: customer?.name || '',
         customerPhone: customer?.phone || '',
-        customerNotes: customer?.notes || ''
+        customerNotes: customer?.notes || '',
+        shippingMethod: shippingMethod
       }
     };
 
@@ -164,6 +196,7 @@ app.post('/api/stripe-webhook', async (req, res) => {
             `Name: ${checkoutSession.customer_details?.name || 'N/A'}`,
             `Email: ${checkoutSession.customer_details?.email || 'N/A'}`,
             `Phone: ${checkoutSession.metadata?.customerPhone || 'N/A'}`,
+            `Shipping: ${checkoutSession.metadata?.shippingMethod === 'upgrade' ? 'Express 1-3 days' : 'Standard 2-5 days'}`,
             `Notes: ${checkoutSession.metadata?.customerNotes || 'None'}`,
             '',
             'Items:',

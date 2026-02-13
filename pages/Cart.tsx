@@ -15,10 +15,23 @@ const createCheckoutSessionUrl = checkoutApiBaseUrl
   ? `${checkoutApiBaseUrl}/api/create-checkout-session`
   : '/api/create-checkout-session';
 
+// Shipping: standard $5.99 (2–5 days), free over threshold; upgrade +$7 (1–3 days)
+const SHIPPING_STANDARD = Number(import.meta.env.VITE_SHIPPING_STANDARD) || 5.99;
+const FREE_SHIPPING_THRESHOLD = Number(import.meta.env.VITE_FREE_SHIPPING_THRESHOLD) || 69;
+const SHIPPING_UPGRADE_ADD = Number(import.meta.env.VITE_SHIPPING_UPGRADE_ADD) || 7;
+
+export type ShippingMethod = 'standard' | 'upgrade';
+
 const Cart: React.FC<CartProps> = ({ cart, onRemove }) => {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState('');
-  const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const [shippingMethod, setShippingMethod] = React.useState<ShippingMethod>('standard');
+  const subtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const standardFee = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_STANDARD;
+  const shippingFee = shippingMethod === 'standard'
+    ? standardFee
+    : standardFee + SHIPPING_UPGRADE_ADD;
+  const total = subtotal + shippingFee;
 
   const handleStripeCheckout = async () => {
     setError('');
@@ -35,7 +48,8 @@ const Cart: React.FC<CartProps> = ({ cart, onRemove }) => {
         body: JSON.stringify({
           items: cart,
           origin: window.location.origin,
-          embedded: false
+          embedded: false,
+          shippingMethod
         })
       });
       const contentType = response.headers.get('content-type');
@@ -124,22 +138,78 @@ const Cart: React.FC<CartProps> = ({ cart, onRemove }) => {
               </div>
             </div>
           ))}
-          <div className="pt-10 flex justify-between items-baseline border-t-2 border-stone-900">
-            <div>
-              <span className="text-sm uppercase tracking-widest text-stone-500 block">Total Selection</span>
-              <span className="chinese-text text-stone-400">总计金额</span>
+          <div className="pt-10 space-y-4 border-t border-stone-200">
+            <div className="flex justify-between text-stone-600">
+              <span className="text-sm uppercase tracking-widest">Subtotal / 小计</span>
+              <span>${subtotal.toFixed(2)}</span>
             </div>
-            <span className="text-5xl font-light ink-text">${total}</span>
+            <div className="space-y-3">
+              <span className="text-sm uppercase tracking-widest text-stone-600 block">Shipping / 配送方式</span>
+              <label className="flex items-start gap-3 cursor-pointer group">
+                <input
+                  type="radio"
+                  name="shipping"
+                  checked={shippingMethod === 'standard'}
+                  onChange={() => setShippingMethod('standard')}
+                  className="mt-1 accent-stone-900"
+                />
+                <div>
+                  <span className="font-medium text-stone-800">Standard Shipping / 标准配送</span>
+                  <span className="block text-xs text-stone-500 chinese-text">2–5 days · 2–5 个工作日</span>
+                  <span className="block text-sm text-stone-600">
+                    {subtotal >= FREE_SHIPPING_THRESHOLD ? 'Free / 免运费' : `$${SHIPPING_STANDARD.toFixed(2)}`}
+                  </span>
+                </div>
+              </label>
+              <label className="flex items-start gap-3 cursor-pointer group">
+                <input
+                  type="radio"
+                  name="shipping"
+                  checked={shippingMethod === 'upgrade'}
+                  onChange={() => setShippingMethod('upgrade')}
+                  className="mt-1 accent-stone-900"
+                />
+                <div>
+                  <span className="font-medium text-stone-800">Express Shipping / 加急配送</span>
+                  <span className="block text-xs text-stone-500 chinese-text">1–3 days · 1–3 个工作日</span>
+                  <span className="block text-sm text-stone-600">
+                    +${SHIPPING_UPGRADE_ADD.toFixed(2)} {subtotal >= FREE_SHIPPING_THRESHOLD ? '(free standard) / （标准免运费基础上）' : 'extra / 额外'}
+                  </span>
+                </div>
+              </label>
+            </div>
+            <div className="flex justify-between text-stone-600 pt-2">
+              <span className="text-sm uppercase tracking-widest">Shipping Fee / 运费</span>
+              <span>{shippingFee === 0 ? 'Free / 免运费' : `$${shippingFee.toFixed(2)}`}</span>
+            </div>
+            {subtotal > 0 && subtotal < FREE_SHIPPING_THRESHOLD && (
+              <p className="text-xs text-stone-500 chinese-text">
+                Add ${(FREE_SHIPPING_THRESHOLD - subtotal).toFixed(2)} more for free standard shipping / 再购 ${(FREE_SHIPPING_THRESHOLD - subtotal).toFixed(2)} 即免标准运费
+              </p>
+            )}
+            <p className="text-xs text-stone-500 chinese-text border-t border-stone-100 pt-4 mt-2">
+              Product availability may vary, subject to actual stock. / 商品库存以实际为准，可能有所变动。
+            </p>
+          </div>
+          <div className="flex justify-between items-baseline border-t-2 border-stone-900 pt-6">
+            <div>
+              <span className="text-sm uppercase tracking-widest text-stone-500 block">Total</span>
+              <span className="chinese-text text-stone-400">总计</span>
+            </div>
+            <span className="text-5xl font-light ink-text">${total.toFixed(2)}</span>
           </div>
         </div>
 
         <div className="bg-stone-50 p-10 md:p-14 border border-stone-200 h-fit rounded-sm shadow-sm">
           <h2 className="text-3xl font-light mb-4 ink-text uppercase tracking-widest">Stripe Checkout</h2>
           <h3 className="chinese-text text-xl text-stone-500 mb-6">Stripe 安全结账</h3>
-          <p className="text-sm text-stone-500 mb-6 leading-relaxed">
+          <p className="text-sm text-stone-500 mb-4 leading-relaxed">
             {stripePaymentLinkUrl
-              ? '点击后将跳转到 Stripe 安全支付页面完成付款。'
-              : '结账时将把当前购物车商品与金额一并传至 Stripe 支付页。'}
+              ? 'You will be redirected to Stripe secure payment. / 点击后将跳转到 Stripe 安全支付页面完成付款。'
+              : 'Your cart items and total will be sent to Stripe. / 结账时将把当前购物车商品与金额一并传至 Stripe 支付页。'}
+          </p>
+          <p className="text-xs text-stone-500 chinese-text mb-6">
+            Product availability may vary, subject to actual stock. / 商品库存以实际为准，可能有所变动。
           </p>
           {error && (
             <div className="mb-6 rounded-sm border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
