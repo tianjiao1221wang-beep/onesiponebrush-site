@@ -1,7 +1,6 @@
-
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Product, ProductVariant } from '../types';
-import { Plus } from 'lucide-react';
+import { Plus, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface ProductCardProps {
   product: Product;
@@ -12,8 +11,28 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant | undefined>(
     product.variants?.[0]
   );
+  const [expanded, setExpanded] = useState(false);
+  const [showExpand, setShowExpand] = useState(false);
+  const descRef = useRef<HTMLDivElement>(null);
+
   const displayImage = selectedVariant?.image ?? product.image;
   const displayPrice = selectedVariant?.price ?? product.price;
+
+  useEffect(() => {
+    const checkOverflow = () => {
+      const el = descRef.current;
+      if (!el) return;
+      if (expanded) {
+        setShowExpand(true);
+        return;
+      }
+      const overflowing = el.scrollHeight > el.clientHeight;
+      setShowExpand(overflowing);
+    };
+    checkOverflow();
+    const timer = setTimeout(checkOverflow, 0);
+    return () => clearTimeout(timer);
+  }, [product.description, product.chineseDescription, expanded]);
 
   const handleAdd = () => {
     if (product.variants?.length && !selectedVariant) return;
@@ -62,8 +81,26 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
         <p className="text-lg font-semibold text-stone-900">${displayPrice}</p>
       </div>
       <div className="mt-4 space-y-1">
-        <p className="text-sm text-stone-500 line-clamp-1 italic">{product.description}</p>
-        <p className="chinese-text text-xs text-stone-400 line-clamp-1">{product.chineseDescription}</p>
+        <div
+          ref={descRef}
+          className={`text-sm text-stone-500 italic space-y-0.5 ${!expanded ? 'line-clamp-2' : ''}`}
+        >
+          <p>{product.description}</p>
+          <p className="chinese-text text-xs text-stone-400 not-italic">{product.chineseDescription}</p>
+        </div>
+        {showExpand && (
+          <button
+            type="button"
+            onClick={() => setExpanded(!expanded)}
+            className="text-xs text-stone-500 hover:text-stone-700 chinese-text mt-1 flex items-center gap-1"
+          >
+            {expanded ? (
+              <>收起 <ChevronUp className="w-3 h-3" /></>
+            ) : (
+              <>展开 <ChevronDown className="w-3 h-3" /></>
+            )}
+          </button>
+        )}
       </div>
       <button
         onClick={handleAdd}
