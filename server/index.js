@@ -51,6 +51,10 @@ const createTransporter = () => {
 
 const formatCurrency = amountInCents => `$${(amountInCents / 100).toFixed(2)}`;
 
+app.get('/', (_req, res) => {
+  res.json({ status: 'ok', service: 'payment-api' });
+});
+
 app.get('/api/config', (_req, res) => {
   const publishableKey = STRIPE_PUBLISHABLE_KEY || VITE_STRIPE_PUBLISHABLE_KEY || '';
   res.json({ publishableKey });
