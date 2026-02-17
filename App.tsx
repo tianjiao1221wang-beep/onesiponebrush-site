@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -19,8 +18,33 @@ import CurationSchools from './pages/CurationSchools';
 import CurationBrandProduction from './pages/CurationBrandProduction';
 import { CartItem, getCartItemKey, Product, ProductVariant } from './types';
 
+const CART_STORAGE_KEY = 'onesiponebrush_cart';
+
+function loadCartFromStorage(): CartItem[] {
+  try {
+    const raw = localStorage.getItem(CART_STORAGE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveCartToStorage(cart: CartItem[]) {
+  try {
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+  } catch (e) {
+    console.warn('Failed to save cart to localStorage', e);
+  }
+}
+
 const App: React.FC = () => {
-  const [cart, setCart] = useState<CartItem[]>([]);
+  const [cart, setCart] = useState<CartItem[]>(() => loadCartFromStorage());
+
+  useEffect(() => {
+    saveCartToStorage(cart);
+  }, [cart]);
 
   const handleAddToCart = (product: Product, variant?: ProductVariant) => {
     const variantId = variant?.id;

@@ -144,6 +144,7 @@ app.post('/api/create-checkout-session', async (req, res) => {
       mode: 'payment',
       line_items: lineItems,
       customer_email: customer?.email || undefined,
+      shipping_address_collection: { allowed_countries: ['US', 'CA', 'GB', 'AU', 'CN', 'JP', 'KR', 'TW', 'HK', 'SG', 'FR', 'DE', 'IT', 'ES', 'NL', 'BE', 'AT', 'CH', 'PL', 'SE', 'NO', 'DK', 'FI', 'IE', 'NZ', 'MX', 'BR', 'IN', 'TH', 'MY', 'VN', 'PH', 'ID'] },
       metadata: {
         customerName: customer?.name || '',
         customerPhone: customer?.phone || '',
@@ -282,11 +283,23 @@ app.post('/api/stripe-webhook', async (req, res) => {
           const name = item.description || item.price?.product?.name || 'Item';
           return `${item.quantity || 1} x ${name} (${formatCurrency(item.amount_total || 0)})`;
         });
+        const addr = checkoutSession.customer_details?.address;
+        const addressLines = addr
+          ? [
+              `${addr.line1 || ''}${addr.line2 ? ', ' + addr.line2 : ''}`.trim(),
+              [addr.city, addr.state, addr.postal_code].filter(Boolean).join(', '),
+              addr.country || ''
+            ].filter(Boolean)
+          : ['N/A'];
         const text = [
           `Name: ${checkoutSession.customer_details?.name || 'N/A'}`,
           `Email: ${checkoutSession.customer_details?.email || 'N/A'}`,
           `Phone: ${checkoutSession.metadata?.customerPhone || 'N/A'}`,
-          `Shipping: ${checkoutSession.metadata?.shippingMethod === 'upgrade' ? 'Express 1-3 days' : 'Standard 2-5 days'}`,
+          '',
+          'Shipping Address / 收货地址:',
+          ...addressLines,
+          '',
+          `Shipping Method: ${checkoutSession.metadata?.shippingMethod === 'upgrade' ? 'Express 1-3 days' : 'Standard 2-5 days'}`,
           `Notes: ${checkoutSession.metadata?.customerNotes || 'None'}`,
           '',
           'Items:',
