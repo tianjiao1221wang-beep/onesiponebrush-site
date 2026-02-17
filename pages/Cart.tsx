@@ -16,7 +16,7 @@ const createCheckoutSessionUrl = checkoutApiBaseUrl
   ? `${checkoutApiBaseUrl}/api/create-checkout-session`
   : '/api/create-checkout-session';
 
-// Shipping: standard $5.99 (2–5 days), free over threshold; upgrade +$7 (1–3 days)
+// Shipping: standard $5.99 (14 days), free over threshold; upgrade +$7 (7 days)
 const SHIPPING_STANDARD = Number(import.meta.env.VITE_SHIPPING_STANDARD) || 5.99;
 const FREE_SHIPPING_THRESHOLD = Number(import.meta.env.VITE_FREE_SHIPPING_THRESHOLD) || 79;
 const SHIPPING_UPGRADE_ADD = Number(import.meta.env.VITE_SHIPPING_UPGRADE_ADD) || 7;
@@ -161,7 +161,7 @@ const Cart: React.FC<CartProps> = ({ cart, onRemove }) => {
                 />
                 <div>
                   <span className="font-medium text-stone-800">Standard Shipping / 标准配送</span>
-                  <span className="block text-xs text-stone-500 chinese-text">2–5 days · 2–5 个工作日</span>
+                  <span className="block text-xs text-stone-500 chinese-text">14 days · 14 个工作日</span>
                   <span className="block text-sm text-stone-600">
                     {subtotal >= FREE_SHIPPING_THRESHOLD ? 'Free / 免运费' : `$${SHIPPING_STANDARD.toFixed(2)}`}
                   </span>
@@ -177,7 +177,7 @@ const Cart: React.FC<CartProps> = ({ cart, onRemove }) => {
                 />
                 <div>
                   <span className="font-medium text-stone-800">Express Shipping / 加急配送</span>
-                  <span className="block text-xs text-stone-500 chinese-text">1–3 days · 1–3 个工作日</span>
+                  <span className="block text-xs text-stone-500 chinese-text">7 days · 7 个工作日</span>
                   <span className="block text-sm text-stone-600">
                     +${SHIPPING_UPGRADE_ADD.toFixed(2)} {subtotal >= FREE_SHIPPING_THRESHOLD ? '(free standard) / （标准免运费基础上）' : 'extra / 额外'}
                   </span>

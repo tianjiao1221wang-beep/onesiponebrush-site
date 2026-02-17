@@ -118,14 +118,14 @@ app.post('/api/create-checkout-session', async (req, res) => {
 
     if (shippingFee > 0) {
       const shippingName = shippingMethod === 'upgrade'
-        ? 'Express Shipping (1-3 days) / 加急配送 (1-3 天)'
-        : 'Standard Shipping (2-5 days) / 标准配送 (2-5 天)';
+        ? 'Express Shipping (7 days) / 加急配送 (7 天)'
+        : 'Standard Shipping (14 days) / 标准配送 (14 天)';
       lineItems.push({
         price_data: {
           currency: 'usd',
           product_data: {
             name: shippingName,
-            description: shippingMethod === 'upgrade' ? 'Express 1-3 days' : 'Standard 2-5 days'
+            description: shippingMethod === 'upgrade' ? 'Express 7 days' : 'Standard 14 days'
           },
           unit_amount: Math.round(shippingFee * 100)
         },
@@ -299,7 +299,7 @@ app.post('/api/stripe-webhook', async (req, res) => {
           'Shipping Address / 收货地址:',
           ...addressLines,
           '',
-          `Shipping Method: ${checkoutSession.metadata?.shippingMethod === 'upgrade' ? 'Express 1-3 days' : 'Standard 2-5 days'}`,
+          `Shipping Method: ${checkoutSession.metadata?.shippingMethod === 'upgrade' ? 'Express 7 days' : 'Standard 14 days'}`,
           `Notes: ${checkoutSession.metadata?.customerNotes || 'None'}`,
           '',
           'Items:',
