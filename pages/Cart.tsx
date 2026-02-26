@@ -16,24 +16,25 @@ const createCheckoutSessionUrl = checkoutApiBaseUrl
   ? `${checkoutApiBaseUrl}/api/create-checkout-session`
   : '/api/create-checkout-session';
 
-// Shipping: standard $5.99 (7 days ETM), free over threshold; upgrade +$7 (3 days ETM); free option for testing
+// Shipping: standard $5.99 (7 days ETM), free over threshold; upgrade +$7 (3 days ETM)
 const SHIPPING_STANDARD = Number(import.meta.env.VITE_SHIPPING_STANDARD) || 5.99;
 const FREE_SHIPPING_THRESHOLD = Number(import.meta.env.VITE_FREE_SHIPPING_THRESHOLD) || 79;
 const SHIPPING_UPGRADE_ADD = Number(import.meta.env.VITE_SHIPPING_UPGRADE_ADD) || 7;
 
-export type ShippingMethod = 'standard' | 'upgrade' | 'free';
+export type ShippingMethod = 'standard' | 'upgrade';
 
 const Cart: React.FC<CartProps> = ({ cart, onRemove }) => {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState('');
-  const [shippingMethod, setShippingMethod] = React.useState<ShippingMethod>('free');
+  const [shippingMethod, setShippingMethod] = React.useState<ShippingMethod>('standard');
   const subtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
   const standardFee = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_STANDARD;
-  const shippingFee = shippingMethod === 'free'
-    ? 0
-    : shippingMethod === 'standard'
-      ? standardFee
-      : standardFee + SHIPPING_UPGRADE_ADD;
+  const shippingFee = shippingMethod === 'standard'
+    ? standardFee
+    : standardFee + SHIPPING_UPGRADE_ADD;
+  const moreForFreeShipping = subtotal > 0 && subtotal < FREE_SHIPPING_THRESHOLD
+    ? (FREE_SHIPPING_THRESHOLD - subtotal).toFixed(2)
+    : null;
   const total = subtotal + shippingFee;
 
   const handleStripeCheckout = async () => {
@@ -157,20 +158,6 @@ const Cart: React.FC<CartProps> = ({ cart, onRemove }) => {
                 <input
                   type="radio"
                   name="shipping"
-                  checked={shippingMethod === 'free'}
-                  onChange={() => setShippingMethod('free')}
-                  className="mt-1 accent-stone-900"
-                />
-                <div>
-                  <span className="font-medium text-stone-800">Free Shipping (Testing) / 免运费（测试）</span>
-                  <span className="block text-xs text-stone-500 chinese-text">For payment testing only</span>
-                  <span className="block text-sm text-stone-600">Free / 免运费</span>
-                </div>
-              </label>
-              <label className="flex items-start gap-3 cursor-pointer group">
-                <input
-                  type="radio"
-                  name="shipping"
                   checked={shippingMethod === 'standard'}
                   onChange={() => setShippingMethod('standard')}
                   className="mt-1 accent-stone-900"
@@ -204,9 +191,9 @@ const Cart: React.FC<CartProps> = ({ cart, onRemove }) => {
               <span className="text-sm uppercase tracking-widest">Shipping Fee / 运费</span>
               <span>{shippingFee === 0 ? 'Free / 免运费' : `$${shippingFee.toFixed(2)}`}</span>
             </div>
-            {subtotal > 0 && subtotal < FREE_SHIPPING_THRESHOLD && (
-              <p className="text-xs text-stone-500 chinese-text">
-                Add ${(FREE_SHIPPING_THRESHOLD - subtotal).toFixed(2)} more for free standard shipping / 再购 ${(FREE_SHIPPING_THRESHOLD - subtotal).toFixed(2)} 即免标准运费
+            {moreForFreeShipping && (
+              <p className="text-sm text-stone-600 chinese-text font-medium">
+                Add ${moreForFreeShipping} more for free standard shipping / 再购 $${moreForFreeShipping} 即免标准运费
               </p>
             )}
             <p className="text-xs text-stone-500 chinese-text border-t border-stone-100 pt-4 mt-2">
@@ -230,9 +217,14 @@ const Cart: React.FC<CartProps> = ({ cart, onRemove }) => {
               ? 'You will be redirected to Stripe secure payment. / 点击后将跳转到 Stripe 安全支付页面完成付款。'
               : 'Your cart items and total will be sent to Stripe. / 结账时将把当前购物车商品与金额一并传至 Stripe 支付页。'}
           </p>
-          <p className="text-xs text-stone-500 chinese-text mb-6">
+          <p className="text-xs text-stone-500 chinese-text mb-4">
             Item availability varies. <Link to="/contact" className="underline hover:text-stone-700">Email us for inquiry</Link>. / 商品库存以实际为准。<Link to="/contact" className="underline hover:text-stone-700">联系我们</Link>咨询。
           </p>
+          {moreForFreeShipping && (
+            <p className="text-sm text-stone-600 chinese-text font-medium mb-6 p-3 bg-stone-100 rounded-sm">
+              Add ${moreForFreeShipping} more for free shipping / 再购 $${moreForFreeShipping} 即免运费
+            </p>
+          )}
           {error && (
             <div className="mb-6 rounded-sm border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
               {error}

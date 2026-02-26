@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Send } from 'lucide-react';
 
 interface CheckoutSuccessProps {
@@ -7,9 +7,15 @@ interface CheckoutSuccessProps {
 }
 
 const CheckoutSuccess: React.FC<CheckoutSuccessProps> = ({ onClear }) => {
+  const navigate = useNavigate();
+
   useEffect(() => {
     onClear();
   }, [onClear]);
+
+  const handleContinue = () => {
+    navigate('/diy-kit', { replace: true });
+  };
 
   return (
     <div className="py-40 px-4 text-center max-w-2xl mx-auto">
@@ -23,12 +29,13 @@ const CheckoutSuccess: React.FC<CheckoutSuccessProps> = ({ onClear }) => {
           Thank you for your order. Your payment was processed, and the studio has been notified with your details.
         </p>
         <p className="chinese-text text-stone-400 mb-10">我们已收到您的付款，并将为您准备订单。</p>
-        <Link
-          to="/diy-kit"
+        <button
+          type="button"
+          onClick={handleContinue}
           className="inline-flex items-center bg-stone-900 text-white px-10 py-4 rounded-sm tracking-widest uppercase text-sm hover:bg-stone-800 transition-all"
         >
           Continue Browsing / 继续探索
-        </Link>
+        </button>
       </div>
     </div>
   );

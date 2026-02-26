@@ -49,16 +49,6 @@ const YIMOYIMING_SECTIONS = [
 
 export const PRODUCTS: Product[] = [
   {
-    id: 'test-0.5',
-    name: '[Test] Payment Test Item',
-    chineseName: '【测试】支付测试商品',
-    price: 0.5,
-    description: 'Test item for payment flow. $0.50 only. For testing purposes.',
-    chineseDescription: '用于测试支付流程的商品，仅 $0.50。测试用途。',
-    image: '/images/product-fan-book-lamp-lanting.png',
-    category: 'design'
-  },
-  {
     id: '1',
     name: 'Fan Book Lamp DIY',
     chineseName: '扇形书灯 DIY（光 · 空间）',
