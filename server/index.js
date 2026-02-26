@@ -110,22 +110,24 @@ app.post('/api/create-checkout-session', async (req, res) => {
     });
 
     const subtotal = items.reduce((sum, item) => sum + Number(item.price) * (item.quantity || 1), 0);
-    const shippingMethod = req.body?.shippingMethod || 'standard';
+    const shippingMethod = req.body?.shippingMethod || 'free';
     const standardFee = subtotal >= freeShippingThreshold ? 0 : shippingStandard;
-    const shippingFee = shippingMethod === 'upgrade'
-      ? standardFee + shippingUpgradeAdd
-      : standardFee;
+    const shippingFee = shippingMethod === 'free'
+      ? 0
+      : shippingMethod === 'upgrade'
+        ? standardFee + shippingUpgradeAdd
+        : standardFee;
 
     if (shippingFee > 0) {
       const shippingName = shippingMethod === 'upgrade'
-        ? 'Express Shipping (7 days) / 加急配送 (7 天)'
-        : 'Standard Shipping (14 days) / 标准配送 (14 天)';
+        ? 'Express Shipping (ETM 3 days) / 加急配送 (预计 3 天)'
+        : 'Standard Shipping (ETM 7 days) / 标准配送 (预计 7 天)';
       lineItems.push({
         price_data: {
           currency: 'usd',
           product_data: {
             name: shippingName,
-            description: shippingMethod === 'upgrade' ? 'Express 7 days' : 'Standard 14 days'
+            description: shippingMethod === 'upgrade' ? 'Express ETM 3 days' : 'Standard ETM 7 days'
           },
           unit_amount: Math.round(shippingFee * 100)
         },
@@ -299,7 +301,7 @@ app.post('/api/stripe-webhook', async (req, res) => {
           'Shipping Address / 收货地址:',
           ...addressLines,
           '',
-          `Shipping Method: ${checkoutSession.metadata?.shippingMethod === 'upgrade' ? 'Express 7 days' : 'Standard 14 days'}`,
+          `Shipping Method: ${checkoutSession.metadata?.shippingMethod === 'upgrade' ? 'Express ETM 3 days' : checkoutSession.metadata?.shippingMethod === 'free' ? 'Free (Testing)' : 'Standard ETM 7 days'}`,
           `Notes: ${checkoutSession.metadata?.customerNotes || 'None'}`,
           '',
           'Items:',
