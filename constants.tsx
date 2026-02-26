@@ -57,6 +57,8 @@ export const PRODUCTS: Product[] = [
     chineseDescription: '以折扇与书卷为灵感，这是一套可亲手完成的东方书灯。展开如山水，点亮成境，让制作与光影成为一段慢下来的时刻。',
     image: '/images/product-fan-book-lamp-lanting.png',
     category: 'kit',
+    recommendedAge: '8+',
+    estimatedHours: '1–2 hrs',
     variants: [
       { id: 'lanting', name: 'Orchid Pavilion', chineseName: '兰亭序', image: '/images/product-fan-book-lamp-lanting.png' },
       { id: 'qianli', name: 'Thousand Li Mountains', chineseName: '千里江山图', image: '/images/product-fan-book-lamp-qianli.png' },
@@ -99,6 +101,8 @@ export const PRODUCTS: Product[] = [
     chineseDescription: '以中式团扇为形，这是一套可亲手完成的婚礼喜扇 DIY 套装。一针一线之间，将祝福与心意缝入仪式之中。团扇自古象征团圆与圆满，是东方婚礼中的温柔意象。通过亲手制作，让传统礼俗不止停留在形式，而成为可被参与、被记住的文化时刻。',
     image: '/images/product-wedding-fan-white-pearl.png',
     category: 'kit',
+    recommendedAge: '12+',
+    estimatedHours: '2–3 hrs',
     variants: [
       { id: 'white-pearl', name: 'White Pearl', chineseName: '白钻款', image: '/images/product-wedding-fan-white-pearl.png' },
       { id: 'elegant-silver', name: 'Elegant Silver', chineseName: '典雅银白', image: '/images/product-wedding-fan-elegant.png' },
@@ -152,6 +156,8 @@ export const PRODUCTS: Product[] = [
     chineseDescription: '一套以传统绣艺为灵感的入门刺绣 DIY 材料包。在一针一线之间，让双手慢下来，让心绪沉静。刺绣源自东方织绣传统，将图案与时间层层叠加于布面。它不仅是手作练习，更是一种关于耐心与专注的生活修习。',
     image: '/images/product-embroidery-kit-bird-flower.png',
     category: 'kit',
+    recommendedAge: '8+',
+    estimatedHours: '2–4 hrs',
     variants: [
       { id: 'bird-flower', name: 'Bird and Flowers', chineseName: '鸟语花香', image: '/images/product-embroidery-kit-bird-flower.png' },
       { id: 'xianghun', name: 'Xianghun', chineseName: '香魂', image: '/images/product-embroidery-kit-xianghun.png' },
@@ -166,6 +172,8 @@ export const PRODUCTS: Product[] = [
     chineseDescription: '一套以端午祈福传统为灵感的香囊 DIY 材料包。在手工编织之间，将香气与祝福缝入日常。香囊自古寓意平安与守护。通过亲手制作，让节气与心意不止停留于仪式，而成为可随身携带的温柔象征。',
     image: '/images/product-sachet-crochet-pink.png',
     category: 'kit',
+    recommendedAge: '6+',
+    estimatedHours: '1–2 hrs',
     variants: [
       { id: 'pink', name: 'Pink Flower', chineseName: '粉花款', image: '/images/product-sachet-crochet-pink.png' },
       { id: 'green', name: 'Green Flower', chineseName: '绿花款', image: '/images/product-sachet-crochet-green.png' },
@@ -180,6 +188,8 @@ export const PRODUCTS: Product[] = [
     chineseDescription: '一套以苏绣传统为灵感的手帕刺绣 DIY 材料包。在细密针脚之间，将心意悄然织入布面。苏绣讲究精细与含蓄，一针一线不仅是图案的呈现，更是情感的沉淀。亲手完成，让赠予不止于礼物，而是一段被认真对待的时间。',
     image: '/images/product-handkerchief-orchid.png',
     category: 'kit',
+    recommendedAge: '10+',
+    estimatedHours: '2–3 hrs',
     variants: [
       { id: 'orchid', name: 'Orchid', chineseName: '兰花', image: '/images/product-handkerchief-orchid.png' },
       { id: 'plum', name: 'Red Plum', chineseName: '红梅', image: '/images/product-handkerchief-plum.png' },
@@ -194,6 +204,8 @@ export const PRODUCTS: Product[] = [
     chineseDescription: '一套以古风图案为灵感的十字绣 DIY 材料包。在规律交织之间，让时间在布面缓缓显现。十字绣以重复与秩序构成画面。一针一线的叠加，不只是图案的完成，更是一种关于耐心与节奏的修习。',
     image: '/images/product-crossstitch-lotus.png',
     category: 'kit',
+    recommendedAge: '8+',
+    estimatedHours: '3–6 hrs',
     variants: [
       { id: 'lotus', name: 'Lotus', chineseName: '荷花', image: '/images/product-crossstitch-lotus.png' },
     ]
@@ -207,6 +219,8 @@ export const PRODUCTS: Product[] = [
     chineseDescription: '一套刺绣书签 DIY 材料包，将针线与阅读相遇。在布面与书页之间，留下属于自己的纹理与时间。书签不仅标记页码，更标记一段阅读的心境。一针一线的叠加，让书写与手作在日常中彼此呼应。',
     image: '/images/product-bookmark-lavender.png',
     category: 'kit',
+    recommendedAge: '6+',
+    estimatedHours: '1–2 hrs',
     variants: [
       { id: 'lavender', name: 'Lavender', chineseName: '薰衣草', image: '/images/product-bookmark-lavender.png' },
       { id: 'bellflower', name: 'Bellflower', chineseName: '风铃草', image: '/images/product-bookmark-bellflower.png' },
@@ -224,6 +238,8 @@ export const PRODUCTS: Product[] = [
     chineseDescription: '一套以水波纹为灵感的国风团扇 DIY 材料包。在层层笔触与结构之间，让风与纹理自然流动。扇自古象征文雅与节气之美。通过亲手制作，使传统意象不再停留于观赏，而成为可被触摸与参与的生活片刻。',
     image: '/images/product-water-fan-apricot.png',
     category: 'kit',
+    recommendedAge: '8+',
+    estimatedHours: '1–2 hrs',
     variants: [
       { id: 'apricot', name: 'Apricot Blossom', chineseName: '杏花水扇', image: '/images/product-water-fan-apricot.png' },
       { id: 'ephemeral', name: 'Ephemeral Flower', chineseName: '昙花水扇', image: '/images/product-water-fan-ephemeral.png' },
@@ -238,7 +254,9 @@ export const PRODUCTS: Product[] = [
     description: 'A DIY gold-foil art kit inspired by traditional gilding techniques. Through pressing and layering, patterns emerge in luminous detail. Gold foil has long symbolized light and refinement in Chinese culture. By crafting it yourself, heritage transforms into a tangible, contemporary expression.',
     chineseDescription: '一套以金箔拓印工艺为灵感的手作材料包。在轻贴与烧箔之间，让图案在光泽中缓缓浮现。金箔自古象征尊贵与光明。通过亲手完成，使传统工艺不再遥远，而成为触手可及的日常创作。',
     image: '/images/product-goldfoil-art.png',
-    category: 'kit'
+    category: 'kit',
+    recommendedAge: '5+',
+    estimatedHours: '0.5–1 hr'
   }
 ];
 

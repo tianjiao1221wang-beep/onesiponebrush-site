@@ -18,6 +18,10 @@ export interface Product {
   category: 'kit' | 'design';
   /** 可选：不同风格种类，有 variants 时在商品卡显示选择器 */
   variants?: ProductVariant[];
+  /** 推荐年龄，用于活动选配展示，如 "6+", "8-12", "成人" */
+  recommendedAge?: string;
+  /** 预计制作时长，用于 DIY 商品，如 "1–2 hrs", "2–3 hrs" */
+  estimatedHours?: string;
 }
 
 export interface CartItem extends Product {

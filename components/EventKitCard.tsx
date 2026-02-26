@@ -1,38 +1,19 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Product, ProductVariant } from '../types';
-import { Plus, ChevronDown, ChevronUp } from 'lucide-react';
+import { Plus } from 'lucide-react';
 
-interface ProductCardProps {
+interface EventKitCardProps {
   product: Product;
   onAddToCart: (product: Product, variant?: ProductVariant) => void;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
+const EventKitCard: React.FC<EventKitCardProps> = ({ product, onAddToCart }) => {
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant | undefined>(
     product.variants?.[0]
   );
-  const [expanded, setExpanded] = useState(false);
-  const [showExpand, setShowExpand] = useState(false);
-  const descRef = useRef<HTMLDivElement>(null);
 
   const displayImage = selectedVariant?.image ?? product.image;
   const displayPrice = selectedVariant?.price ?? product.price;
-
-  useEffect(() => {
-    const checkOverflow = () => {
-      const el = descRef.current;
-      if (!el) return;
-      if (expanded) {
-        setShowExpand(true);
-        return;
-      }
-      const overflowing = el.scrollHeight > el.clientHeight;
-      setShowExpand(overflowing);
-    };
-    checkOverflow();
-    const timer = setTimeout(checkOverflow, 0);
-    return () => clearTimeout(timer);
-  }, [product.description, product.chineseDescription, expanded]);
 
   const handleAdd = () => {
     if (product.variants?.length && !selectedVariant) return;
@@ -45,7 +26,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
   };
 
   return (
-    <div className="group relative bg-white p-4 transition-all hover:shadow-xl hover:-translate-y-1">
+    <div className="group relative bg-white p-4 transition-all hover:shadow-xl hover:-translate-y-1 border border-stone-100">
+      <div className="flex items-start justify-between gap-2 mb-3 flex-wrap">
+        <span className="inline-block px-3 py-1 text-xs font-medium bg-amber-50 text-amber-800 border border-amber-200 chinese-text">
+          推荐年龄 {product.recommendedAge || '—'}
+        </span>
+        <span className="inline-block px-3 py-1 text-xs font-medium bg-stone-100 text-stone-700 border border-stone-200">
+          制作时长 {product.estimatedHours || '—'}
+        </span>
+      </div>
       <div className="aspect-[4/3] w-full overflow-hidden flex items-center justify-center bg-stone-50">
         <img
           src={displayImage}
@@ -77,34 +66,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
             {product.chineseName}
             {selectedVariant?.chineseName && ` · ${selectedVariant.chineseName}`}
           </p>
-          {product.category === 'kit' && product.estimatedHours && (
-            <p className="text-xs text-stone-500 mt-1">制作时长 / Est. {product.estimatedHours}</p>
-          )}
         </div>
         <p className="text-lg font-semibold text-stone-900">${displayPrice}</p>
       </div>
-      <div className="mt-4 space-y-1">
-        <div
-          ref={descRef}
-          className={`text-sm text-stone-500 italic space-y-0.5 ${!expanded ? 'line-clamp-2' : ''}`}
-        >
-          <p>{product.description}</p>
-          <p className="chinese-text text-xs text-stone-400 not-italic">{product.chineseDescription}</p>
-        </div>
-        {showExpand && (
-          <button
-            type="button"
-            onClick={() => setExpanded(!expanded)}
-            className="text-xs text-stone-500 hover:text-stone-700 chinese-text mt-1 flex items-center gap-1"
-          >
-            {expanded ? (
-              <>收起 <ChevronUp className="w-3 h-3" /></>
-            ) : (
-              <>展开 <ChevronDown className="w-3 h-3" /></>
-            )}
-          </button>
-        )}
-      </div>
+      <p className="mt-3 text-sm text-stone-500 chinese-text line-clamp-2">{product.chineseDescription}</p>
       <button
         onClick={handleAdd}
         className="mt-6 w-full flex items-center justify-center bg-stone-900 text-white px-6 py-3 text-sm font-medium hover:bg-stone-800 transition-colors tracking-widest uppercase"
@@ -116,4 +81,4 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
   );
 };
 
-export default ProductCard;
+export default EventKitCard;
