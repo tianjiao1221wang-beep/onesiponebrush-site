@@ -53,12 +53,6 @@ const Home: React.FC<HomeProps> = ({ onAddToCart }) => {
               Design Your Event / 策划活动
               <ArrowRight className="ml-3 w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
-            <Link 
-              to="/about" 
-              className="bg-white border border-stone-300 text-stone-800 px-12 py-5 rounded-sm text-sm tracking-widest uppercase hover:bg-stone-50 transition-all flex items-center justify-center"
-            >
-              Our Philosophy / 我们的理念
-            </Link>
           </div>
         </div>
       </section>
