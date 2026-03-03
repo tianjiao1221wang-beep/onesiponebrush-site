@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { PRODUCTS } from '../constants';
 import { Product } from '../types';
 import ProductCard from '../components/ProductCard';
 import EventKitCard from '../components/EventKitCard';
+import { ArrowRight } from 'lucide-react';
 
 interface DIYKitProps {
   onAddToCart: (product: Product) => void;
@@ -67,6 +69,27 @@ const DIYKit: React.FC<DIYKitProps> = ({ onAddToCart }) => {
           {eventDIYkits.map((product) => (
             <EventKitCard key={product.id} product={product} onAddToCart={onAddToCart} />
           ))}
+        </div>
+
+        {/* Curate an Event — we can curate events with these DIY kits + workshops */}
+        <div className="mt-24 pt-16 border-t border-stone-200">
+          <div className="rounded-xl border border-stone-200 bg-gradient-to-br from-stone-50 to-white p-8 md:p-12 text-center">
+            <h3 className="text-2xl font-light ink-text mb-2">Curate Your Event with DIY Kits + Workshops</h3>
+            <p className="chinese-text text-lg text-stone-600 mb-4">用 DIY 套装与工作坊策划您的活动</p>
+            <p className="text-stone-600 max-w-2xl mx-auto mb-6">
+              Combine these DIY kits with our Chinese Heritage Workshop Series — Cloisonné and bamboo weaving — for school events, pop-ups, weddings, or brand activations. We help design and deliver tailored experiences.
+            </p>
+            <p className="chinese-text text-sm text-stone-500 mb-8">
+              将 DIY 套装与掐丝珐琅、竹编等传统工艺工作坊结合，为学校、快闪、婚礼或品牌活动定制沉浸式文化体验。
+            </p>
+            <Link
+              to="/cultural-event-curation"
+              className="inline-flex items-center gap-2 bg-stone-900 text-white px-8 py-4 rounded-sm text-sm tracking-widest uppercase hover:bg-stone-800 transition-colors"
+            >
+              Design Your Event / 策划活动
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
         </div>
       </section>
     </div>

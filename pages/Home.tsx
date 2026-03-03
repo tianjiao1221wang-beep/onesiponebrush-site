@@ -38,12 +38,19 @@ const Home: React.FC<HomeProps> = ({ onAddToCart }) => {
            "A drop of ink to paint the world, a sip of tea to calm the soul."<br />
             <span className="chinese-text text-lg block mt-2 not-italic">“一滴墨汁绘就世界，一盏清茶安抚灵魂。”</span>
           </p>
-          <div className="flex flex-col sm:flex-row gap-6 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center flex-wrap">
             <Link 
               to="/diy-kit" 
               className="bg-stone-900 text-white px-12 py-5 rounded-sm text-sm tracking-widest uppercase hover:bg-stone-800 transition-all flex items-center justify-center group"
             >
               Shop Collection / 选购套装
+              <ArrowRight className="ml-3 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
+            <Link 
+              to="/cultural-event-curation" 
+              className="bg-stone-800 text-white px-12 py-5 rounded-sm text-sm tracking-widest uppercase hover:bg-stone-700 transition-all flex items-center justify-center group"
+            >
+              Design Your Event / 策划活动
               <ArrowRight className="ml-3 w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link 

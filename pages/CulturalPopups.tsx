@@ -1,13 +1,43 @@
 import React from 'react';
-import CurationDetailPage from './CurationDetailPage';
+import { Link } from 'react-router-dom';
+import WorkshopSeriesSection from '../components/WorkshopSeriesSection';
 
 const CulturalPopups: React.FC = () => (
-  <CurationDetailPage
-    titleEn="Interactive Cultural Pop-Ups"
-    titleZh="互动文化快闪"
-    descriptionEn="Immersive pop-ups featuring live intangible heritage hands-on, design interaction, and school Chinese culture festival with heritage stalls."
-    descriptionZh="现场体验非遗手工、现场设计互动，学校中国文化节提供非遗摊位，让每位来宾都能沉浸式感受中华文化。"
-  />
+  <div className="paper-bg min-h-screen">
+    <section className="py-16 md:py-24 border-b border-stone-200 bg-white/70">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <p className="text-xs uppercase tracking-[0.4em] text-stone-500 mb-2">Cultural Event Curation</p>
+        <p className="chinese-text text-base text-stone-500 mb-5">文化活动策展</p>
+        <h1 className="text-4xl md:text-5xl font-light ink-text mb-2">Interactive Cultural Pop-Ups</h1>
+        <p className="chinese-text text-2xl text-stone-700 mb-6">互动文化快闪</p>
+        <p className="text-lg text-stone-600 mb-2">
+          Immersive pop-ups featuring live intangible heritage hands-on, design interaction, and school Chinese culture festival with heritage stalls.
+        </p>
+        <p className="chinese-text text-base text-stone-500 mb-8">
+          现场体验非遗手工、现场设计互动，学校中国文化节提供非遗摊位，让每位来宾都能沉浸式感受中华文化。
+        </p>
+        <div className="flex flex-col sm:flex-row justify-center gap-4 flex-wrap">
+          <Link
+            to="/contact"
+            className="bg-stone-900 text-white px-8 py-4 rounded-sm text-sm tracking-widest uppercase hover:bg-stone-800 transition-colors"
+          >
+            Book a Pop-Up / 预约快闪
+          </Link>
+          <a
+            href="#workshop-series"
+            className="bg-white border border-stone-300 text-stone-800 px-8 py-4 rounded-sm text-sm tracking-widest uppercase hover:bg-stone-50 transition-colors"
+          >
+            View Workshop Series / 查看课程系列
+          </a>
+          <Link
+            to="/cultural-event-curation"
+            className="text-stone-500 hover:text-stone-800 text-sm tracking-widest uppercase transition-colors py-4"
+          >
+            ← Back to Experience Types
+          </Link>
+        </div>
+      </div>
+    </section>
+    <WorkshopSeriesSection bottomCtaText="Ready to bring Chinese heritage crafts to your pop-up or festival?" />
+  </div>
 );
-
-export default CulturalPopups;
