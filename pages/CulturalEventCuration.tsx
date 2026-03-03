@@ -31,13 +31,13 @@ const categories = [
   {
     titleEn: 'School Chinese Culture Courses',
     titleZh: '学校中国文化课程',
-    descriptionEn: 'Educational Chinese culture and craft courses for all ages, hands-on DIY classes.',
-    descriptionZh: '提供各年龄段中国文化以及中国手工艺相关寓教于乐课程，课堂 DIY 课程。',
+    descriptionEn: 'Chinese Heritage Workshop Series — Cloisonné & bamboo weaving for K–12 and beyond. Book age-appropriate workshops.',
+    descriptionZh: '中国传统工艺体验系列 — 掐丝珐琅与竹编课程，为各年级定制，可预约适合的工作坊。',
     path: '/cultural-event-curation/schools',
     subEvents: [
-      { en: 'Age-appropriate Chinese culture curriculum', zh: '各年龄段中国文化课程' },
-      { en: 'Chinese craft hands-on learning', zh: '中国手工艺寓教于乐' },
-      { en: 'Classroom DIY workshops', zh: '课堂 DIY 课程' },
+      { en: 'Cloisonné Heritage Experience (3 levels)', zh: '掐丝珐琅体验系列' },
+      { en: 'Bamboo Weaving Structure (2 levels)', zh: '竹编结构系列' },
+      { en: 'Book workshops for your grade', zh: '按年级预约工作坊' },
     ],
   },
   {
