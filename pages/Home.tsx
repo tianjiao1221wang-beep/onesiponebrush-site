@@ -1,9 +1,10 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, BookOpen, Feather, Sparkles } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { PRODUCTS } from '../constants';
 import ProductCard from '../components/ProductCard';
+import WorkshopSeriesSection from '../components/WorkshopSeriesSection';
 import { Product } from '../types';
 import { CURATED_EVENTS } from '../constants/curatedEvents';
 
@@ -57,37 +58,66 @@ const Home: React.FC<HomeProps> = ({ onAddToCart }) => {
         </div>
       </section>
 
-      {/* Philosophy Section */}
-      <section className="py-32 bg-white/80 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-20 text-center">
-            <div className="flex flex-col items-center group">
-              <div className="w-20 h-20 bg-stone-50 rounded-full flex items-center justify-center mb-8 border border-stone-100 group-hover:border-stone-400 transition-colors duration-500">
-                <Feather className="w-8 h-8 text-stone-700" />
-              </div>
-              <h3 className="text-2xl font-light mb-2">Traditional Chinese Culture Design</h3>
-              <p className="chinese-text text-stone-400 mb-4">中国传统文化设计</p>
-              <p className="text-stone-500 leading-relaxed text-sm">Modern aesthetics meeting traditional calligraphy. We design tools that inspire creativity.</p>
-            </div>
-            <div className="flex flex-col items-center group">
-              <div className="w-20 h-20 bg-stone-50 rounded-full flex items-center justify-center mb-8 border border-stone-100 group-hover:border-stone-400 transition-colors duration-500">
-                <BookOpen className="w-8 h-8 text-stone-700" />
-              </div>
-              <h3 className="text-2xl font-light mb-2">Slow Life Culture</h3>
-              <p className="chinese-text text-stone-400 mb-4">慢生活文化</p>
-              <p className="text-stone-500 leading-relaxed text-sm">Embracing the 'Slow Life'. Every moment is a meditation, a bridge to tranquility.</p>
-            </div>
-            <div className="flex flex-col items-center group">
-              <div className="w-20 h-20 bg-stone-50 rounded-full flex items-center justify-center mb-8 border border-stone-100 group-hover:border-stone-400 transition-colors duration-500">
-                <Sparkles className="w-8 h-8 text-stone-700" />
-              </div>
-              <h3 className="text-2xl font-light mb-2">Culture Lab</h3>
-              <p className="chinese-text text-stone-400 mb-4">文创堂</p>
-              <p className="text-stone-500 leading-relaxed text-sm">Our creative hub where we share the philosophical roots of our thousand-year heritage.</p>
-            </div>
+      {/* Design Your Event */}
+      <section className="py-28 bg-white/80 backdrop-blur-sm border-b border-stone-200">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-4xl md:text-5xl font-light ink-text mb-2">Design Your Event</h2>
+          <p className="chinese-text text-2xl text-stone-700 mb-6">策划活动</p>
+          <p className="text-lg text-stone-600 mb-2">
+            We design and produce immersive Chinese cultural experiences for events, celebrations, schools, and brands.
+          </p>
+          <p className="chinese-text text-base text-stone-500 mb-10">
+            我们为活动庆典、学校项目与品牌合作打造沉浸式中华文化体验。
+          </p>
+          <div className="flex flex-col sm:flex-row justify-center gap-4 flex-wrap">
+            <Link
+              to="/cultural-event-curation"
+              className="inline-flex items-center justify-center bg-stone-900 text-white px-10 py-4 rounded-sm text-sm tracking-widest uppercase hover:bg-stone-800 transition-colors"
+            >
+              Cultural Event Curation
+              <ArrowRight className="ml-3 w-4 h-4" />
+            </Link>
+            <Link
+              to="/contact"
+              className="inline-flex flex-col sm:flex-row items-center justify-center bg-white border border-stone-300 text-stone-800 px-10 py-4 rounded-sm text-sm tracking-widest uppercase hover:bg-stone-50 transition-colors gap-1"
+            >
+              <span>Request a Proposal</span>
+              <span className="chinese-text normal-case tracking-normal text-base font-normal">申请方案</span>
+            </Link>
           </div>
         </div>
       </section>
+
+      {/* School Chinese Culture Courses — same content as curation /schools */}
+      <section className="pt-20 pb-0 border-b border-stone-200 bg-white/70">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-xs uppercase tracking-[0.4em] text-stone-500 mb-2">Cultural Event Curation</p>
+          <p className="chinese-text text-base text-stone-500 mb-5">文化活动策展</p>
+          <h2 className="text-4xl md:text-5xl font-light ink-text mb-2">School Chinese Culture Courses</h2>
+          <p className="chinese-text text-2xl text-stone-700 mb-6">学校中国文化课程</p>
+          <p className="text-lg text-stone-600 mb-2">
+            Educational Chinese culture and craft courses for all ages — hands-on DIY workshops.
+          </p>
+          <p className="chinese-text text-base text-stone-500 mb-8">
+            提供各年龄段中国文化以及中国手工艺相关寓教于乐课程，课堂 DIY 课程。
+          </p>
+          <div className="flex flex-col sm:flex-row justify-center gap-4 flex-wrap pb-20">
+            <Link
+              to="/contact"
+              className="bg-stone-900 text-white px-8 py-4 rounded-sm text-sm tracking-widest uppercase hover:bg-stone-800 transition-colors"
+            >
+              Book a Workshop / 预约课程
+            </Link>
+            <a
+              href="#workshop-series"
+              className="bg-white border border-stone-300 text-stone-800 px-8 py-4 rounded-sm text-sm tracking-widest uppercase hover:bg-stone-50 transition-colors"
+            >
+              View Workshop Series / 查看课程系列
+            </a>
+          </div>
+        </div>
+      </section>
+      <WorkshopSeriesSection bottomCtaText="Ready to bring Chinese heritage crafts to your school?" />
 
       {/* Featured Products Section */}
       <section className="py-32 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
