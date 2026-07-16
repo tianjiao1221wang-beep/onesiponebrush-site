@@ -41,3 +41,5 @@ const CulturalPopups: React.FC = () => (
     <WorkshopSeriesSection bottomCtaText="Ready to bring Chinese heritage crafts to your pop-up or festival?" />
   </div>
 );
+
+export default CulturalPopups;
