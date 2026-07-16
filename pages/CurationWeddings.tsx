@@ -11,10 +11,10 @@ const CurationWeddings: React.FC = () => (
         <h1 className="text-4xl md:text-5xl font-light ink-text mb-2">Weddings & Chinese Celebrations</h1>
         <p className="chinese-text text-2xl text-stone-700 mb-6">婚礼与中式庆典</p>
         <p className="text-lg text-stone-600 mb-2">
-          Custom Chinese cultural programming for baby's 100-day celebration, Chinese wedding, and Chinese celebrations.
+          Custom Chinese cultural programming for baby's 100-day celebration, Chinese wedding, family gatherings, and corporate team building.
         </p>
         <p className="chinese-text text-base text-stone-500 mb-10">
-          孩子百日宴、中式婚礼、中式庆典，为重要时刻注入仪式感、文化美学与难忘回忆。
+          百日宴、中式婚礼、家族欢聚、公司团建，为重要时刻注入仪式感、文化美学与难忘回忆。
         </p>
         <div className="flex flex-col sm:flex-row justify-center gap-4">
           <Link

@@ -8,13 +8,13 @@ const CurationSchools: React.FC = () => (
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <p className="text-xs uppercase tracking-[0.4em] text-stone-500 mb-2">Cultural Event Curation</p>
         <p className="chinese-text text-base text-stone-500 mb-5">文化活动策展</p>
-        <h1 className="text-4xl md:text-5xl font-light ink-text mb-2">School Chinese Culture Courses</h1>
-        <p className="chinese-text text-2xl text-stone-700 mb-6">学校中国文化课程</p>
+        <h1 className="text-4xl md:text-5xl font-light ink-text mb-2">Chinese Heritage Enrichment Program</h1>
+        <p className="chinese-text text-2xl text-stone-700 mb-6">中国文化艺术素养课程</p>
         <p className="text-lg text-stone-600 mb-2">
-          Educational Chinese culture and craft courses for all ages — hands-on DIY workshops.
+          A complete school partnership framework — Heritage Workshops, Series, Summer Camp, Family Workshop, Teacher Resources, Student Passport, Exhibition, and annual School Partnership.
         </p>
         <p className="chinese-text text-base text-stone-500 mb-8">
-          提供各年龄段中国文化以及中国手工艺相关寓教于乐课程，课堂 DIY 课程。
+          完整学校合作体系：体验课、系列课程、夏令营、亲子、教师教材、成长护照、成果展与年度合作。
         </p>
         <div className="flex flex-col sm:flex-row justify-center gap-4 flex-wrap">
           <Link

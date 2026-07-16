@@ -10,48 +10,153 @@ interface HomeProps {
   onAddToCart: (product: Product) => void;
 }
 
-const CURATION_EXPERIENCES = [
+interface OfferingItem {
+  titleEn: string;
+  titleZh: string;
+  image: string;
+  imageAlt: string;
+}
+
+const POPUP_OFFERINGS: OfferingItem[] = [
   {
-    titleEn: 'Interactive Cultural Pop-Ups',
-    titleZh: '互动文化快闪',
-    descriptionEn:
-      'Hands-on activations that invite guests into Chinese arts and heritage craft — live intangible heritage, design interaction, and festival stalls.',
-    descriptionZh: '沉浸式互动体验：现场非遗手工、设计互动，以及文化节摊位。',
-    path: '/cultural-event-curation/popups',
-    image: '/images/events/event-lny2026-02.png',
-    imageAlt: 'Children crafting at a cultural pop-up event',
-  },
-  {
-    titleEn: 'Weddings & Chinese Celebrations',
-    titleZh: '婚礼与中式庆典',
-    descriptionEn:
-      'Refined cultural moments for intimate milestones — 100-day celebrations, Chinese weddings, and family gatherings.',
-    descriptionZh: '为百日宴、中式婚礼与家族欢聚定制优雅文化仪式。',
-    path: '/cultural-event-curation/weddings',
-    image: '/images/events/event-ruihua2025-05.png',
-    imageAlt: 'Celebration styling with traditional attire and festive decor',
-  },
-  {
-    titleEn: 'School Chinese Culture Courses',
-    titleZh: '学校中国文化课程',
-    descriptionEn:
-      'Chinese Heritage Workshop Series — Cloisonné & bamboo weaving for K–12 and beyond. Age-appropriate, hands-on DIY classrooms.',
-    descriptionZh: '中国传统工艺体验系列 — 掐丝珐琅与竹编，为各年级定制课堂 DIY 课程。',
-    path: '/cultural-event-curation/schools',
+    titleEn: 'Intangible Heritage Hands-On',
+    titleZh: '非遗手工',
     image: '/images/events/event-lny2026-08.png',
-    imageAlt: 'Adult guiding a child through a Cloisonné workshop',
+    imageAlt: 'Cloisonné heritage craft workshop with child and instructor',
   },
   {
-    titleEn: 'Film & Brand Cultural Direction',
-    titleZh: '影视与品牌文化指导',
-    descriptionEn:
-      'Authentic Chinese cultural direction for campaigns, productions, and branded events — styling, consulting, and storytelling.',
-    descriptionZh: '为广告、影像与品牌活动提供真实专业的中华文化指导与叙事策划。',
-    path: '/cultural-event-curation/brand-production',
-    image: '/images/events/event-ruihua2025-hero.png',
-    imageAlt: 'Stage performance and cultural brand storytelling',
+    titleEn: 'Live Design Interaction',
+    titleZh: '设计互动',
+    image: '/images/events/event-lny2026-04.png',
+    imageAlt: 'Calligraphy and craft design interaction at table',
+  },
+  {
+    titleEn: 'Culture Festival Heritage Stalls',
+    titleZh: '文化节摊位',
+    image: '/images/events/event-ruihua2025-02.png',
+    imageAlt: 'Temple fair venue with heritage craft stalls',
   },
 ];
+
+const CELEBRATION_OFFERINGS: OfferingItem[] = [
+  {
+    titleEn: "Baby's 100-Day Celebration",
+    titleZh: '百日宴',
+    image: '/images/events/event-lny2026-01.png',
+    imageAlt: 'Child in traditional dress for a family celebration',
+  },
+  {
+    titleEn: 'Chinese Wedding',
+    titleZh: '中式婚礼',
+    image: '/images/product-wedding-fan-red-gold.png',
+    imageAlt: 'Chinese wedding round fan craft',
+  },
+  {
+    titleEn: 'Family Gathering',
+    titleZh: '家族欢聚',
+    image: '/images/events/event-ruihua2025-01.png',
+    imageAlt: 'Family and community gathering celebration',
+  },
+  {
+    titleEn: 'Corporate Team Building',
+    titleZh: '公司团建',
+    image: '/images/events/event-lny2026-03.png',
+    imageAlt: 'Group cultural craft activity for team building',
+  },
+];
+
+const ENRICHMENT_PROGRAM: OfferingItem[] = [
+  {
+    titleEn: 'Heritage Workshops',
+    titleZh: '体验课',
+    image: '/images/events/event-lny2026-08.png',
+    imageAlt: 'Hands-on heritage workshop experience',
+  },
+  {
+    titleEn: 'Heritage Series',
+    titleZh: '系列课程',
+    image: '/images/events/event-lny2026-02.png',
+    imageAlt: 'Multi-session heritage craft series',
+  },
+  {
+    titleEn: 'Summer Camp',
+    titleZh: '夏令营',
+    image: '/images/events/event-lny2026-05.png',
+    imageAlt: 'Children focused on summer camp crafts',
+  },
+  {
+    titleEn: 'Family Workshop',
+    titleZh: '亲子',
+    image: '/images/events/event-lny2026-06.png',
+    imageAlt: 'Family workshop with children in traditional attire',
+  },
+  {
+    titleEn: 'Teacher Resources',
+    titleZh: '教师教材',
+    image: '/images/product-copybook.png',
+    imageAlt: 'Teacher resources and mindful copybook materials',
+  },
+  {
+    titleEn: 'Student Passport',
+    titleZh: '成长护照',
+    image: '/images/product-embroidered-cover-cream.png',
+    imageAlt: 'Student growth passport and learning journal',
+  },
+  {
+    titleEn: 'Heritage Exhibition',
+    titleZh: '成果展',
+    image: '/images/events/event-lny2026-07.png',
+    imageAlt: 'Heritage exhibition and cultural products display',
+  },
+  {
+    titleEn: 'School Partnership',
+    titleZh: '年度合作',
+    image: '/images/events/event-ruihua2025-hero.png',
+    imageAlt: 'Annual school partnership cultural program',
+  },
+];
+
+const BRAND_OFFERINGS: OfferingItem[] = [
+  {
+    titleEn: 'Set Cultural Styling',
+    titleZh: '片场文化美术指导',
+    image: '/images/events/event-ruihua2025-05.png',
+    imageAlt: 'Cultural styling and set direction',
+  },
+  {
+    titleEn: 'Campaign Cultural Consulting',
+    titleZh: '项目文化顾问支持',
+    image: '/images/events/event-ruihua2025-03.png',
+    imageAlt: 'Campaign cultural consulting at festive venue',
+  },
+  {
+    titleEn: 'Brand Storytelling Concepts',
+    titleZh: '品牌文化叙事策划',
+    image: '/images/events/event-ruihua2025-hero.png',
+    imageAlt: 'Brand storytelling stage and cultural narrative',
+  },
+];
+
+const OfferingGrid: React.FC<{ items: OfferingItem[]; columns?: string }> = ({
+  items,
+  columns = 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3',
+}) => (
+  <div className={`grid ${columns} gap-6 md:gap-8`}>
+    {items.map((item) => (
+      <article key={item.titleEn} className="group">
+        <div className="overflow-hidden rounded-sm mb-4">
+          <img
+            src={item.image}
+            alt={item.imageAlt}
+            className="w-full h-52 md:h-56 object-cover group-hover:scale-[1.02] transition-transform duration-500"
+          />
+        </div>
+        <h4 className="text-lg font-light ink-text mb-1">{item.titleEn}</h4>
+        <p className="chinese-text text-stone-500">{item.titleZh}</p>
+      </article>
+    ))}
+  </div>
+);
 
 const Home: React.FC<HomeProps> = ({ onAddToCart }) => {
   const diyKits = PRODUCTS.filter((p) => p.category === 'kit').slice(0, 3);
@@ -96,7 +201,7 @@ const Home: React.FC<HomeProps> = ({ onAddToCart }) => {
               onClick={() => scrollTo('curation')}
               className="bg-stone-900 text-white px-12 py-5 rounded-sm text-sm tracking-widest uppercase hover:bg-stone-800 transition-all flex items-center justify-center group"
             >
-              Explore Workshops / 看看我们有什么 Workshop
+              Explore Workshops / 文化活动介绍
               <ArrowRight className="ml-3 w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
             <button
@@ -111,10 +216,10 @@ const Home: React.FC<HomeProps> = ({ onAddToCart }) => {
         </div>
       </section>
 
-      {/* 1. Cultural Event Curation — text + images */}
+      {/* 1. Cultural Event Curation — full content on page */}
       <section id="curation" className="py-24 md:py-32 scroll-mt-24 border-b border-stone-200 bg-white/70">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16 md:mb-20">
+          <div className="text-center mb-20">
             <h2 className="text-4xl md:text-5xl font-light ink-text mb-2">Cultural Event Curation</h2>
             <p className="chinese-text text-2xl text-stone-700 mb-6">文化活动策展</p>
             <p className="text-lg text-stone-600 max-w-3xl mx-auto mb-2">
@@ -125,43 +230,72 @@ const Home: React.FC<HomeProps> = ({ onAddToCart }) => {
             </p>
           </div>
 
-          <div className="space-y-16 md:space-y-24">
-            {CURATION_EXPERIENCES.map((item, index) => {
-              const imageLeft = index % 2 === 0;
-              return (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center group"
-                >
-                  <div className={`overflow-hidden rounded-sm ${imageLeft ? 'lg:order-1' : 'lg:order-2'}`}>
-                    <img
-                      src={item.image}
-                      alt={item.imageAlt}
-                      className="w-full h-[280px] md:h-[360px] object-cover group-hover:scale-[1.02] transition-transform duration-500"
-                    />
-                  </div>
-                  <div className={`text-left ${imageLeft ? 'lg:order-2' : 'lg:order-1'}`}>
-                    <h3 className="text-3xl font-light ink-text mb-2">{item.titleEn}</h3>
-                    <p className="chinese-text text-xl text-stone-600 mb-5">{item.titleZh}</p>
-                    <p className="text-stone-600 leading-relaxed mb-3">{item.descriptionEn}</p>
-                    <p className="chinese-text text-sm text-stone-500 mb-8">{item.descriptionZh}</p>
-                    <span className="inline-flex items-center text-sm tracking-widest uppercase text-stone-900 group-hover:gap-4 gap-2 transition-all">
-                      Learn More / 了解更多
-                      <ArrowRight className="w-4 h-4" />
-                    </span>
-                  </div>
-                </Link>
-              );
-            })}
+          {/* Pop-Ups */}
+          <div className="mb-24">
+            <div className="mb-10">
+              <h3 className="text-3xl md:text-4xl font-light ink-text mb-2">Interactive Cultural Pop-Ups</h3>
+              <p className="chinese-text text-xl text-stone-600 mb-4">互动文化快闪</p>
+              <p className="text-stone-600 max-w-3xl">
+                Hands-on activations that invite guests into Chinese arts and heritage craft.
+                <span className="chinese-text block text-sm text-stone-500 mt-1">
+                  沉浸式互动体验，带领宾客走入中华艺术与非遗手工艺。
+                </span>
+              </p>
+            </div>
+            <OfferingGrid items={POPUP_OFFERINGS} />
+          </div>
+
+          {/* Weddings & Celebrations */}
+          <div className="mb-24">
+            <div className="mb-10">
+              <h3 className="text-3xl md:text-4xl font-light ink-text mb-2">Weddings & Chinese Celebrations</h3>
+              <p className="chinese-text text-xl text-stone-600 mb-4">婚礼与中式庆典</p>
+              <p className="text-stone-600 max-w-3xl">
+                Refined cultural moments for intimate milestones, family gatherings, and corporate celebrations.
+                <span className="chinese-text block text-sm text-stone-500 mt-1">
+                  为重要时刻、家族欢聚与公司团建定制优雅文化仪式。
+                </span>
+              </p>
+            </div>
+            <OfferingGrid items={CELEBRATION_OFFERINGS} columns="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" />
+          </div>
+
+          {/* Heritage Enrichment Program */}
+          <div className="mb-24">
+            <div className="mb-10">
+              <h3 className="text-3xl md:text-4xl font-light ink-text mb-2">Chinese Heritage Enrichment Program</h3>
+              <p className="chinese-text text-xl text-stone-600 mb-4">中国文化艺术素养课程</p>
+              <p className="text-stone-600 max-w-3xl">
+                A complete school partnership framework — from single workshops to year-long programs, teacher support, and student growth.
+                <span className="chinese-text block text-sm text-stone-500 mt-1">
+                  完整的学校合作体系：从单次体验到年度课程、教师支持与学生成长。
+                </span>
+              </p>
+            </div>
+            <OfferingGrid items={ENRICHMENT_PROGRAM} columns="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" />
+          </div>
+
+          {/* Film & Brand */}
+          <div className="mb-8">
+            <div className="mb-10">
+              <h3 className="text-3xl md:text-4xl font-light ink-text mb-2">Film & Brand Cultural Direction</h3>
+              <p className="chinese-text text-xl text-stone-600 mb-4">影视与品牌文化指导</p>
+              <p className="text-stone-600 max-w-3xl">
+                Authentic Chinese cultural direction for campaigns, productions, and branded events.
+                <span className="chinese-text block text-sm text-stone-500 mt-1">
+                  为广告、影像与品牌活动提供专业且真实的中华文化指导。
+                </span>
+              </p>
+            </div>
+            <OfferingGrid items={BRAND_OFFERINGS} />
           </div>
 
           <div className="mt-16 text-center">
             <Link
-              to="/cultural-event-curation"
+              to="/contact"
               className="inline-flex items-center bg-stone-900 text-white px-10 py-4 rounded-sm text-sm tracking-widest uppercase hover:bg-stone-800 transition-colors"
             >
-              View All Experience Types / 查看全部体验类型
+              Request a Proposal / 申请方案
               <ArrowRight className="ml-3 w-4 h-4" />
             </Link>
           </div>
@@ -225,7 +359,6 @@ const Home: React.FC<HomeProps> = ({ onAddToCart }) => {
             <p className="chinese-text text-xl text-stone-500">套装商店</p>
           </div>
 
-          {/* DIY Kits */}
           <div className="mb-24">
             <div className="flex flex-col md:flex-row justify-between items-baseline mb-12 border-b border-stone-200 pb-6">
               <div>
@@ -246,7 +379,6 @@ const Home: React.FC<HomeProps> = ({ onAddToCart }) => {
             </div>
           </div>
 
-          {/* Cultural finished products */}
           <div>
             <div className="flex flex-col md:flex-row justify-between items-baseline mb-12 border-b border-stone-200 pb-6">
               <div>
