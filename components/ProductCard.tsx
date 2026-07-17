@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Product, ProductVariant } from '../types';
 import { Plus, ChevronDown, ChevronUp } from 'lucide-react';
+import { EVENT_SALE_LABEL, EVENT_SALE_LABEL_EN, formatPrice, getSalePrice } from '../constants';
 
 interface ProductCardProps {
   product: Product;
@@ -16,7 +17,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
   const descRef = useRef<HTMLDivElement>(null);
 
   const displayImage = selectedVariant?.image ?? product.image;
-  const displayPrice = selectedVariant?.price ?? product.price;
+  const originalPrice = selectedVariant?.price ?? product.price;
+  const salePrice = getSalePrice(originalPrice);
 
   useEffect(() => {
     const checkOverflow = () => {
@@ -46,7 +48,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
 
   return (
     <div className="group relative bg-white p-4 transition-all hover:shadow-xl hover:-translate-y-1">
-      <div className="aspect-[4/3] w-full overflow-hidden flex items-center justify-center bg-stone-50">
+      <div className="aspect-[4/3] w-full overflow-hidden flex items-center justify-center bg-stone-50 relative">
+        <span className="absolute top-3 left-3 z-10 bg-[#9d2933] text-white text-[10px] tracking-widest uppercase px-2.5 py-1">
+          {EVENT_SALE_LABEL} · {EVENT_SALE_LABEL_EN}
+        </span>
         <img
           src={displayImage}
           alt={product.name}
@@ -81,7 +86,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
             <p className="text-xs text-stone-500 mt-1">制作时长 / Est. {product.estimatedHours}</p>
           )}
         </div>
-        <p className="text-lg font-semibold text-stone-900">${displayPrice}</p>
+        <div className="text-right shrink-0">
+          <p className="text-xs text-stone-400 line-through">${formatPrice(originalPrice)}</p>
+          <p className="text-lg font-semibold text-[#9d2933]">${formatPrice(salePrice)}</p>
+        </div>
       </div>
       <div className="mt-4 space-y-1">
         <div

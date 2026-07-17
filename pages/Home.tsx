@@ -99,14 +99,14 @@ const ENRICHMENT_PROGRAM: OfferingItem[] = [
   {
     titleEn: 'Student Passport',
     titleZh: '成长护照',
-    image: '/images/product-embroidered-cover-cream.png',
-    imageAlt: 'Student growth passport and learning journal',
+    image: '/images/student-passport.png',
+    imageAlt: 'Culture Explorer student passport for tracking heritage learning',
   },
   {
     titleEn: 'Heritage Exhibition',
     titleZh: '成果展',
-    image: '/images/events/event-lny2026-07.png',
-    imageAlt: 'Heritage exhibition and cultural products display',
+    image: '/images/heritage-exhibition.png',
+    imageAlt: 'Chinese traditional craft DIY achievement exhibition display',
   },
   {
     titleEn: 'School Partnership',
@@ -120,8 +120,8 @@ const BRAND_OFFERINGS: OfferingItem[] = [
   {
     titleEn: 'Set Cultural Styling',
     titleZh: '片场文化美术指导',
-    image: '/images/events/event-ruihua2025-05.png',
-    imageAlt: 'Cultural styling and set direction',
+    image: '/images/set-cultural-styling.png',
+    imageAlt: 'Chinese period film set with traditional styling and lighting',
   },
   {
     titleEn: 'Campaign Cultural Consulting',
@@ -132,8 +132,8 @@ const BRAND_OFFERINGS: OfferingItem[] = [
   {
     titleEn: 'Brand Storytelling Concepts',
     titleZh: '品牌文化叙事策划',
-    image: '/images/events/event-ruihua2025-hero.png',
-    imageAlt: 'Brand storytelling stage and cultural narrative',
+    image: '/images/brand-storytelling.png',
+    imageAlt: 'Brand cultural storytelling planning with Chinese ink aesthetics',
   },
 ];
 

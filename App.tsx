@@ -17,6 +17,7 @@ import CurationWeddings from './pages/CurationWeddings';
 import CurationSchools from './pages/CurationSchools';
 import CurationBrandProduction from './pages/CurationBrandProduction';
 import { CartItem, getCartItemKey, Product, ProductVariant } from './types';
+import { getSalePrice } from './constants';
 
 const CART_STORAGE_KEY = 'onesiponebrush_cart';
 
@@ -48,10 +49,11 @@ const App: React.FC = () => {
 
   const handleAddToCart = (product: Product, variant?: ProductVariant) => {
     const variantId = variant?.id;
+    const originalPrice = variant?.price ?? product.price;
     const cartItem: CartItem = {
       ...product,
       image: variant?.image ?? product.image,
-      price: variant?.price ?? product.price,
+      price: getSalePrice(originalPrice),
       quantity: 1,
       variantId,
       variantName: variant?.name,

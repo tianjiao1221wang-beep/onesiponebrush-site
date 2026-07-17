@@ -47,6 +47,19 @@ const YIMOYIMING_SECTIONS = [
   }
 ];
 
+/** 活动八折：售价 = 原价 × 0.8 */
+export const EVENT_SALE_MULTIPLIER = 0.8;
+export const EVENT_SALE_LABEL = '活动八折';
+export const EVENT_SALE_LABEL_EN = 'Event 20% Off';
+
+export function getSalePrice(originalPrice: number): number {
+  return Math.round(originalPrice * EVENT_SALE_MULTIPLIER * 100) / 100;
+}
+
+export function formatPrice(amount: number): string {
+  return Number.isInteger(amount) ? String(amount) : amount.toFixed(2);
+}
+
 export const PRODUCTS: Product[] = [
   {
     id: '1',

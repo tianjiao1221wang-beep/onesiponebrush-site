@@ -142,7 +142,10 @@ const Cart: React.FC<CartProps> = ({ cart, onRemove }) => {
                 </div>
                 <div className="mt-6 flex justify-between items-end">
                   <span className="text-xs uppercase tracking-widest text-stone-400">Qty: {item.quantity}</span>
-                  <div className="text-2xl font-light text-stone-900">${item.price * item.quantity}</div>
+                  <div className="text-right">
+                    <span className="block text-[10px] uppercase tracking-widest text-[#9d2933] mb-1">活动八折</span>
+                    <div className="text-2xl font-light text-stone-900">${(item.price * item.quantity).toFixed(2)}</div>
+                  </div>
                 </div>
               </div>
             </div>

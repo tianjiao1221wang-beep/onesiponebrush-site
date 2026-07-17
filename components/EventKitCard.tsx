@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Product, ProductVariant } from '../types';
 import { Plus } from 'lucide-react';
+import { EVENT_SALE_LABEL, EVENT_SALE_LABEL_EN, formatPrice, getSalePrice } from '../constants';
 
 interface EventKitCardProps {
   product: Product;
@@ -13,7 +14,8 @@ const EventKitCard: React.FC<EventKitCardProps> = ({ product, onAddToCart }) => 
   );
 
   const displayImage = selectedVariant?.image ?? product.image;
-  const displayPrice = selectedVariant?.price ?? product.price;
+  const originalPrice = selectedVariant?.price ?? product.price;
+  const salePrice = getSalePrice(originalPrice);
 
   const handleAdd = () => {
     if (product.variants?.length && !selectedVariant) return;
@@ -33,6 +35,9 @@ const EventKitCard: React.FC<EventKitCardProps> = ({ product, onAddToCart }) => 
         </span>
         <span className="inline-block px-3 py-1 text-xs font-medium bg-stone-100 text-stone-700 border border-stone-200">
           制作时长 {product.estimatedHours || '—'}
+        </span>
+        <span className="inline-block px-3 py-1 text-xs font-medium bg-[#9d2933] text-white tracking-widest uppercase">
+          {EVENT_SALE_LABEL} · {EVENT_SALE_LABEL_EN}
         </span>
       </div>
       <div className="aspect-[4/3] w-full overflow-hidden flex items-center justify-center bg-stone-50">
@@ -67,7 +72,10 @@ const EventKitCard: React.FC<EventKitCardProps> = ({ product, onAddToCart }) => 
             {selectedVariant?.chineseName && ` · ${selectedVariant.chineseName}`}
           </p>
         </div>
-        <p className="text-lg font-semibold text-stone-900">${displayPrice}</p>
+        <div className="text-right shrink-0">
+          <p className="text-xs text-stone-400 line-through">${formatPrice(originalPrice)}</p>
+          <p className="text-lg font-semibold text-[#9d2933]">${formatPrice(salePrice)}</p>
+        </div>
       </div>
       <p className="mt-3 text-sm text-stone-500 chinese-text line-clamp-2">{product.chineseDescription}</p>
       <button
