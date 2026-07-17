@@ -42,8 +42,8 @@ const CELEBRATION_OFFERINGS: OfferingItem[] = [
   {
     titleEn: "Baby's 100-Day Celebration",
     titleZh: '百日宴',
-    image: '/images/events/event-lny2026-01.png',
-    imageAlt: 'Child in traditional dress for a family celebration',
+    image: '/images/baby-100-day-celebration.png',
+    imageAlt: 'Traditional Chinese 100-day celebration display with calligraphy and red decor',
   },
   {
     titleEn: 'Chinese Wedding',
@@ -54,8 +54,8 @@ const CELEBRATION_OFFERINGS: OfferingItem[] = [
   {
     titleEn: 'Family Gathering',
     titleZh: '家族欢聚',
-    image: '/images/events/event-ruihua2025-01.png',
-    imageAlt: 'Family and community gathering celebration',
+    image: '/images/family-gathering.png',
+    imageAlt: 'Private Chinese-style dining room for family gathering',
   },
   {
     titleEn: 'Corporate Team Building',
@@ -69,14 +69,14 @@ const ENRICHMENT_PROGRAM: OfferingItem[] = [
   {
     titleEn: 'Heritage Workshops',
     titleZh: '体验课',
-    image: '/images/events/event-lny2026-08.png',
-    imageAlt: 'Hands-on heritage workshop experience',
+    image: '/images/heritage-workshops.png',
+    imageAlt: 'Heritage workshop craft pouches and gift boxes',
   },
   {
     titleEn: 'Heritage Series',
     titleZh: '系列课程',
-    image: '/images/events/event-lny2026-02.png',
-    imageAlt: 'Multi-session heritage craft series',
+    image: '/images/heritage-series.png',
+    imageAlt: 'Chinese calligraphy ink on red paper',
   },
   {
     titleEn: 'Summer Camp',
