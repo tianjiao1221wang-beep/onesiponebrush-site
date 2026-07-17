@@ -60,8 +60,8 @@ const CELEBRATION_OFFERINGS: OfferingItem[] = [
   {
     titleEn: 'Corporate Team Building',
     titleZh: '公司团建',
-    image: '/images/events/event-lny2026-03.png',
-    imageAlt: 'Group cultural craft activity for team building',
+    image: '/images/corporate-team-building.png',
+    imageAlt: 'Chinese traditional craft workshop studio for corporate team building',
   },
 ];
 
@@ -81,8 +81,8 @@ const ENRICHMENT_PROGRAM: OfferingItem[] = [
   {
     titleEn: 'Summer Camp',
     titleZh: '夏令营',
-    image: '/images/events/event-lny2026-05.png',
-    imageAlt: 'Children focused on summer camp crafts',
+    image: '/images/summer-camp.png',
+    imageAlt: 'Chinese traditional craft summer camp workshop classroom',
   },
   {
     titleEn: 'Family Workshop',
