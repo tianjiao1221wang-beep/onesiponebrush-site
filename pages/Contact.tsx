@@ -1,17 +1,43 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Send, MessageCircle, Mail, HelpCircle } from 'lucide-react';
 import { ContactSubject } from '../types';
 
 const apiBase = (import.meta.env.VITE_CHECKOUT_API_URL || '').trim().replace(/\/+$/, '')
   || (import.meta.env.DEV ? 'http://localhost:4242' : '');
 
+const buildProductInquiryMessage = (
+  name: string,
+  chineseName: string,
+  variant: string,
+  variantZh: string
+) => {
+  if (!name) return '';
+  const variantLabel = variant ? ` (${variant}${variantZh ? ` / ${variantZh}` : ''})` : '';
+  return [
+    `I would like to check availability and inquire about purchasing:`,
+    `${name}${chineseName ? ` / ${chineseName}` : ''}${variantLabel}`,
+    '',
+    'Please let me know if this piece is available and how I can buy it.',
+    '',
+    '我想咨询该商品的库存与购买方式，请告知是否有货以及如何购买。'
+  ].join('\n');
+};
+
 const Contact: React.FC = () => {
+  const [searchParams] = useSearchParams();
+  const productName = searchParams.get('name') || '';
+  const productChineseName = searchParams.get('chineseName') || '';
+  const productVariant = searchParams.get('variant') || '';
+  const productVariantZh = searchParams.get('variantZh') || '';
+  const isProductInquiry = searchParams.get('subject') === 'product' || Boolean(productName);
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    subject: 'general' as ContactSubject,
-    message: ''
+    subject: (isProductInquiry ? 'product' : 'general') as ContactSubject,
+    message: buildProductInquiryMessage(productName, productChineseName, productVariant, productVariantZh)
   });
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [newsletterSubscribed, setNewsletterSubscribed] = useState(false);
@@ -19,6 +45,15 @@ const Contact: React.FC = () => {
   const [isSent, setIsSent] = useState(false);
   const [contactError, setContactError] = useState('');
   const [contactLoading, setContactLoading] = useState(false);
+
+  useEffect(() => {
+    if (!isProductInquiry) return;
+    setFormData((prev) => ({
+      ...prev,
+      subject: 'product',
+      message: buildProductInquiryMessage(productName, productChineseName, productVariant, productVariantZh)
+    }));
+  }, [isProductInquiry, productName, productChineseName, productVariant, productVariantZh]);
 
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -85,14 +120,20 @@ const Contact: React.FC = () => {
             <div className="space-y-8">
               <h3 className="text-3xl font-light ink-text">How can we help?</h3>
               <p className="text-stone-600 leading-relaxed text-lg">
-                Whether you're looking for guidance on using your <strong>DIY Kit</strong>, have questions about traditional ceremonies, or just want to say hello—we're here for you.
+                Whether you'd like to buy a piece and check availability, need guidance on using your <strong>DIY Kit</strong>, have questions about traditional ceremonies, or just want to say hello—we're here for you.
               </p>
               <p className="chinese-text text-stone-500">
-                无论您是需要<strong>手作套装</strong>的使用指导，还是对传统仪式有任何疑问，或是只想打个招呼——我们都在这里。
+                无论您想购买商品并查询库存、需要<strong>手作套装</strong>的使用指导，还是对传统仪式有任何疑问，或是只想打个招呼——我们都在这里。
               </p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+              <div className="p-6 bg-white border border-stone-100 rounded-sm">
+                <Mail className="w-8 h-8 text-stone-400 mb-4" />
+                <h4 className="font-semibold mb-2">Buy & Availability</h4>
+                <p className="text-xs text-stone-500 uppercase tracking-widest mb-2">购买与库存</p>
+                <p className="text-sm text-stone-600 italic">Contact us to purchase any product or check current stock.</p>
+              </div>
               <div className="p-6 bg-white border border-stone-100 rounded-sm">
                 <HelpCircle className="w-8 h-8 text-stone-400 mb-4" />
                 <h4 className="font-semibold mb-2">Tutorial Help</h4>
@@ -146,6 +187,15 @@ const Contact: React.FC = () => {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-8">
+                {productName && (
+                  <div className="bg-stone-50 border border-stone-200 px-4 py-3 text-sm text-stone-700">
+                    Inquiring about / 正在咨询：
+                    <span className="font-medium"> {productName}</span>
+                    {productChineseName ? ` / ${productChineseName}` : ''}
+                    {productVariant ? ` · ${productVariant}` : ''}
+                    {productVariantZh ? ` / ${productVariantZh}` : ''}
+                  </div>
+                )}
                 <div>
                   <label className="block text-xs uppercase tracking-widest text-stone-400 mb-3">Your Name / 姓名</label>
                   <input
@@ -175,6 +225,7 @@ const Contact: React.FC = () => {
                     value={formData.subject}
                     onChange={(e) => setFormData({ ...formData, subject: e.target.value as ContactSubject })}
                   >
+                    <option value="product">Product Purchase / Availability / 产品购买与库存</option>
                     <option value="general">General Inquiry / 一般咨询</option>
                     <option value="tutorial">DIY Kit Tutorial Help / 套装教程求助</option>
                     <option value="order">Order Question / 订单问题</option>

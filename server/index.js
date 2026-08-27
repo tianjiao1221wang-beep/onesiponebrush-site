@@ -1,57 +1,44 @@
 import dotenv from 'dotenv';
 import express from 'express';
-import Stripe from 'stripe';
 import cors from 'cors';
 import { Resend } from 'resend';
 
 dotenv.config();
 
 const {
-  STRIPE_SECRET_KEY,
-  STRIPE_PUBLISHABLE_KEY,
-  VITE_STRIPE_PUBLISHABLE_KEY,
-  STRIPE_WEBHOOK_SECRET,
-  FRONTEND_URL,
   RESEND_API_KEY,
   RESEND_FROM,
   SHOP_OWNER_EMAIL,
   MAILCHIMP_API_KEY,
   MAILCHIMP_LIST_ID,
-  PORT,
-  SHIPPING_STANDARD,
-  FREE_SHIPPING_THRESHOLD,
-  SHIPPING_UPGRADE_ADD
+  PORT
 } = process.env;
 
-const shippingStandard = Number(SHIPPING_STANDARD) || 5.99;
-const freeShippingThreshold = Number(FREE_SHIPPING_THRESHOLD) || 79;
-const shippingUpgradeAdd = Number(SHIPPING_UPGRADE_ADD) || 7;
-
-if (!STRIPE_SECRET_KEY) {
-  throw new Error('Missing STRIPE_SECRET_KEY.');
-}
-
-const stripe = new Stripe(STRIPE_SECRET_KEY);
 const app = express();
 
 app.use(cors({ origin: true }));
-
-app.use('/api/stripe-webhook', express.raw({ type: 'application/json' }));
 app.use(express.json());
 
 const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
 
 const canSendEmail = () => Boolean(resend && RESEND_FROM && SHOP_OWNER_EMAIL);
 
-const formatCurrency = amountInCents => `$${(amountInCents / 100).toFixed(2)}`;
+const checkoutDisabledMessage = 'Online checkout is no longer available. Please contact us to buy a product or check availability.';
 
 app.get('/', (_req, res) => {
-  res.json({ status: 'ok', service: 'payment-api' });
+  res.json({ status: 'ok', service: 'contact-api' });
 });
 
-app.get('/api/config', (_req, res) => {
-  const publishableKey = STRIPE_PUBLISHABLE_KEY || VITE_STRIPE_PUBLISHABLE_KEY || '';
-  res.json({ publishableKey });
+app.all('/api/create-checkout-session', (_req, res) => {
+  return res.status(410).json({ message: checkoutDisabledMessage });
+});
+
+app.all('/api/config', (_req, res) => {
+  return res.status(410).json({ message: checkoutDisabledMessage });
+});
+
+app.all('/api/stripe-webhook', (_req, res) => {
+  return res.status(410).json({ message: checkoutDisabledMessage });
 });
 
 // Resend 连接测试
@@ -76,101 +63,6 @@ app.get('/api/smtp-test', async (_req, res) => {
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     return res.json({ ok: false, error: msg });
-  }
-});
-
-app.all('/api/create-checkout-session', (req, res, next) => {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ message: '请使用 POST 请求。此接口需从购物车页面的结账按钮发起。' });
-  }
-  next();
-});
-
-app.post('/api/create-checkout-session', async (req, res) => {
-  try {
-    const { items, customer, origin } = req.body;
-
-    if (!Array.isArray(items) || items.length === 0) {
-      return res.status(400).json({ message: 'Cart is empty.' });
-    }
-
-    const lineItems = items.map(item => {
-      const desc = item.variantName ? `${item.chineseName} · ${item.variantChineseName || item.variantName}` : item.chineseName;
-      return {
-        price_data: {
-          currency: 'usd',
-          product_data: {
-            name: item.name,
-            description: desc
-          },
-          unit_amount: Math.round(Number(item.price) * 100)
-        },
-        quantity: item.quantity
-      };
-    });
-
-    const subtotal = items.reduce((sum, item) => sum + Number(item.price) * (item.quantity || 1), 0);
-    const shippingMethod = req.body?.shippingMethod || 'standard';
-    const standardFee = subtotal >= freeShippingThreshold ? 0 : shippingStandard;
-    const shippingFee = shippingMethod === 'upgrade'
-        ? standardFee + shippingUpgradeAdd
-        : standardFee;
-
-    if (shippingFee > 0) {
-      const shippingName = shippingMethod === 'upgrade'
-        ? 'Express Shipping (ETM 3 days) / 加急配送 (预计 3 天)'
-        : 'Standard Shipping (ETM 7 days) / 标准配送 (预计 7 天)';
-      lineItems.push({
-        price_data: {
-          currency: 'usd',
-          product_data: {
-            name: shippingName,
-            description: shippingMethod === 'upgrade' ? 'Express ETM 3 days' : 'Standard ETM 7 days'
-          },
-          unit_amount: Math.round(shippingFee * 100)
-        },
-        quantity: 1
-      });
-    }
-
-    const baseUrl = (origin || FRONTEND_URL || '').trim().replace(/\/+$/, '');
-    if (!baseUrl) {
-      return res.status(400).json({ message: 'Missing frontend URL.' });
-    }
-    const successUrl = `${baseUrl}/checkout-success?session_id={CHECKOUT_SESSION_ID}`;
-    const cancelUrl = `${baseUrl}/cart?canceled=true`;
-
-    const sessionConfig = {
-      mode: 'payment',
-      line_items: lineItems,
-      customer_email: customer?.email || undefined,
-      shipping_address_collection: { allowed_countries: ['US', 'CA', 'GB', 'AU', 'CN', 'JP', 'KR', 'TW', 'HK', 'SG', 'FR', 'DE', 'IT', 'ES', 'NL', 'BE', 'AT', 'CH', 'PL', 'SE', 'NO', 'DK', 'FI', 'IE', 'NZ', 'MX', 'BR', 'IN', 'TH', 'MY', 'VN', 'PH', 'ID'] },
-      metadata: {
-        customerName: customer?.name || '',
-        customerPhone: customer?.phone || '',
-        customerNotes: customer?.notes || '',
-        shippingMethod: shippingMethod
-      }
-    };
-
-    if (req.body?.embedded) {
-      sessionConfig.ui_mode = 'embedded';
-      sessionConfig.return_url = successUrl;
-    } else {
-      sessionConfig.success_url = successUrl;
-      sessionConfig.cancel_url = cancelUrl;
-    }
-
-    const session = await stripe.checkout.sessions.create(sessionConfig);
-
-    if (req.body?.embedded) {
-      return res.json({ clientSecret: session.client_secret });
-    }
-
-    return res.json({ url: session.url });
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Failed to create checkout session.';
-    return res.status(500).json({ message });
   }
 });
 
@@ -234,7 +126,13 @@ app.post('/api/contact', async (req, res) => {
     if (!canSendEmail()) {
       return res.status(503).json({ message: 'Contact form is not configured. Please set Resend (RESEND_API_KEY, RESEND_FROM, SHOP_OWNER_EMAIL).' });
     }
-    const subjectLabels = { general: 'General Inquiry', tutorial: 'DIY Kit Tutorial Help', order: 'Order Question', partnership: 'Collaboration' };
+    const subjectLabels = {
+      general: 'General Inquiry',
+      tutorial: 'DIY Kit Tutorial Help',
+      order: 'Order Question',
+      partnership: 'Collaboration',
+      product: 'Product Purchase / Availability'
+    };
     const subjectText = subjectLabels[s] || s;
     const text = [`From: ${n} <${e}>`, `Subject: ${subjectText}`, '', m].join('\n');
     const { error } = await resend.emails.send({
@@ -255,76 +153,7 @@ app.post('/api/contact', async (req, res) => {
   }
 });
 
-app.post('/api/stripe-webhook', async (req, res) => {
-  if (!STRIPE_WEBHOOK_SECRET) {
-    return res.status(400).send('Webhook secret is not configured.');
-  }
-
-  const signature = req.headers['stripe-signature'];
-  let event;
-
-  try {
-    event = stripe.webhooks.constructEvent(req.body, signature, STRIPE_WEBHOOK_SECRET);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Webhook error';
-    return res.status(400).send(message);
-  }
-
-  if (event.type === 'checkout.session.completed') {
-    const session = event.data.object;
-    try {
-      const checkoutSession = await stripe.checkout.sessions.retrieve(session.id, {
-        expand: ['line_items', 'customer_details']
-      });
-
-      if (canSendEmail()) {
-        const lineItems = checkoutSession.line_items?.data ?? [];
-        const itemLines = lineItems.map(item => {
-          const name = item.description || item.price?.product?.name || 'Item';
-          return `${item.quantity || 1} x ${name} (${formatCurrency(item.amount_total || 0)})`;
-        });
-        const addr = checkoutSession.customer_details?.address;
-        const addressLines = addr
-          ? [
-              `${addr.line1 || ''}${addr.line2 ? ', ' + addr.line2 : ''}`.trim(),
-              [addr.city, addr.state, addr.postal_code].filter(Boolean).join(', '),
-              addr.country || ''
-            ].filter(Boolean)
-          : ['N/A'];
-        const text = [
-          `Name: ${checkoutSession.customer_details?.name || 'N/A'}`,
-          `Email: ${checkoutSession.customer_details?.email || 'N/A'}`,
-          `Phone: ${checkoutSession.metadata?.customerPhone || 'N/A'}`,
-          '',
-          'Shipping Address / 收货地址:',
-          ...addressLines,
-          '',
-          `Shipping Method: ${checkoutSession.metadata?.shippingMethod === 'upgrade' ? 'Express ETM 3 days' : 'Standard ETM 7 days'}`,
-          `Notes: ${checkoutSession.metadata?.customerNotes || 'None'}`,
-          '',
-          'Items:',
-          ...itemLines,
-          '',
-          `Total: ${formatCurrency(checkoutSession.amount_total || 0)}`,
-          `Session: ${checkoutSession.id}`
-        ].join('\n');
-        const { error } = await resend.emails.send({
-          from: RESEND_FROM,
-          to: SHOP_OWNER_EMAIL,
-          subject: `New Order: ${checkoutSession.customer_details?.name || 'Customer'}`,
-          text
-        });
-        if (error) console.error('Order email error:', error);
-      }
-    } catch (error) {
-      console.error('Failed to send order email', error);
-    }
-  }
-
-  res.json({ received: true });
-});
-
 const port = Number(PORT) || 4242;
 app.listen(port, '0.0.0.0', () => {
-  console.log(`Payment server running on port ${port}`);
+  console.log(`API server running on port ${port}`);
 });

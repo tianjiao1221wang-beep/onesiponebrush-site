@@ -1,13 +1,9 @@
 
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ShoppingBag, Menu, X } from 'lucide-react';
+import { Menu, X, Mail } from 'lucide-react';
 
-interface NavbarProps {
-  cartCount: number;
-}
-
-const Navbar: React.FC<NavbarProps> = ({ cartCount }) => {
+const Navbar: React.FC = () => {
   const location = useLocation();
   const [isOpen, setIsOpen] = React.useState(false);
 
@@ -50,13 +46,8 @@ const Navbar: React.FC<NavbarProps> = ({ cartCount }) => {
           </div>
 
           <div className="flex items-center space-x-4">
-            <Link to="/cart" className="relative group p-2">
-              <ShoppingBag className="w-6 h-6 text-stone-700 group-hover:text-stone-900 transition-colors" />
-              {cartCount > 0 && (
-                <span className="absolute top-0 right-0 bg-stone-900 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full">
-                  {cartCount}
-                </span>
-              )}
+            <Link to="/contact" className="hidden lg:flex relative group p-2" aria-label="Contact us">
+              <Mail className="w-6 h-6 text-stone-700 group-hover:text-stone-900 transition-colors" />
             </Link>
             <button className="lg:hidden p-2" onClick={() => setIsOpen(!isOpen)}>
               {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}

@@ -3,12 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { PRODUCTS } from '../constants';
 import ProductCard from '../components/ProductCard';
-import { Product } from '../types';
 import { CURATED_EVENTS } from '../constants/curatedEvents';
-
-interface HomeProps {
-  onAddToCart: (product: Product) => void;
-}
 
 interface OfferingItem {
   titleEn: string;
@@ -158,7 +153,7 @@ const OfferingGrid: React.FC<{ items: OfferingItem[]; columns?: string }> = ({
   </div>
 );
 
-const Home: React.FC<HomeProps> = ({ onAddToCart }) => {
+const Home: React.FC = () => {
   const diyKits = PRODUCTS.filter((p) => p.category === 'kit').slice(0, 3);
   const culturalProducts = PRODUCTS.filter((p) => p.category === 'design').slice(0, 3);
 
@@ -356,7 +351,11 @@ const Home: React.FC<HomeProps> = ({ onAddToCart }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-light ink-text uppercase tracking-widest mb-2">Shop</h2>
-            <p className="chinese-text text-xl text-stone-500">套装商店</p>
+            <p className="chinese-text text-xl text-stone-500 mb-6">套装商店</p>
+            <p className="text-stone-600 max-w-2xl mx-auto">
+              Online checkout is currently paused. Contact us to buy any piece or check availability.
+            </p>
+            <p className="chinese-text text-stone-500 mt-2">线上暂不开放支付。如需购买或查询库存，请联系我们。</p>
           </div>
 
           <div className="mb-24">
@@ -374,7 +373,7 @@ const Home: React.FC<HomeProps> = ({ onAddToCart }) => {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
               {diyKits.map((product) => (
-                <ProductCard key={product.id} product={product} onAddToCart={onAddToCart} />
+                <ProductCard key={product.id} product={product} />
               ))}
             </div>
           </div>
@@ -394,7 +393,7 @@ const Home: React.FC<HomeProps> = ({ onAddToCart }) => {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
               {culturalProducts.map((product) => (
-                <ProductCard key={product.id} product={product} onAddToCart={onAddToCart} />
+                <ProductCard key={product.id} product={product} />
               ))}
             </div>
           </div>

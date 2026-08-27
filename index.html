@@ -45,9 +45,9 @@
 <body>
     <script>
       (function(){
-        var p=location.pathname,s=location.search;
-        if((p==='/checkout-success'||p==='/cart')&&(s||p==='/checkout-success')){
-          location.replace('/#'+p+s);
+        var p=location.pathname;
+        if(p==='/checkout-success'||p==='/cart'||p==='/checkout'){
+          location.replace(p==='/checkout-success' ? '/#/shop' : '/#/contact');
         }
       })();
     </script>

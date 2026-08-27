@@ -24,17 +24,18 @@ export interface Product {
   estimatedHours?: string;
 }
 
-export interface CartItem extends Product {
-  quantity: number;
-  /** 若选了变体，记录变体信息供购物车展示 */
-  variantId?: string;
-  variantName?: string;
-  variantChineseName?: string;
-}
-
-/** 购物车行唯一标识：同商品同变体合并，不同变体分开展示 */
-export function getCartItemKey(item: CartItem): string {
-  return item.variantId ? `${item.id}__${item.variantId}` : item.id;
+/** Contact form link for product purchase / availability inquiries */
+export function getProductInquiryPath(
+  product: Pick<Product, 'name' | 'chineseName'>,
+  variant?: Pick<ProductVariant, 'name' | 'chineseName'>
+): string {
+  const params = new URLSearchParams();
+  params.set('subject', 'product');
+  params.set('name', product.name);
+  if (product.chineseName) params.set('chineseName', product.chineseName);
+  if (variant?.name) params.set('variant', variant.name);
+  if (variant?.chineseName) params.set('variantZh', variant.chineseName);
+  return `/contact?${params.toString()}`;
 }
 
 export interface CulturePostSection {
@@ -66,4 +67,4 @@ export interface OrderInfo {
   notes: string;
 }
 
-export type ContactSubject = 'tutorial' | 'general' | 'order' | 'partnership';
+export type ContactSubject = 'tutorial' | 'general' | 'order' | 'partnership' | 'product';

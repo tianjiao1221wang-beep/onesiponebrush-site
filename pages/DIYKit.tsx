@@ -1,18 +1,13 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { PRODUCTS } from '../constants';
-import { Product } from '../types';
 import ProductCard from '../components/ProductCard';
 import EventKitCard from '../components/EventKitCard';
 import { ArrowRight } from 'lucide-react';
 
-interface DIYKitProps {
-  onAddToCart: (product: Product) => void;
-}
-
 type TypeFilter = 'all' | 'kit' | 'design';
 
-const DIYKit: React.FC<DIYKitProps> = ({ onAddToCart }) => {
+const DIYKit: React.FC = () => {
   const [typeFilter, setTypeFilter] = useState<TypeFilter>('all');
 
   const filteredProducts = PRODUCTS.filter((p) => {
@@ -25,7 +20,11 @@ const DIYKit: React.FC<DIYKitProps> = ({ onAddToCart }) => {
     <div className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto min-h-screen">
       <header className="mb-20 text-center">
         <h1 className="text-5xl font-light mb-4 ink-text uppercase tracking-widest">Our Collection</h1>
-        <h2 className="chinese-text text-2xl text-stone-500 mb-12 italic">精选系列 — 匠心呈现</h2>
+        <h2 className="chinese-text text-2xl text-stone-500 mb-6 italic">精选系列 — 匠心呈现</h2>
+        <p className="text-stone-600 max-w-2xl mx-auto mb-2">
+          Online checkout is currently paused. Contact us to buy any product or check availability.
+        </p>
+        <p className="chinese-text text-stone-500 mb-12">线上暂不开放支付。如需购买或查询库存，请联系我们。</p>
 
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center flex-wrap gap-4 sm:gap-8 border-b border-stone-200 pb-6">
           <span className="text-xs uppercase tracking-widest text-stone-400">Type / 品类</span>
@@ -51,7 +50,7 @@ const DIYKit: React.FC<DIYKitProps> = ({ onAddToCart }) => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-20">
         {filteredProducts.map((product) => (
-          <ProductCard key={product.id} product={product} onAddToCart={onAddToCart} />
+          <ProductCard key={product.id} product={product} />
         ))}
       </div>
 
@@ -67,7 +66,7 @@ const DIYKit: React.FC<DIYKitProps> = ({ onAddToCart }) => {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16">
           {eventDIYkits.map((product) => (
-            <EventKitCard key={product.id} product={product} onAddToCart={onAddToCart} />
+            <EventKitCard key={product.id} product={product} />
           ))}
         </div>
 

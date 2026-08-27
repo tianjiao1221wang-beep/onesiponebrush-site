@@ -1,14 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Product, ProductVariant } from '../types';
-import { Plus, ChevronDown, ChevronUp } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Product, ProductVariant, getProductInquiryPath } from '../types';
+import { Mail, ChevronDown, ChevronUp } from 'lucide-react';
 import { EVENT_SALE_LABEL, EVENT_SALE_LABEL_EN, formatPrice, getSalePrice } from '../constants';
 
 interface ProductCardProps {
   product: Product;
-  onAddToCart: (product: Product, variant?: ProductVariant) => void;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant | undefined>(
     product.variants?.[0]
   );
@@ -35,16 +35,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
     const timer = setTimeout(checkOverflow, 0);
     return () => clearTimeout(timer);
   }, [product.description, product.chineseDescription, expanded]);
-
-  const handleAdd = () => {
-    if (product.variants?.length && !selectedVariant) return;
-    const item = {
-      ...product,
-      image: selectedVariant?.image ?? product.image,
-      price: selectedVariant?.price ?? product.price,
-    };
-    onAddToCart(item, selectedVariant);
-  };
 
   return (
     <div className="group relative bg-white p-4 transition-all hover:shadow-xl hover:-translate-y-1">
@@ -113,13 +103,16 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
           </button>
         )}
       </div>
-      <button
-        onClick={handleAdd}
-        className="mt-6 w-full flex items-center justify-center bg-stone-900 text-white px-6 py-3 text-sm font-medium hover:bg-stone-800 transition-colors tracking-widest uppercase"
+      <Link
+        to={getProductInquiryPath(product, selectedVariant)}
+        className="mt-6 w-full flex flex-col items-center justify-center bg-stone-900 text-white px-6 py-3 text-sm font-medium hover:bg-stone-800 transition-colors"
       >
-        <Plus className="w-4 h-4 mr-2" />
-        Add to Selection
-      </button>
+        <span className="flex items-center tracking-widest uppercase">
+          <Mail className="w-4 h-4 mr-2" />
+          Contact to Buy
+        </span>
+        <span className="chinese-text text-xs font-normal tracking-normal mt-1 text-stone-300">联系购买 · 查询库存</span>
+      </Link>
     </div>
   );
 };
